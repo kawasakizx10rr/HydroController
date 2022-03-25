@@ -19,7 +19,6 @@ The hydro controller is an all-in-one system which is designed to maintain the e
 Please help to support the hydro controller project by donating towards its research and development, it takes me alot of time and money for me to design and producde new PCBs and manage the code so any donation is welcome and thankyou for your intrest in the hydro controller project.
 https://paypal.me/EdwinsOnlineStore?country.x=GB&locale.x=en_GB
 
-### Suppprt the project
-Buy a PCB and parts
+### Buy a PCB and parts
 Coming soon...
 
