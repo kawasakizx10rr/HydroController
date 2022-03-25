@@ -8,9 +8,9 @@ The hydro controller is an all-in-one system which is designed to maintain the e
   <li>Water temperature control via DS18B20 and a water heater controlled by a relay.</li>
   <li>Air teperature control (temperature and humidity) via a dual AC zero-point cross module and a DHT22 and a relay to control an exter AC heater.</li>
   <li>AC light timer (on/off/auto timer) via a DS3231 RTC and a relay module.</li>
-  <li>Co2 cotrol via a MH-Z14 CO2 Sensor Carbon Dioxide Sensor and a relay module (external Co2 solenoid and flow rate meter required)./li>
+  <li>Co2 cotrol via a MH-Z14 CO2 Sensor Carbon Dioxide Sensor and a relay module (external Co2 solenoid and flow rate meter required).</li>
   <li>Local Wifi access point with a Hydro controller GUI to view and adjust values remotely, via a ESP8266-01.</li>
-  <li>800x480 RA8875 touch screen TFT display with a modern and responsive GUI</li>
+  <li>800x480 RA8875 touch screen TFT display with an intuitive GUI design</li>
 </ul>
 
 
