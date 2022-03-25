@@ -15,7 +15,9 @@ The hydro controller is an all-in-one system which is designed to maintain the e
 
 
 
-## Suppprt the project
-//TO DO
+### Suppprt the project
+https://paypal.me/EdwinsOnlineStore?country.x=GB&locale.x=en_GB
 
+### Suppprt the project
+//Buy a PCB and parts
 
