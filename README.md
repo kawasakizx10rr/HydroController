@@ -21,6 +21,5 @@ https://paypal.me/EdwinsOnlineStore?country.x=GB&locale.x=en_GB
 
 ### Suppprt the project
 Buy a PCB and parts
-
-####Coming soon
+Coming soon...
 
