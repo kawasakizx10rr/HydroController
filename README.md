@@ -20,9 +20,7 @@ Please help to support the hydro controller project by donating towards its rese
 https://paypal.me/EdwinsOnlineStore?country.x=GB&locale.x=en_GB
 
 ### Buy a PCB and parts
-Coming soon... 
-I had a new PCB designed on the 24 Feb 2022 and went into production 25 Feb 2022, once received and tested i will add some to my Ebay store, both blank pcbs and components and some pre assembbled ones. ETA 20 April 2022.
+https://www.ebay.co.uk/itm/175255889255
 
 ### Youtube video
-Coming soon... 
-Once i get the new PCB created i will show its new features and the new code with the new Wifi access point and Webpage. 
+https://youtu.be/aWhb0Ocu9u4
