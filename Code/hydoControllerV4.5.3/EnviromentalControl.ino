@@ -1,10 +1,10 @@
 void envriomentalControl() {
   lightingControl();
-  //waterLevelControl();
-  //waterTemperatureControl();
-  //co2Control();
+  waterLevelControl();
+  waterTemperatureControl();
+  co2Control();
   airControl();
-  //waterEcPhControl();
+  waterEcPhControl();
 }
 
 // Control the water level
@@ -216,32 +216,26 @@ bool refillTank(const unsigned long& a_lastTouch, unsigned long& a_previousMilli
 
 // Control the water temperature
 void waterTemperatureControl() {
-  static byte previousWaterHeaterState = 0;
-  static byte waterHeaterState = 3; // 1 = on, 2 = off, 3 = unset
-  if (device::sensorsReady) {
+  // Control the water heater
+  float waterTemp = sensor::waterTemp;
+  float minTemp = user::targetMinWaterTemp;
+  static byte prevWaterHeaterMin = 69;
+  if (rtcTime.min != prevWaterHeaterMin) {
     if (user::convertToF) {
-      if (sensor::waterTempF <= user::targetMinWaterTempF && waterHeaterState != 1)
-        waterHeaterState = 1;
-      else if (sensor::waterTempF >= user::targetMaxWaterTempF && waterHeaterState != 2)
-        waterHeaterState = 2;
+      waterTemp = sensor::waterTempF;
+      minTemp = user::targetMinWaterTempF;
+    } 
+    if (waterTemp <= minTemp && !device::waterHeaterIsOn) {
+      device::waterHeaterIsOn = true;
+      digitalWrite(pin::waterHeater, !device::relayOffState);
+      saveLogMessage(13); // save log message, heater on
     }
-    else {
-      if (sensor::waterTemp <= user::targetMinWaterTemp && waterHeaterState != 1)
-        waterHeaterState = 1;
-      else if (sensor::waterTemp >= user::targetMaxWaterTemp && waterHeaterState != 2)
-        waterHeaterState = 2;
+    else if (device::waterHeaterIsOn) {
+      device::waterHeaterIsOn = false;
+      digitalWrite(pin::waterHeater, device::relayOffState);
+      saveLogMessage(14); // save log message, heater off
     }
-    if (waterHeaterState != previousWaterHeaterState) {
-      if (waterHeaterState == 1) {
-        digitalWrite(pin::waterHeater, !device::relayOffState);
-        Serial.println(F("Water heater on"));
-      }
-      else if (waterHeaterState == 2) {
-        digitalWrite(pin::waterHeater, device::relayOffState);
-        Serial.println(F("Water heater off"));
-      }
-      previousWaterHeaterState = waterHeaterState;
-    }
+    prevWaterHeaterMin = rtcTime.min;
   }
 }
 
@@ -435,8 +429,31 @@ void airControl() {
       humOption = device::SPEED_DOWN;
       humPercent = humOutOfRange / (user::targetMinHumidity / 100.0);
     }
+
+    // Control the air heater
+    float airTemp = sensor::airTemp;
+    float minTemp = user::targetMinAirTemp;
+    static byte prevAirHeaterMin = 69;
+    if (rtcTime.min != prevAirHeaterMin) {
+      if (user::convertToF) {
+        airTemp = convertToF(sensor::airTemp);
+        minTemp = user::targetMinAirTempF;
+      } 
+      if (airTemp <= minTemp && !device::airHeaterIsOn) {
+        device::airHeaterIsOn = true;
+        digitalWrite(pin::airHeater, !device::relayOffState);
+        saveLogMessage(11); // save log message, heater on
+      }
+      else if (device::airHeaterIsOn) {
+        device::airHeaterIsOn = false;
+        digitalWrite(pin::airHeater, device::relayOffState);
+        saveLogMessage(12); // save log message, heater off
+      }
+      prevAirHeaterMin = rtcTime.min;
+    }
     //Serial.print(F("Temp out by: ")); Serial.print(tempOption == device::SPEED_UP ? tempPercent : -tempPercent); Serial.println(F("%"));
     //Serial.print(F("Hum out by ")); Serial.print(humOption == device::SPEED_UP ? humPercent : -humPercent); Serial.println(F("%"));
+
     // Temperature and humidity are ok, so send 'just fan' IR command
     if (tempPercent <= 0.01 && humPercent <= 0.01) {
       // Fans should stay at current speed ?

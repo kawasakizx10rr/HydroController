@@ -124,17 +124,21 @@ const char calibratingCo2 []         PROGMEM = "Please wait 10 seconds\nwhile th
 const char co2Alert []               PROGMEM = "Alert the system is about\nto start pumping Co2. Please\nmake sure that no one is\ninside! Starting in $ seconds\nDo you want to continue?";
 const char cancelCo2 []              PROGMEM = "Pumping Co2 for $ minutes.\nPlease make sure that no\none is inside! Press cancel to\nquit Co2 pumping at any time.";
 // log messages
-const char bootNotification[]        PROGMEM = "System started";   // 0
-const char drainNotification[]       PROGMEM = "Drained water";    // 1
-const char refillNotification[]      PROGMEM = "Refilled water";   // 2
-const char co2Notification[]         PROGMEM = "Adjusted Co2";     // 3
-const char lightOnNotification[]     PROGMEM = "Light on";         // 4
-const char lightOffNotification[]    PROGMEM = "Light off";        // 5
-const char lightErrorNotification[]  PROGMEM = "Error light off";  // 6
-const char phUpNotification[]        PROGMEM = "Adjusted PH up";   // 7
-const char phDownNotification[]      PROGMEM = "Adjusted PH down"; // 8
-const char ecNotification[]          PROGMEM = "Adjusted EC";      // 9
-const char tdsNotification[]         PROGMEM = "Adjusted TDS";     // 10
+const char bootNotification[]        PROGMEM = "System started";     // 0
+const char drainNotification[]       PROGMEM = "Drained water";      // 1
+const char refillNotification[]      PROGMEM = "Refilled water";     // 2
+const char co2Notification[]         PROGMEM = "Adjusted Co2";       // 3
+const char lightOnNotification[]     PROGMEM = "Light on";           // 4
+const char lightOffNotification[]    PROGMEM = "Light off";          // 5
+const char lightErrorNotification[]  PROGMEM = "Error light off";    // 6
+const char phUpNotification[]        PROGMEM = "Adjusted PH up";     // 7
+const char phDownNotification[]      PROGMEM = "Adjusted PH down";   // 8
+const char ecNotification[]          PROGMEM = "Adjusted EC";        // 9
+const char tdsNotification[]         PROGMEM = "Adjusted TDS";       // 10
+const char heaterOnNotification[]    PROGMEM = "Air heater on";      // 11
+const char heaterOffNotification[]   PROGMEM = "Air heater off";     // 12
+const char waterOnNotification[]     PROGMEM = "Water heater on";    // 13
+const char waterOffNotification[]    PROGMEM = "Water heater off";   // 14
 const char* const notificationsArray[] PROGMEM = {
   bootNotification,
   drainNotification,
@@ -146,7 +150,9 @@ const char* const notificationsArray[] PROGMEM = {
   phUpNotification,
   phDownNotification,
   ecNotification,
-  tdsNotification
+  tdsNotification,
+  heaterOnNotification,
+  heaterOffNotification
 };
 const byte maxLogs = 20;
 const byte maxCharsPerLog = 13;
@@ -163,6 +169,8 @@ int remotlyLoadUserProfile = -1;
 int remotlySaveUserProfile = -1;
 bool sensorsReady = false;
 bool currentlyDosing = false;
+bool airHeaterIsOn = false;
+bool waterHeaterIsOn = false;
 byte currentDoserNum = 0;
 // bool currentlyDraining;
 bool systemReset = false;
