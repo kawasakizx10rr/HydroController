@@ -198,9 +198,8 @@ void saveLogMessage(const byte& a_logType) {
   strcat(message::timeStrArray[message::systemLogPos], " ");
   // Add the time
   strcat(message::timeStrArray[message::systemLogPos], t_time);
-
-  Serial.print(F("Added new log: "));
-  const char* logPretext = PROGMEM_read(&message::notificationsArray[a_logType]);
+  Serial.print(F("Added new log type [")); Serial.print(a_logType); Serial.print(F("] "));
+  const char* logPretext = PROGMEM_read(&message::notificationsArray[message::logTypeArray[a_logType]]);
   Serial.print((const __FlashStringHelper *)logPretext);
   Serial.print(F(" ")); Serial.println(message::timeStrArray[message::systemLogPos]);
   if (message::systemLogPos < message::maxLogs)

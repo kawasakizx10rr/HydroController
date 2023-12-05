@@ -12,7 +12,7 @@
 #include <EEPROM.h>
 #include <DS3231.h>
 //#include <dht.h>
-#include <hdc1080.h>
+#include "Adafruit_HDC1000.h"
 
 // Include font files
 //#include "Fonts/Aerial_22.h"
@@ -152,7 +152,9 @@ const char* const notificationsArray[] PROGMEM = {
   ecNotification,
   tdsNotification,
   heaterOnNotification,
-  heaterOffNotification
+  heaterOffNotification,
+  waterOnNotification,
+  waterOffNotification
 };
 const byte maxLogs = 20;
 const byte maxCharsPerLog = 13;
@@ -523,7 +525,7 @@ DallasTemperature dallasTemperature(&oneWire);
 DS3231 rtc(SDA, SCL);
 Time rtcTime;
 //dht DHT;
-HDC1080 hdc;
+Adafruit_HDC1000 hdc = Adafruit_HDC1000();
 
 void(*reset)(void) = 0; // Reset function
 
@@ -602,7 +604,9 @@ void initializeDevice() {
   rtc.begin();
   rtcTime = rtc.getTime();
   //DHT.read22(pin::dht22);
-  hdc.begin();
+  if(!hdc.begin()) {
+    Serial.println(F("Error: Unable to connect HDC1080!"));
+  }
   sendToSlave('P', sensor::phPotStep);
   tft.fillWindow(user::backgroundColor);
   frame();

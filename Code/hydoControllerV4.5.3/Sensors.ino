@@ -45,13 +45,13 @@ void readSensors() {
     // AIR TEMP ==========================================================================
     //DHT.read22(pin::dht22);
     //sensor::airTemp = DHT.temperature;
-    sensor::airTemp = hdc.getTemp();    
+    sensor::airTemp = hdc.readTemperature();    
     //Serial.print(F("Air temp in c:")); Serial.println(sensor::airTemp);
     if (sensor::airTemp < 0)
       sensor::airTemp = 0;
     // HUMIDITY ==========================================================================
     //sensor::humidity = DHT.humidity;
-    sensor::humidity = hdc.getHumidity();
+    sensor::humidity = hdc.readHumidity();
     //Serial.print(F("Humidity:")); Serial.println(sensor::humidity);
     if (sensor::humidity > 99.9)
       sensor::humidity = 99.9;
@@ -72,11 +72,11 @@ void readSensors() {
     if (buffer[0] == 255 && buffer[5] == 0 && buffer[7] == 0)
       sensorValue = (256 * (int)buffer[2]) + (int)buffer[3];
     if (sensorValue <= 0) {
-      Serial.print(F("Error reading Co2 sensor buffer:"));
-      for (const byte& val : buffer) {
-        Serial.print(val); Serial.print(F(","));
-      }
-      Serial.println();
+      //Serial.print(F("Error reading Co2 sensor buffer:"));
+      //for (const byte& val : buffer) {
+      //  Serial.print(val); Serial.print(F(","));
+      //}
+      //Serial.println();
       sensor::co2 = 0;
     }
     else if (sensorValue < 300) {

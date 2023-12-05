@@ -228,12 +228,12 @@ void waterTemperatureControl() {
     if (waterTemp <= minTemp && !device::waterHeaterIsOn) {
       device::waterHeaterIsOn = true;
       digitalWrite(pin::waterHeater, !device::relayOffState);
-      saveLogMessage(13); // save log message, heater on
+      saveLogMessage(13); // save log message, water heater on
     }
     else if (waterTemp > minTemp && device::waterHeaterIsOn) {
       device::waterHeaterIsOn = false;
       digitalWrite(pin::waterHeater, device::relayOffState);
-      saveLogMessage(14); // save log message, heater off
+      saveLogMessage(14); // save log message, water heater off
     }
     prevWaterHeaterMin = rtcTime.min;
   }
@@ -442,12 +442,12 @@ void airControl() {
       if (airTemp <= minTemp && !device::airHeaterIsOn) {
         device::airHeaterIsOn = true;
         digitalWrite(pin::airHeater, !device::relayOffState);
-        saveLogMessage(11); // save log message, heater on
+        saveLogMessage(11); // save log message, air heater on
       }
       else if (airTemp > minTemp &&device::airHeaterIsOn) {
         device::airHeaterIsOn = false;
         digitalWrite(pin::airHeater, device::relayOffState);
-        saveLogMessage(12); // save log message, heater off
+        saveLogMessage(12); // save log message, air heater off
       }
       prevAirHeaterMin = rtcTime.min;
     }
