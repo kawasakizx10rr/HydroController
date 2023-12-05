@@ -635,11 +635,14 @@ void initializeDevice() {
   Serial2.write(sensor::co2Request, 9);
   delay(50);
   Serial2.flush();
-  // Set system variables to their defaults
+  // Start the AC fans
   device::fanOneSpeed = user::targetMinFanOneSpeed;
   device::fanTwoSpeed = user::targetMinFanTwoSpeed;
+  sendToSlave('Z', device::fanOneSpeed);
+  sendToSlave('X', device::fanTwoSpeed);
+  // Dont adjust, set graph data out of range of viewed precison, thus 0
   if (device::graphArrayPos == 0) {
-    device::phArray[0] = 0.001; // Dont adjust, set out of range of viewed precison, thus 0
+    device::phArray[0] = 0.001; 
     device::ecArray[0] = 0.001;
     device::tdsArray[0] = 0.01;
     device::co2Array[0] = 0.01;
