@@ -393,58 +393,47 @@ void airControl() {
     device::controlOptions tempOption = device::SPEED_IDLE;
     device::controlOptions humOption = device::SPEED_IDLE;
     device::controlOptions fanMode = device::SPEED_IDLE;
+    const float maxAirTemp = user::convertToF ? user::targetMaxAirTempF : user::targetMaxAirTemp;
+    const float minAirTemp = user::convertToF ? user::targetMinAirTempF : user::targetMinAirTemp;
+    const float airTemp = user::convertToF ? convertToF(sensor::airTemp) : sensor::airTemp;
+
     // Check to see if the temperature is out of range
-    if (user::convertToF) {
-      if (convertToF(sensor::airTemp) > user::targetMaxAirTempF && !user::fansControlTemperature) {
-        tempOutOfRange = abs(user::targetMaxAirTempF - convertToF(sensor::airTemp));
-        tempOption = device::SPEED_UP;
-        tempPercent = tempOutOfRange / (user::targetMaxAirTempF / 100.0);
-      }
-      else if (convertToF(sensor::airTemp) < user::targetMinAirTempF && !user::fansControlTemperature) {
-        tempOutOfRange = abs(user::targetMinAirTempF - convertToF(sensor::airTemp));
-        tempOption = device::SPEED_DOWN;
-        tempPercent = tempOutOfRange / (user::targetMinAirTempF / 100.0);
-      }
+    if (airTemp > maxAirTemp && user::fansControlTemperature) {
+      tempOutOfRange = abs(maxAirTemp - airTemp);     
+      tempOption = device::SPEED_UP;
+      tempPercent = tempOutOfRange / (maxAirTemp / 100.0);
+      //Serial.print(F("SPEED_UP tempPercent: ")); Serial.println(tempPercent);
     }
-    else {
-      if (sensor::airTemp > user::targetMaxAirTemp && !user::fansControlTemperature) {
-        tempOutOfRange = abs(user::targetMaxAirTemp - sensor::airTemp);
-        tempOption = device::SPEED_UP;
-        tempPercent = tempOutOfRange / (user::targetMaxAirTemp / 100.0);
-      }
-      else if (sensor::airTemp < user::targetMinAirTemp && !user::fansControlTemperature) {
-        tempOutOfRange = abs(user::targetMinAirTemp - sensor::airTemp);
-        tempOption = device::SPEED_DOWN;
-        tempPercent = tempOutOfRange / (user::targetMinAirTemp / 100.0);
-      }
+    else if (airTemp < minAirTemp && user::fansControlTemperature) {
+      tempOutOfRange = abs(minAirTemp - airTemp);
+      tempOption = device::SPEED_DOWN;
+      tempPercent = tempOutOfRange / (minAirTemp / 100.0);
+      //Serial.print(F("SPEED_DOWN tempPercent: ")); Serial.println(tempPercent);
     }
+
     // Check to see if the humidity is out of range
-    if (sensor::humidity > user::targetMaxHumidity && !user::fansControlHumidity)  {
+    if (sensor::humidity > user::targetMaxHumidity && user::fansControlHumidity)  {
       humOutOfRange = abs(user::targetMaxHumidity - sensor::humidity);
       humOption = device::SPEED_UP;
       humPercent = humOutOfRange / (user::targetMaxHumidity / 100.0);
+      //Serial.print(F("SPEED_UP humPercent: ")); Serial.println(humPercent);
     }
-    else if (sensor::humidity < user::targetMinHumidity && !user::fansControlHumidity)  {
+    else if (sensor::humidity < user::targetMinHumidity && user::fansControlHumidity)  {
       humOutOfRange = abs(user::targetMinHumidity - sensor::humidity);
       humOption = device::SPEED_DOWN;
       humPercent = humOutOfRange / (user::targetMinHumidity / 100.0);
+      //Serial.print(F("SPEED_DOWN humPercent: ")); Serial.println(humPercent);
     }
 
     // Control the air heater
-    float airTemp = sensor::airTemp;
-    float minTemp = user::targetMinAirTemp;
     static byte prevAirHeaterMin = 69;
     if (rtcTime.min != prevAirHeaterMin) {
-      if (user::convertToF) {
-        airTemp = convertToF(sensor::airTemp);
-        minTemp = user::targetMinAirTempF;
-      } 
-      if (airTemp <= minTemp && !device::airHeaterIsOn) {
+      if (airTemp <= minAirTemp && !device::airHeaterIsOn) {
         device::airHeaterIsOn = true;
         digitalWrite(pin::airHeater, !device::relayOffState);
         saveLogMessage(11); // save log message, air heater on
       }
-      else if (airTemp > minTemp &&device::airHeaterIsOn) {
+      else if (airTemp > minAirTemp &&device::airHeaterIsOn) {
         device::airHeaterIsOn = false;
         digitalWrite(pin::airHeater, device::relayOffState);
         saveLogMessage(12); // save log message, air heater off

@@ -172,7 +172,7 @@ void launchDosingNotification(const float& a_sensorPercent, const byte& a_dosing
 // Draw the left and top menu icons
 void OuterMenuIcons() {
   // left menu
-  const unsigned long iconTime = millis(); // 453ms quicker, 2% less flash mem :)
+  //const unsigned long iconTime = millis();
   drawPageIcon(0, 17, 102, homeIcon, 462, 66, 56);
   drawPageIcon(1, 17, 187, graphIcon, 371, 66, 45);
   drawPageIcon(2, 16, 257, minMaxIcon, 310, 69, 36);
@@ -191,7 +191,7 @@ void OuterMenuIcons() {
   drawPageIcon(11, 604, 16, fanIcon, 512, 64, 64);
   drawPageIcon(12, 703, 20, warningsIcon, 510, 67, 61);
   display::previousPage = display::page;
-  Serial.print(F("icon time: ")); Serial.println(millis() - iconTime);
+  //Serial.print(F("icon time: ")); Serial.println(millis() - iconTime);
 }
 
 // Draw the black frame you see around the menu icons

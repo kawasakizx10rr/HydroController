@@ -1,15 +1,17 @@
 void touchEvent() {
   if (tft.touched()) {
     display::currentTouch = millis();
-    display::touch_x = 0; display::touch_y = 0;
+    //display::touch_x = 0; display::touch_y = 0;
     static uint16_t previousTouchX = 0, previousTouchY = 0;
-    if (!display::enableAverageTouches)
-      tft.touchReadPixel(&display::touch_x, &display::touch_y);
-    else {
+    //if (!display::enableAverageTouches)
+    //  tft.touchReadPixel(&display::touch_x, &display::touch_y);
+    //else {
       uint16_t t_touchX = 0, t_touchY = 0;
       tft.touchReadPixel(&t_touchX, &t_touchY);
-      getAverageTouch(t_touchX, t_touchY);
-    }
+      display::touch_x = t_touchX;
+      display::touch_y = t_touchY;
+      //getAverageTouch(t_touchX, t_touchY);
+    //}
     if (display::touch_x > 0 && display::touch_y > 0) {
       //tft.fillCircle(display::touch_x, display::touch_y, 2, RA8875_WHITE); // for touch debugging / calibration check
       if (abs(display::touch_x - previousTouchX) <= 20 && abs(display::touch_y - previousTouchY) <= 20)
@@ -365,23 +367,25 @@ int sliderXTouch() {
   static int scrollLeftCount = 0, scrollRightCount = 0;
   int returnVal = 0;
   //if (display::currentTouch > display::lastTouch) {
-    if ((int16_t)display::touch_x - (int16_t)display::lastTouchX >= 30) {
+    if ((int16_t)display::touch_x - (int16_t)display::lastTouchX >= 35) {
       scrollRightCount++;
+      //Serial.print(F("slide R ")); Serial.println(scrollRightCount);
       scrollLeftCount = 0;
       display::lastTouchX = display::touch_x;
     }
-    else if ((int16_t)display::touch_x - (int16_t)display::lastTouchX <= -30) {
+    else if ((int16_t)display::touch_x - (int16_t)display::lastTouchX <= -35) {
       scrollLeftCount++;
+      //Serial.print(F("slide L ")); Serial.println(scrollLeftCount);
       scrollRightCount = 0;
       display::lastTouchX = display::touch_x;
     }
   //}
-  if (scrollRightCount >= 10) {
+  if (scrollRightCount >= 8) {
     returnVal = 1;
     scrollRightCount = 0;
     //display::lastTouchX = 0;
   }
-  else if (scrollLeftCount >= 10) {
+  else if (scrollLeftCount >= 8) {
     returnVal = -1;
     scrollLeftCount = 0;
     //display::lastTouchX = tft.width();
