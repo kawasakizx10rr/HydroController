@@ -564,7 +564,7 @@ void setup() {
 
 void loop() {
   touchEvent();
-  //readSensors();
+  readSensors();
   drawPages();
   envriomentalControl();
   displayWarnings();
