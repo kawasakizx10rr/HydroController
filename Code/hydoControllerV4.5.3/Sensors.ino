@@ -42,16 +42,18 @@ void readSensors() {
       sensor::waterLevel = 0;
     if (sensor::waterLevelInches < 0)
       sensor::waterLevelInches = 0;
-    // AIR TEMP ==========================================================================
-    //DHT.read22(pin::dht22);
-    //sensor::airTemp = DHT.temperature;
-    sensor::airTemp = hdc.readTemperature();    
+    // AIR TEMP AND HUMIDITY============================================================
+#ifdef USING_HDC1080
+    sensor::airTemp = hdc.readTemperature();
+    sensor::humidity = hdc.readHumidity();    
+#else
+    DHT.read22(pin::dht22);
+    sensor::airTemp = DHT.temperature;
+    sensor::humidity = DHT.humidity;
+#endif  
     //Serial.print(F("Air temp in c:")); Serial.println(sensor::airTemp);
     if (sensor::airTemp < 0)
       sensor::airTemp = 0;
-    // HUMIDITY ==========================================================================
-    //sensor::humidity = DHT.humidity;
-    sensor::humidity = hdc.readHumidity();
     //Serial.print(F("Humidity:")); Serial.println(sensor::humidity);
     if (sensor::humidity > 99.9)
       sensor::humidity = 99.9;

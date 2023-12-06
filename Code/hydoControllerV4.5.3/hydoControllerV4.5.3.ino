@@ -2,6 +2,9 @@
   Version V4.5.3 Updated on the 5th Dec 2023
 */
 
+// Uncomment the line below to use a HDC1080,
+// If commented out a DHT11 will be used.
+//#define USING_HDC1080
 
 // Library imports
 #include <RA8875.h>
@@ -11,9 +14,11 @@
 #include <DallasTemperature.h>
 #include <EEPROM.h>
 #include <DS3231.h>
-//#include <dht.h>
+#ifdef USING_HDC1080
 #include "Adafruit_HDC1000.h"
-
+#else
+#include <dht.h>
+#endif
 // Include font files
 //#include "Fonts/Aerial_22.h"
 #include "Fonts/Akashi_36.h"
@@ -524,8 +529,11 @@ OneWire oneWire(pin::oneWireBus);
 DallasTemperature dallasTemperature(&oneWire);
 DS3231 rtc(SDA, SCL);
 Time rtcTime;
-//dht DHT;
+#ifdef USING_HDC1080
 Adafruit_HDC1000 hdc = Adafruit_HDC1000();
+#else
+dht DHT;
+#endif
 
 void(*reset)(void) = 0; // Reset function
 
@@ -603,10 +611,13 @@ void initializeDevice() {
   dallasTemperature.begin();
   rtc.begin();
   rtcTime = rtc.getTime();
-  //DHT.read22(pin::dht22);
+#ifdef USING_HDC1080
   if(!hdc.begin()) {
     Serial.println(F("Error: Unable to connect HDC1080!"));
   }
+#else
+  DHT.read22(pin::dht22);
+#endif
   sendToSlave('P', sensor::phPotStep);
   tft.fillWindow(user::backgroundColor);
   frame();
