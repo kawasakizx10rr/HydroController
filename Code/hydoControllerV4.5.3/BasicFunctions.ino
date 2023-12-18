@@ -193,6 +193,7 @@ void saveLogMessage(const byte& a_logType) {
   // Add the time
   strcat(message::timeStrArray[message::systemLogPos], t_time);
   Serial.print(F("Added new log type [")); Serial.print(a_logType); Serial.print(F("] "));
+  Serial.print(F("at position ")); Serial.print(message::systemLogPos); Serial.print(F(", LOG: "));
   const char* logPretext = PROGMEM_read(&message::notificationsArray[a_logType]);
   Serial.print((const __FlashStringHelper *)logPretext);
   Serial.print(F(" ")); Serial.println(message::timeStrArray[message::systemLogPos]);
