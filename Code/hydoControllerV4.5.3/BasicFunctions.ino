@@ -165,10 +165,10 @@ void saveLogMessage(const byte& a_logType) {
   rtcTime = rtc.getTime();
   const char* t_mon = rtc.getMonthStr(FORMAT_SHORT);
   const char* t_time = rtc.getTimeStr(FORMAT_SHORT);
-  char t_date[3];
+  char t_date[8];
   itoa(rtcTime.date, t_date, 10);
   // Push back log array if full
-  if (message::systemLogPos == message::maxLogs) {
+  if (pushBackLogs) {
     for (byte i = 0; i < message::maxLogs - 1; i++) {
       // push back log type
       message::logTypeArray[i] = message::logTypeArray[i + 1];
@@ -177,21 +177,15 @@ void saveLogMessage(const byte& a_logType) {
         message::timeStrArray[i][n] = message::timeStrArray[i + 1][n];
       }
     }
-    // clear final array block for next insert
-    for (byte n = 0; n < message::maxCharsPerLog; n++) {
-      message::timeStrArray[message::maxLogs - 1][n] = 0;
-    }
   }
   // Add the log message type
   message::logTypeArray[message::systemLogPos] = a_logType;
-  // Add the date
-  if (rtcTime.date < 10) {
+  // Clear the last block
+  memset(message::timeStrArray[message::systemLogPos], 0, message::maxCharsPerLog);
+  // Add the day
+  if (rtc.day() < 10)
     strcpy(message::timeStrArray[message::systemLogPos], "0");
-    strcat(message::timeStrArray[message::systemLogPos], t_date);
-  }
-  else {
-    strcpy(message::timeStrArray[message::systemLogPos], t_date);
-  }
+  strcpy(message::timeStrArray[message::systemLogPos], t_day);
   strcat(message::timeStrArray[message::systemLogPos], " ");
   /// add month
   strcat(message::timeStrArray[message::systemLogPos], t_mon);
@@ -202,8 +196,13 @@ void saveLogMessage(const byte& a_logType) {
   const char* logPretext = PROGMEM_read(&message::notificationsArray[a_logType]);
   Serial.print((const __FlashStringHelper *)logPretext);
   Serial.print(F(" ")); Serial.println(message::timeStrArray[message::systemLogPos]);
-  if (message::systemLogPos < message::maxLogs)
+  if (message::systemLogPos < message::maxLogs - 1) {
     message::systemLogPos++;
+    pushBackLogs = false;
+  }
+  else {
+    pushBackLogs = true;
+  }
 }
 
 // Convert a float to int, with a precison of 2 decimal places
