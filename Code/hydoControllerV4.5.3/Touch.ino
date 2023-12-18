@@ -197,7 +197,7 @@ void sliders() {
         beep();
         clearPage();
       }
-      Serial.print("systemLogScrollPos: "); Serial.print(message::systemLogScrollPos); Serial.print(", max systemLogPos: "); Serial.println(message::systemLogPos);
+      Serial.print("systemLogScrollPos: "); Serial.print(display::systemLogScrollPos); Serial.print(", max systemLogPos: "); Serial.println(message::systemLogPos);
     }
 
     if (display::settingsPage == 0) {
