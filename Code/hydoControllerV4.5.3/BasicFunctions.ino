@@ -162,6 +162,7 @@ void prime(const byte& a_doser, const byte& a_pin, const byte& a_speed) {
 
 // Save a log message to the array and push back the array when full
 void saveLogMessage(const byte& a_logType) {
+  static bool pushBackLogs = false;
   rtcTime = rtc.getTime();
   const char* t_mon = rtc.getMonthStr(FORMAT_SHORT);
   const char* t_time = rtc.getTimeStr(FORMAT_SHORT);
@@ -183,9 +184,9 @@ void saveLogMessage(const byte& a_logType) {
   // Clear the last block
   memset(message::timeStrArray[message::systemLogPos], 0, message::maxCharsPerLog);
   // Add the day
-  if (rtc.day() < 10)
+  if (rtcTime.date < 10)
     strcpy(message::timeStrArray[message::systemLogPos], "0");
-  strcpy(message::timeStrArray[message::systemLogPos], t_day);
+  strcpy(message::timeStrArray[message::systemLogPos], t_date);
   strcat(message::timeStrArray[message::systemLogPos], " ");
   /// add month
   strcat(message::timeStrArray[message::systemLogPos], t_mon);
