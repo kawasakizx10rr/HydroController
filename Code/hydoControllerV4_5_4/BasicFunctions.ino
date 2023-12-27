@@ -169,7 +169,9 @@ void saveLogMessage(const byte& a_logType) {
   char t_date[8];
   itoa(rtcTime.date, t_date, 10);
   // Push back log array if full
-  if (pushBackLogs) {
+  int arraypos = message::systemLogPos;
+  if (message::systemLogPos == message::maxLogs) {
+    Serial.println(F("Pushing logs back..."));
     for (byte i = 0; i < message::maxLogs - 1; i++) {
       // push back log type
       message::logTypeArray[i] = message::logTypeArray[i + 1];
@@ -178,35 +180,30 @@ void saveLogMessage(const byte& a_logType) {
         message::timeStrArray[i][n] = message::timeStrArray[i + 1][n];
       }
     }
+    arraypos = message::maxLogs - 1;
   }
   // Add the log message type
-  message::logTypeArray[message::systemLogPos] = a_logType;
+  message::logTypeArray[arraypos] = a_logType;
   // Clear the last block
-  memset(message::timeStrArray[message::systemLogPos], 0, message::maxCharsPerLog);
+  memset(message::timeStrArray[arraypos], 0, message::maxCharsPerLog);
   // Add the day
-  if (rtcTime.date < 10)
-    strcpy(message::timeStrArray[message::systemLogPos], "0");
-  strcpy(message::timeStrArray[message::systemLogPos], t_date);
-  strcat(message::timeStrArray[message::systemLogPos], " ");
+  if (atoi(t_date) < 10)
+    strcpy(message::timeStrArray[arraypos], "0");
+  strcpy(message::timeStrArray[arraypos], t_date);
+  strcat(message::timeStrArray[arraypos], " ");
   /// add month
-  strcat(message::timeStrArray[message::systemLogPos], t_mon);
-  strcat(message::timeStrArray[message::systemLogPos], " ");
+  strcat(message::timeStrArray[arraypos], t_mon);
+  strcat(message::timeStrArray[arraypos], " ");
   // Add the time
-  strcat(message::timeStrArray[message::systemLogPos], t_time);
+  strcat(message::timeStrArray[arraypos], t_time);
   Serial.print(F("Added new log type [")); Serial.print(a_logType); Serial.print(F("] "));
-  Serial.print(F("at position ")); Serial.print(message::systemLogPos); Serial.print(F(", LOG: "));
-  const char* logPretext = PROGMEM_read(&message::notificationsArray[a_logType]);
+  Serial.print(F("at position ")); Serial.print(arraypos); Serial.print(F(", LOG: "));
+  const char* logPretext = pgm_read_word(&message::notificationsArray[a_logType]);
   Serial.print((const __FlashStringHelper *)logPretext);
-  Serial.print(F(" ")); Serial.println(message::timeStrArray[message::systemLogPos]);
-  if (message::systemLogPos < message::maxLogs - 1) {
+  Serial.print(F(" ")); Serial.println(message::timeStrArray[arraypos]);
+  if (message::systemLogPos < message::maxLogs) 
     message::systemLogPos++;
-    pushBackLogs = false;
-  }
-  else {
-    pushBackLogs = true;
-  }
 }
-
 // Convert a float to int, with a precison of 2 decimal places
 int fltToInt(const float& a_value) {
   int val = a_value * 100;

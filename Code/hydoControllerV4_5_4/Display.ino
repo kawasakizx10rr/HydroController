@@ -1287,7 +1287,7 @@ void drawSettingsPageOne() {
       else 
         maxLogsToDsiplay = message::systemLogPos;
       for (byte i = display::systemLogScrollPos; i < maxLogsToDsiplay; i++) {
-        const char* logPretext = PROGMEM_read(&message::notificationsArray[message::logTypeArray[i]]);
+        const char* logPretext = pgm_read_word(&message::notificationsArray[message::logTypeArray[i]]);
         Serial.print(F("Printing log[")); Serial.print(i); Serial.print(F("] ")); Serial.print((const __FlashStringHelper *)logPretext); Serial.print(F(" ")); Serial.println(message::timeStrArray[i]);
         tft.print(105, startX, (const __FlashStringHelper *)logPretext);
         tft.print(F(" "));
