@@ -1,0 +1,16 @@
+dht	KEYWORD1
+
+read11	KEYWORD2
+read22	KEYWORD2
+temperature	KEYWORD2
+humidity	KEYWORD2
+hydro	KEYWORD2
+pin	KEYWORD2
+display	KEYWORD2
+message	KEYWORD2
+device	KEYWORD2
+user	KEYWORD2
+sensor	KEYWORD2
+rtc	KEYWORD2
+wifi	KEYWORD2
+machineLearning	KEYWORD2
