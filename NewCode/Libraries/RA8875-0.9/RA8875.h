@@ -292,7 +292,7 @@ typedef struct //Matrix
 
 struct fontDataStruct {
   const byte *data;
-  const byte arraySize;
+  const int arraySize;
   const byte width;
   const byte height;
   const int  yOffset;
@@ -382,9 +382,8 @@ class RA8875 {
 	inline uint16_t htmlTo565(int32_t color_) { return (uint16_t)(((color_ & 0xF80000) >> 8) | ((color_ & 0x00FC00) >> 5) | ((color_ & 0x0000F8) >> 3));}
 	inline void 	Color565ToRGB(uint16_t color, uint8_t &r, uint8_t &g, uint8_t &b){r = (((color & 0xF800) >> 11) * 527 + 23) >> 6; g = (((color & 0x07E0) >> 5) * 259 + 33) >> 6; b = ((color & 0x001F) * 527 + 23) >> 6;}
 	//----------BMPs -------------------------------------------------------------------------
-	void drawBMP(const uint16_t& a_x, const uint16_t& a_y, const uint16_t& a_width, const uint16_t& a_height, const uint16_t *a_array, const int8_t& a_scale = 1);
-	void drawXBMP(const uint16_t& a_x, const uint16_t& a_y, const uint16_t& a_width, const uint16_t& a_height, const uint8_t* a_array, const uint16_t& a_arraySize, uint16_t a_color, uint16_t a_color2, const int8_t& a_scale = 1);
-	void drawXbmpArray(const uint8_t* a_array, const uint16_t& a_arraySize, const uint16_t& a_x, const uint16_t& a_y,const uint16_t& a_width, const uint16_t& a_height, const uint16_t& a_color, const uint16_t& a_scale = 1);
+	void drawBMP(const uint16_t a_x, const uint16_t a_y, const uint16_t *a_array, const uint16_t a_width, const uint16_t a_height, const int8_t a_scale = 1);
+	void drawXBMP(const uint16_t a_x, const uint16_t a_y, const uint8_t* a_array, const uint16_t a_arraySize, const uint16_t a_width, const uint16_t a_height, const uint16_t a_foreground, const uint16_t a_background, const int8_t a_scale = 1);
 	//----------FONT -------------------------------------------------------------------------
 	void setFont(const font_returnStruct *font);	
 	void print(const int16_t& a_fontX, const int16_t& a_fontY, const String& a_val);
@@ -523,8 +522,6 @@ class RA8875 {
 	//---------- PATTERN --------------------------------------------------------------------------
 	void 		setPattern(uint8_t num, enum RA8875pattern p=P8X8);
 	void 		writePattern(int16_t x,int16_t y,const uint8_t *data,uint8_t size,bool setAW=true);
-	void 		writeToBlock(int16_t a_x, int16_t a_y, const uint16_t *a_data, uint16_t a_width, uint16_t a_height, uint16_t a_scale = 1);
-	void		writeToBlock(int16_t a_x, int16_t a_y, const uint8_t* a_data, const uint16_t a_arraySize, const uint16_t a_width, const uint16_t a_height, const uint16_t a_foreground, const uint16_t a_background, const uint16_t a_scale = 1);
 //-------------- GPIO & PWM -------------------------
 	void    	GPIOX(boolean on);
 	void    	PWMout(uint8_t pw,uint8_t p);//1:backlight, 2:free
