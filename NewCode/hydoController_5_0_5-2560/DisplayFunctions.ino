@@ -242,10 +242,10 @@ void frame() {
 // Draw a menu icon
 void drawPageIcon(const uint8_t& a_page, const short& a_x, const short a_y, const uint8_t* a_icon, const int& a_arraySize, const uint8_t& a_width, const uint8_t& a_height) {
   if (display::page == a_page) {
-    tft.writeToBlock(a_x, a_y, a_icon, a_arraySize, a_width, a_height, RA8875_BLUE, user::backgroundColor, 1);
+    tft.drawXBMP(a_x, a_y, a_icon, a_arraySize, a_width, a_height, RA8875_BLUE, user::backgroundColor, 1);
   }
   else if (display::previousPage == a_page || display::refreshPage) {
-    tft.writeToBlock(a_x, a_y, a_icon, a_arraySize, a_width, a_height, display::RA8875_DARKGREY, user::backgroundColor, 1);
+    tft.drawXBMP(a_x, a_y, a_icon, a_arraySize, a_width, a_height, display::RA8875_DARKGREY, user::backgroundColor, 1);
   }
   //delay(1);
   //tft.drawPixel(1, 1, user::backgroundColor);
@@ -253,16 +253,16 @@ void drawPageIcon(const uint8_t& a_page, const short& a_x, const short a_y, cons
 
 // draws the mini icons to swap between sensors on the graph page
 void drawGraphIcons() {
-  tft.drawXBMP(747, 98, 40, 23, miniPmIcon, 115, display::showTdsGraph ? display::RA8875_PURPLE : display::RA8875_DARKGREY, user::backgroundColor);
-  tft.drawXBMP(747, 131, 39, 23, miniPhIcon, 112, display::showPhGraph ? display::RA8875_LIGHT_GREEN : display::RA8875_DARKGREY, user::backgroundColor);
-  tft.drawXBMP(748, 166, 38, 23, miniEcIcon, 110, display::showEcGraph ? RA8875_YELLOW : display::RA8875_DARKGREY, user::backgroundColor);
-  tft.drawXBMP(746, 199, 40, 26, miniCo2Icon, 130, display::showCo2Graph ? RA8875_MAGENTA : display::RA8875_DARKGREY, user::backgroundColor);
-  tft.drawXBMP(753, 234, 27, 32, miniWaterTempIcon, 109, display::showWaterTempGraph ? display::RA8875_ORANGE : display::RA8875_DARKGREY, user::backgroundColor);
-  tft.drawXBMP(754, 273, 27, 30, miniWaterLevelIcon, 101, display::showWaterLvlGraph ? RA8875_BLUE : display::RA8875_DARKGREY, user::backgroundColor);
-  tft.drawXBMP(749, 312, 35, 36, miniFanOneIcon, 158, display::showFanOneGraph ? RA8875_WHITE : display::RA8875_DARKGREY, user::backgroundColor);
-  tft.drawXBMP(749, 356, 35, 36, miniFanTwoIcon, 158, display::showFanTwoGraph ? RA8875_BLACK : display::RA8875_DARKGREY, user::backgroundColor);
-  tft.drawXBMP(754, 396, 27, 36, miniAirTempIcon, 122, display::showAirTempGraph ? RA8875_RED : display::RA8875_DARKGREY, user::backgroundColor);
-  tft.drawXBMP(750, 438, 34, 32, miniHumidityIcon, 136, display::showHumidityGraph ? display::RA8875_SEABLUE : display::RA8875_DARKGREY, user::backgroundColor);
+  tft.drawXBMP(747, 98, miniPmIcon, 115, 40, 23, display::showTdsGraph ? display::RA8875_PURPLE : display::RA8875_DARKGREY, user::backgroundColor);
+  tft.drawXBMP(747, 131, miniPhIcon, 112, 39, 23, display::showPhGraph ? display::RA8875_LIGHT_GREEN : display::RA8875_DARKGREY, user::backgroundColor);
+  tft.drawXBMP(748, 166, miniEcIcon, 110, 38, 23, display::showEcGraph ? RA8875_YELLOW : display::RA8875_DARKGREY, user::backgroundColor);
+  tft.drawXBMP(746, 199, miniCo2Icon, 130, 40, 26, display::showCo2Graph ? RA8875_MAGENTA : display::RA8875_DARKGREY, user::backgroundColor);
+  tft.drawXBMP(753, 234, miniWaterTempIcon, 109, 27, 32, display::showWaterTempGraph ? display::RA8875_ORANGE : display::RA8875_DARKGREY, user::backgroundColor);
+  tft.drawXBMP(754, 273, miniWaterLevelIcon, 101, 27, 30, display::showWaterLvlGraph ? RA8875_BLUE : display::RA8875_DARKGREY, user::backgroundColor);
+  tft.drawXBMP(749, 312, miniFanOneIcon, 158, 35, 36, display::showFanOneGraph ? RA8875_WHITE : display::RA8875_DARKGREY, user::backgroundColor);
+  tft.drawXBMP(749, 356, miniFanTwoIcon, 158, 35, 36, display::showFanTwoGraph ? RA8875_BLACK : display::RA8875_DARKGREY, user::backgroundColor);
+  tft.drawXBMP(754, 396, miniAirTempIcon, 122, 27, 36, display::showAirTempGraph ? RA8875_RED : display::RA8875_DARKGREY, user::backgroundColor);
+  tft.drawXBMP(750, 438, miniHumidityIcon, 136, 34, 32, display::showHumidityGraph ? display::RA8875_SEABLUE : display::RA8875_DARKGREY, user::backgroundColor);
   tft.drawRect(742, 88, 48, 391, RA8875_BLACK);
   tft.drawRect(743, 89, 46, 389, RA8875_BLACK);
 }
@@ -1152,7 +1152,7 @@ void drawDoser(
 {
   int startPosition = 0;
   if (display::refreshPage) {
-    tft.drawXBMP(a_x + 17, a_y + 6, 55, 68, doserIcon, 468, RA8875_BLACK, user::backgroundColor, 2);
+    tft.drawXBMP(a_x + 17, a_y + 6, doserIcon, 468, 55, 68, RA8875_BLACK, user::backgroundColor, 2);
   }
   if (display::refreshPage || a_value != a_previousValue) {
     tft.setFont(&HallfeticaLargenum_42px_Regular);

@@ -2,10 +2,9 @@
   Version V5.0.5 Updated on the 30th Jan 2024
 */
 // TO DO: add user setup guide for new device / reset
-// cyclic timer for 2 external relays
 // wifi
 
-#define USING_HDC1080 // comment this line to use a dht22
+//#define USING_HDC1080 // comment this line to use a dht22
 
 // Library imports
 #include <SPI.h>
@@ -20,7 +19,7 @@
 #else
 #include <dht.h>
 #endif
-#include <Adafruit_ADS1X15.h>
+//#include <Adafruit_ADS1X15.h>
 #include "Adafruit_VL53L0X.h"
 //#include "DFRobot_PH.h"
 #include "DFRobot_EC.h"
@@ -708,6 +707,16 @@ void setup() {
   pinMode(pin::tdsTransistor, OUTPUT);
   pinMode(pin::phTransistor, OUTPUT);
   pinMode(pin::espTransistor, OUTPUT);
+  //
+  digitalWrite(pin::light, device::relayOffState);
+  digitalWrite(pin::waterHeater, device::relayOffState);
+  digitalWrite(pin::inletPump, device::relayOffState);
+  digitalWrite(pin::outletPump, device::relayOffState);
+  digitalWrite(pin::airHeater, device::relayOffState);
+  digitalWrite(pin::co2Solenoid, device::relayOffState);
+  digitalWrite(pin::auxRelayOnePin, device::relayOffState);
+  digitalWrite(pin::auxRelayTwoPin, device::relayOffState);
+  
   Wire.begin();
   initializeDevice();
 }

@@ -607,10 +607,6 @@ void airControl() {
       device::fanTwoSpeed = user::targetMinFanTwoSpeed;  
     else if (device::fanTwoSpeed > user::targetMaxFanTwoSpeed) 
       device::fanTwoSpeed = user::targetMaxFanTwoSpeed;
-    
-    if (device::globalDebug) {
-      Serial.print(F("Fan one speed: ")); Serial.print(device::fanOneSpeed, 2); Serial.print(F("%, fan two speed: ")); Serial.print(device::fanTwoSpeed, 2); Serial.println(F("%"));
-    }
 
     // Send the new fan speeds to the Atmel328P
     if (device::fanOneSpeed != previousFanOneSpeed) {

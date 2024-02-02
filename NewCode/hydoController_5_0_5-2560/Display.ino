@@ -107,10 +107,10 @@ void homePage() {
     int timeStrOffset = tft.getStringWidth(timeStr);
     tft.print(795-timeStrOffset, 92, timeStr);
     // Wifi symbol
-    tft.drawXBMP(795 - (timeStrOffset + 45), 99, 30, 26, miniWifiIcon, 97, wifi::wifiEnabled ? RA8875_BLUE : display::RA8875_DARKGREY, user::backgroundColor, 1);
+    tft.drawXBMP(795 - (timeStrOffset + 45), 99, miniWifiIcon, 97, 30, 26, wifi::wifiEnabled ? RA8875_BLUE : display::RA8875_DARKGREY, user::backgroundColor, 1);
     // Warning symbol
     //if (device::globalErrorState != device::NO_WARNING)
-      tft.drawXBMP(795 - (timeStrOffset + 90), 95, 31, 30, miniWarningIcon, 116, device::globalErrorState == device::MAJOR_WARNING ? RA8875_RED : RA8875_YELLOW, user::backgroundColor, 1);
+      tft.drawXBMP(795 - (timeStrOffset + 90), 95, miniWarningIcon, 116, 31, 30, device::globalErrorState == device::MAJOR_WARNING ? RA8875_RED : RA8875_YELLOW, user::backgroundColor, 1);
     statusBarStartX = 795 - (timeStrOffset + 90);
     statusBarWidth = tft.width() - (timeStrOffset + 90);
     previousRTCMinute = rtc.minute();

@@ -113,15 +113,6 @@ void initializeDevice() {
   tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
   tft.print(120, 370, F("Loading sensors..."));
   //
-  digitalWrite(pin::light, device::relayOffState);
-  digitalWrite(pin::waterHeater, device::relayOffState);
-  digitalWrite(pin::inletPump, device::relayOffState);
-  digitalWrite(pin::outletPump, device::relayOffState);
-  digitalWrite(pin::airHeater, device::relayOffState);
-  digitalWrite(pin::co2Solenoid, device::relayOffState);
-  digitalWrite(pin::auxRelayOnePin, device::relayOffState);
-  digitalWrite(pin::auxRelayTwoPin, device::relayOffState);
-  //
   tft.fillCircle(startX, 340, 14, RA8875_WHITE);
   delay(250);
   startX += 38;
