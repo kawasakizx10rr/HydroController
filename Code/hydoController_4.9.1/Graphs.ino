@@ -33,7 +33,6 @@ void drawGraph (
       yIncrement = maxArrayVal / a_numYLabels;
     float yLablePosition = a_yStartPos - 6;
     float tempYmax = maxArrayVal;
-    graphXstartPosition = a_xStartPos;
 
     for (int i = 0; i < a_numYLabels + 1; i++) {
       tft.setCursor(a_xStartPos, yLablePosition);
@@ -49,7 +48,7 @@ void drawGraph (
 
     // draw x line and numbers
     float xLablePosition = graphXstartPosition + 2;
-    xSpacing = (float)(a_graphWidth - (graphXstartPosition - a_xStartPos)) / (maxGraphArrayValues - 1);
+    xSpacing = (float)(a_graphWidth - (graphXstartPosition - a_xStartPos)) / maxGraphArrayValues;
     float lableSpacing = (float)(a_graphWidth - (graphXstartPosition - a_xStartPos)) / (maxGraphArrayValues  + 1);
     for (int i = 0; i < maxGraphArrayValues + 1; i++) {
       tft.setCursor(xLablePosition, a_yStartPos + a_graphHeight - 1);
