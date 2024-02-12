@@ -25,23 +25,12 @@ void initializeDevice() {
   tft.setFont(&Arial_22px_Regular);
   tft.print(120, 370, F("Initilizing device..."));
   tft.fillCircle(startX, 340, 14, RA8875_WHITE);
-  delay(2000);
+  delay(250);
   startX += 38;
   //
   tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
   tft.print(120, 370, F("Loading EEPROM..."));
   initializeEEPROM();
-  //
-  tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
-  tft.setTextColor(RA8875_WHITE, RA8875_BLACK);
-  tft.print(120, 370, F("Loading 328P..."));
-  delay(200);
-  if (!i2cScanner(device::slaveAddress)) {
-    tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
-    tft.setTextColor(RA8875_RED, RA8875_BLACK);
-    tft.print(120, 370, F("Failed to load Atmel 328P"));
-    while(true){};
-  }
   //
   tft.fillCircle(startX, 340, 14, RA8875_WHITE);
   delay(250);
@@ -109,6 +98,17 @@ void initializeDevice() {
     tft.setTextColor(RA8875_RED, RA8875_BLACK);
     tft.print(120, 370, F("Failed to load VL53L0X"));
     delay(500);//while(true){};
+  }
+  //
+  tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+  tft.setTextColor(RA8875_WHITE, RA8875_BLACK);
+  tft.print(120, 370, F("Loading 328P..."));
+  delay(200);
+  if (!i2cScanner(device::slaveAddress)) {
+    tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+    tft.setTextColor(RA8875_RED, RA8875_BLACK);
+    tft.print(120, 370, F("Failed to load Atmel 328P"));
+    while(true){};
   }
   //
   tft.setTextColor(RA8875_WHITE, RA8875_BLACK);
