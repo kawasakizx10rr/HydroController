@@ -23,7 +23,7 @@ void initializeEEPROM() {
     getSetSystemEEPROM(device::EEPROM_SET);
     for (uint8_t i = 0; i < 5; i++)
       getSetProfileEEPROM(i, device::EEPROM_SET);
-    clearPage();
+    //clearPage();
   }
 }
 

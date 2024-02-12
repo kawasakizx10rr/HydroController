@@ -111,6 +111,7 @@ void initializeDevice() {
     delay(500);//while(true){};
   }
   //
+  tft.setTextColor(RA8875_WHITE, RA8875_BLACK);
   tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
   tft.print(120, 370, F("Loading sensors..."));
   //

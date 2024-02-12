@@ -49,7 +49,7 @@ void drawGraph (
 
     // draw x line and numbers
     float xLablePosition = graphXstartPosition + 2;
-    xSpacing = (float)(a_graphWidth - (graphXstartPosition - a_xStartPos)) / maxGraphArrayValues;
+    xSpacing = (float)(a_graphWidth - (graphXstartPosition - a_xStartPos)) / (maxGraphArrayValues - 1);
     float lableSpacing = (float)(a_graphWidth - (graphXstartPosition - a_xStartPos)) / (maxGraphArrayValues  + 1);
     for (int i = 0; i < maxGraphArrayValues + 1; i++) {
       tft.setCursor(xLablePosition, a_yStartPos + a_graphHeight - 1);
