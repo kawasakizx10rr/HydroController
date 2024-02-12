@@ -28,7 +28,7 @@ void initializeDevice() {
   delay(250);
   startX += 38;
   //
-  tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+  tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
   tft.print(120, 370, F("Loading EEPROM..."));
   initializeEEPROM();
   //
@@ -36,25 +36,25 @@ void initializeDevice() {
   delay(250);
   startX += 38;
   //
-  tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+  tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
   tft.setTextColor(RA8875_WHITE, RA8875_BLACK);
   tft.print(120, 370, F("Loading DS3231..."));
   delay(200);
   if (!i2cScanner(URTCLIB_ADDRESS)) {
-    tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+    tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
     tft.setTextColor(RA8875_RED, RA8875_BLACK);
-    tft.print(120, 370, F("Failed to load DS3231"));
+    tft.print(120, 370, F("Error: Failed to load DS3231"));
     while(true){};
   }
   //
-  tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+  tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
   tft.setTextColor(RA8875_WHITE, RA8875_BLACK);
   tft.print(120, 370, F("Loading DS18B20..."));
   delay(200);
   if (!dallasTemperature.begin()) {
-    tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+    tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
     tft.setTextColor(RA8875_RED, RA8875_BLACK);
-    tft.print(120, 370, F("Failed to load DS18B20"));
+    tft.print(120, 370, F("Error: Failed to load DS18B20"));
     while(true){};
   }
   //
@@ -62,24 +62,24 @@ void initializeDevice() {
   delay(250);
   startX += 38;
   //
-  tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+  tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
   tft.setTextColor(RA8875_WHITE, RA8875_BLACK);
 #ifdef USING_HDC1080
   tft.print(120, 370, F("Loading HDC1080..."));
   delay(200);
   if(!hdc.begin()) {
-    tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+    tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
     tft.setTextColor(RA8875_RED, RA8875_BLACK);
-    tft.print(120, 370, F("Failed to load HDC1080"));
+    tft.print(120, 370, F("Error: Failed to load HDC1080"));
     while(true){};
   }
 #else
   tft.print(120, 370, F("Loading DHT22..."));
   delay(200);
   if(!DHT.begin(DHT22)) {
-    tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+    tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
     tft.setTextColor(RA8875_RED, RA8875_BLACK);
-    tft.print(120, 370, F("Failed to load DHT22"));
+    tft.print(120, 370, F("Error: Failed to load DHT22"));
     while(true){};
   }
 #endif
@@ -88,31 +88,31 @@ void initializeDevice() {
   delay(250);
   startX += 38;
   //
-  tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+  tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
   tft.setTextColor(RA8875_WHITE, RA8875_BLACK);
   tft.print(120, 370, F("Loading VL53L0X..."));
   delay(200);
   if (!lox.begin()) {
     device::disableVL53L0X = true;
-    tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
-    tft.setTextColor(RA8875_RED, RA8875_BLACK);
-    tft.print(120, 370, F("Failed to load VL53L0X"));
+    tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
+    tft.setTextColor(RA8875_YELLOW, RA8875_BLACK);
+    tft.print(120, 370, F("Warning: Failed to load VL53L0X"));
     delay(500);//while(true){};
   }
   //
-  tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+  tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
   tft.setTextColor(RA8875_WHITE, RA8875_BLACK);
   tft.print(120, 370, F("Loading 328P..."));
   delay(200);
   if (!i2cScanner(device::slaveAddress)) {
-    tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+    tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
     tft.setTextColor(RA8875_RED, RA8875_BLACK);
-    tft.print(120, 370, F("Failed to load Atmel 328P"));
+    tft.print(120, 370, F("Warning: Failed to load 328P"));
     while(true){};
   }
   //
   tft.setTextColor(RA8875_WHITE, RA8875_BLACK);
-  tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
+  tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
   tft.print(120, 370, F("Loading sensors..."));
   //
   tft.fillCircle(startX, 340, 14, RA8875_WHITE);
