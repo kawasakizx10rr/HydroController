@@ -26,13 +26,10 @@ void readSensors() {
     sensor::airTemp = hdc.readTemperature();
     sensor::humidity = hdc.readHumidity();    
 #else
-    DHT.read22(pin::dht22);
+    DHT.read();
     sensor::airTemp = DHT.temperature;
     sensor::humidity = DHT.humidity;
 #endif  
-    //DHT.read22(pin::dht22);
-    //sensor::airTemp = DHT.temperature;
-    //sensor::humidity = DHT.humidity;  
     //Serial.print(F("Air temp in c:")); Serial.println(sensor::airTemp);
     if (sensor::airTemp < 0)
       sensor::airTemp = 0;

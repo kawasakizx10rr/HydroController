@@ -6,7 +6,7 @@
 // brightness
 // df robot ph sensor
 
-#define USING_HDC1080 // comment this line to use a dht22
+//#define USING_HDC1080 // comment this line to use a dht22
 
 // Library imports
 #include <SPI.h>
@@ -323,6 +323,7 @@ uint32_t systemEEPROMSize = 0;
 bool globalDebug = true;
 const char* versionNumber = "4.9.1"; // do not adjust !
 bool relayOffState = HIGH;
+bool disableVL53L0X = false; // TO DO
 const uint8_t slaveAddress = 9;
 int remotlyLoadUserProfile = -1;
 int remotlySaveUserProfile = -1;
@@ -675,7 +676,7 @@ uRTCLib rtc(0x68); // The RTC uses hardware I2C (SCL/SDA) //DS3231 rtc(SDA, SCL)
 #ifdef USING_HDC1080
 Adafruit_HDC1000 hdc = Adafruit_HDC1000();
 #else
-dht DHT;
+dht DHT(pin::dht22);
 #endif
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 DFRobot_PH ph;

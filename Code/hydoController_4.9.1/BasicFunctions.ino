@@ -87,13 +87,12 @@ void initializeDevice() {
 #else
   tft.print(120, 370, F("Loading DHT22..."));
   delay(200);
-  if(!dht.begin()) {
+  if(!DHT.begin(DHT22)) {
     tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
     tft.setTextColor(RA8875_RED, RA8875_BLACK);
     tft.print(120, 370, F("Failed to load DHT22"));
     while(true){};
   }
-  DHT.read22(pin::dht22);
 #endif
   //
   tft.fillCircle(startX, 340, 14, RA8875_WHITE);
