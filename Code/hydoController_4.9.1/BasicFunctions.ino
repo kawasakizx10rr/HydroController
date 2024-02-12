@@ -25,7 +25,7 @@ void initializeDevice() {
   tft.setFont(&Arial_22px_Regular);
   tft.print(120, 370, F("Initilizing device..."));
   tft.fillCircle(startX, 340, 14, RA8875_WHITE);
-  delay(250);
+  delay(2000);
   startX += 38;
   //
   tft.fillRect(120, 370, 400, 24, RA8875_BLACK);
