@@ -1516,7 +1516,7 @@ void settingsTwoPageTouched() {
           if (user::heightSensor == user::SR04)
             user::heightSensor = user::ETAPE;
           else if (user::heightSensor == user::ETAPE)
-            user::heightSensor = user::VL53L0X;
+            disableVL53L0X ? user::heightSensor = user::SR04 : user::heightSensor = user::VL53L0X;
           else if (user::heightSensor == user::VL53L0X)
             user::heightSensor = user::SR04;
           beep();
