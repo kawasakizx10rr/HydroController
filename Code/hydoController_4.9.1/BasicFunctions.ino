@@ -107,7 +107,7 @@ void initializeDevice() {
   if (!i2cScanner(device::slaveAddress)) {
     tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
     tft.setTextColor(RA8875_RED, RA8875_BLACK);
-    tft.print(120, 370, F("Warning: Failed to load 328P"));
+    tft.print(120, 370, F("Error: Failed to load 328P"));
     while(true){};
   }
   //
