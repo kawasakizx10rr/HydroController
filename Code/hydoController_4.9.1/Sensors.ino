@@ -85,19 +85,12 @@ void readSensors() {
         device::ecWaitTillNextCall = true;
       }
       else {
-        float voltage = analogRead(pin::tdsSensor) * device::aref / 1024.0;   
-        sensor::ec = gravityTds.getEcValue();
+        gravityTds.setTemperature(sensor::waterTemp);
+        gravityTds.update(analogRead(pin::tdsSensor), 5, 10);  //sample and calculate    
+        sensor::ec = gravityTds.getEcValue() / 1000.0; // Convert uS to mS
         sensor::tds = gravityTds.getTdsValue();
-        //Serial.print(F("EC:")); Serial.println(sensor::ec, 2);
-        //Serial.print(F("TDS:")); Serial.println(sensor::tds, 2);
-        if (sensor::tds > 9999)
-          sensor::tds = 9999;
-        else if (sensor::tds < 0)
-          sensor::tds = 0;
-        if (sensor::ec > 5)
-          sensor::ec = 5;
-        else if (sensor::ec < 0)
-          sensor::ec = 0;
+        Serial.print(F("EC:")); Serial.println(sensor::ec, 2);
+        Serial.print(F("TDS:")); Serial.println(sensor::tds);
         swapSenor = 1;
         device::ecWaitTillNextCall = false;
         digitalWrite(pin::tdsTransistor, LOW);
