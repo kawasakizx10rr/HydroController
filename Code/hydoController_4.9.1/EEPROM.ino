@@ -49,8 +49,8 @@ uint32_t getSetSystemEEPROM(const device::eepromModes a_mode) {
   eepromGetSet(address, a_mode, sensor::emptyWaterTankDepth);
   eepromGetSet(address, a_mode, sensor::etapeZeroVolumeResistance);
   eepromGetSet(address, a_mode, sensor::etapeMaxVolumeResistance);
-  eepromGetSet(address, a_mode, sensor::ecKvalueLow);
-  eepromGetSet(address, a_mode, sensor::ecKvalueHigh);
+  eepromGetSet(address, a_mode, sensor::tdsKvalueLow);
+  eepromGetSet(address, a_mode, sensor::tdsKvalueHigh);
   eepromGetSet(address, a_mode, sensor::phNeutralVoltage);
   eepromGetSet(address, a_mode, sensor::phAcidicVoltage);
   //

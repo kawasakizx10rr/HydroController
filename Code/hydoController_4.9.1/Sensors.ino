@@ -8,7 +8,10 @@ void readSensors() {
     if (sensor::waterTemp < 0)
       sensor::waterTemp = 0;
     // WATER LEVEL ========================================================================
-    sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
+    if (user::heightSensor != user::ETAPE)
+      sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
+    else
+      sensor::waterLevel = getWaterHeight();
     sensor::waterLevelInches = sensor::waterLevel / 2.5;
     if (sensor::waterLevel < 0)
       sensor::waterLevel = 0;
@@ -83,8 +86,8 @@ void readSensors() {
       }
       else {
         float voltage = analogRead(pin::tdsSensor) * device::aref / 1024.0;   
-        sensor::ec = ec.readEC(voltage, sensor::waterTemp);
-        sensor::tds = convertEcToTds(sensor::ec);  
+        sensor::ec = gravityTds.getEcValue();
+        sensor::tds = gravityTds.getTdsValue();
         //Serial.print(F("EC:")); Serial.println(sensor::ec, 2);
         //Serial.print(F("TDS:")); Serial.println(sensor::tds, 2);
         if (sensor::tds > 9999)
@@ -225,7 +228,7 @@ bool phCallbration() {
   // Turn on the TDS sensor
   digitalWrite(pin::phTransistor, HIGH);
   // allow TDS sensor to power up
-  delay(500);
+  delay(1000);
   // Get the water temperature in celsius
   dallasTemperature.requestTemperatures();
   sensor::waterTemp = dallasTemperature.getTempCByIndex(0);
@@ -241,7 +244,7 @@ bool phCallbration() {
   return returnVal;
 }
 
-bool tdsCalibration() {
+bool tdsCalibration(const bool a_lowCal) {
   bool returnVal = false;
   if (device::globalDebug)
     Serial.println(F("Starting TDS sensor calibration"));
@@ -250,16 +253,14 @@ bool tdsCalibration() {
   // Turn on the TDS sensor
   digitalWrite(pin::tdsTransistor, HIGH);
   // allow TDS sensor to power up
-  delay(500);
+  delay(1000);
   // Get the water temperature in celsius
   dallasTemperature.requestTemperatures();
   sensor::waterTemp = dallasTemperature.getTempCByIndex(0);
-  // Print the current calibration solution value
-  float voltage = analogRead(pin::tdsSensor) * device::aref / 1024.0;   
-  if (device::globalDebug) {
-    Serial.print(F("Raw EC voltage = ")); Serial.println(voltage, 2);
-  }
-  if(ec.calibration(voltage, sensor::waterTemp))
+  gravityTds.setTemperature(sensor::waterTemp);
+  if (a_lowCal && gravityTds.calibrateLow(analogRead(pin::tdsSensor)))
+    returnVal = true;
+  else if (!a_lowCal && gravityTds.calibrateHigh(analogRead(pin::tdsSensor)))
     returnVal = true;
   // Turn off the TDS sensor
   digitalWrite(pin::phTransistor, LOW);

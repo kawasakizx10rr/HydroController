@@ -988,12 +988,18 @@ void settingsZeroPageTouched() {
         static unsigned long previousCtTime = millis();
         if (millis() - previousCtTime >= 500UL) {
           beep();
-          if (device::conversionType == device::EU)
+          if (device::conversionType == device::EU) {
             device::conversionType = device::US;
-          else if (device::conversionType == device::US)
+            gravityTds.setTdsFactor(0.5);
+          }
+          else if (device::conversionType == device::US) {
             device::conversionType = device::AU;
-          else if (device::conversionType == device::AU)
+            gravityTds.setTdsFactor(0.7);
+          }
+          else if (device::conversionType == device::AU) {
             device::conversionType = device::EU;
+            gravityTds.setTdsFactor(0.64);
+          }
           previousCtTime = millis();
         }
       }
@@ -1689,21 +1695,32 @@ void settingsFourPageTouched() {
         clearPage();
       }
       else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with Tds Calibration
-        beep();
-        if (tdsCalibration()) {
-          if (display::calTdsPageScrollPos < 1) {
+        beep();        
+        if (display::calTdsPageScrollPos == 0) {
+          if (tdsCalibration(true)) {
+            sensor::tdsKvalueLow = gravityTds.getKvalueLow();         
+            if (device::globalDebug) {
+              Serial.print(F("tdsKvalueLow: ")); Serial.println(sensor::tdsKvalueLow);
+            }
             display::calTdsPageScrollPos++;
           }
-          else {
-            display::showTdsCalibration = false;
-            display::showingDialog = false;
-            sensor::ecKvalueLow = ec.getKvalueLow();
-            sensor::ecKvalueHigh = ec.getKvalueHigh();
-            clearPage();
+          else {       
+            display::showCalErrorMessage = true;  // show error message
           }
         }
-        else {       
-          display::showCalErrorMessage = true;  // show error message
+        else {
+          if (tdsCalibration(false)) {
+            display::showTdsCalibration = false;
+            display::showingDialog = false;         
+            sensor::tdsKvalueHigh = gravityTds.getKvalueHigh();
+            if (device::globalDebug) {
+              Serial.print(F("tdsKvalueHigh: ")); Serial.println(sensor::tdsKvalueHigh);
+            }
+            clearPage();
+          }
+          else {       
+            display::showCalErrorMessage = true;  // show error message
+          }
         }
         display::refreshPage = true;      
       }
@@ -1871,6 +1888,8 @@ void settingsFourPageTouched() {
   else if (display::touch_x >= 700 && display::touch_x <= 770 && display::touch_y >= 220 && display::touch_y <= 250) { // set tds sensor calibration
     beep();
     display::showTdsCalibration = true;
+    gravityTds.setRawEcLowSolution(sensor::tdsCalSolutionPart1);
+    gravityTds.setRawEcHighSolution(sensor::tdsCalSolutionPart2);
     display::showingDialog = true;
     display::refreshPage = true;
   }

@@ -1893,9 +1893,9 @@ void drawSettingsPageFour() {
       if (display::showCalErrorMessage)
         continueMessage(message::calibrateError, -1, 0, true, false, false);
       else if (display::calTdsPageScrollPos == 0) 
-        continueMessage(message::calibrateTds, sensor::ecCalSolutionPart1, 3, true, true, false);
+        continueMessage(message::calibrateTds, sensor::tdsCalSolutionPart1, 0, true, true, false);
       else
-        continueMessage(message::calibrateTds, sensor::ecCalSolutionPart2, 2, true, true, false);
+        continueMessage(message::calibrateTds, sensor::tdsCalSolutionPart2, 0, true, true, false);
     }
   }
   else if (display::showPhCalibration) {

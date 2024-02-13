@@ -23,7 +23,7 @@
 #endif
 #include "Adafruit_VL53L0X.h"
 #include "DFRobot_PH.h"
-#include "DFRobot_EC.h"
+#include "GravityTDS.h"
 // Include font files
 #include "Fonts/Aerial_22.h"
 #include "Fonts/Akashi_36.h"
@@ -167,7 +167,7 @@ const char setWaterHeight[]             PROGMEM = "Please make sure the tank\nis
 const char setEtapeMinReading[]         PROGMEM = "Please remove the Etape\nfrom the water and ensure\nthe Etape is not bent before\ncontinuing the calibration!";
 const char setEtapeMaxReading[]         PROGMEM = "Please place the Etape\nin water up to 32cm and\nthe Etape is not bent before\ncontinuing the calibration!";
 const char calibrateError[]             PROGMEM = "Error: the calibrate has\nfailed, please try again\nor cancel the calibration.";
-const char calibrateTds[]               PROGMEM = "Please place the TDS probe\nin $ mS/cm calibration\nsolution, and do not disturb\nthe sensor then press\ncontinue.";
+const char calibrateTds[]               PROGMEM = "Please place the TDS probe\nin $ uS/cm calibration\nsolution, and do not disturb\nthe sensor then press\ncontinue.";
 const char calibratePh[]                PROGMEM = "Please place the PH probe\nin PH $ calibration\nsolution, and do not disturb\nthe sensor then press\ncontinue.";
 const char drainingAlert[]              PROGMEM = "Alert the system is about\nto start draining and filling\nthe water reservoir.\nStarting in $ seconds\nDo you want to continue?";
 const char cancelDraining[]             PROGMEM = "The system is currently\ndraining the water reservoir\nto the minimum target $*\nPress cancel to quit draining\nat any time.";
@@ -321,7 +321,7 @@ namespace device {
 uint32_t profileEEPROMSize = 0;
 uint32_t systemEEPROMSize = 0;
 bool globalDebug = true;
-const char* versionNumber = "4.9.1"; // do not adjust !
+const char* versionNumber = "4.9.2"; // do not adjust !
 bool relayOffState = HIGH;
 bool disableVL53L0X = false; // TO DO
 const uint8_t slaveAddress = 9;
@@ -617,17 +617,16 @@ float waterVolumeLtrs = 0;
 float waterVolumeGallons = 0;
 float emptyWaterTankDepth = 0;
 long hcsrDuration = 0;
-float ecCalibration = 1;
+float tdsKvalueLow = 1.0;
+float tdsKvalueHigh = 1.0; // TO DO...
 float phDownSolution = 4.0;
 float phUpSolution = 11.0;
 float ecSolution = 1.0;
 float tdsSolution = 640.0;
 const float phCalSolutionPart1 = 7.0;
 const float phCalSolutionPart2 = 4.0;
-const float ecCalSolutionPart1 = 1.413;
-const float ecCalSolutionPart2 = 12.88;
-float ecKvalueLow = 1.0;
-float ecKvalueHigh = 1.0;
+const float tdsCalSolutionPart1 = 1413; // uS
+const float tdsCalSolutionPart2 = 2760; // uS
 float phNeutralVoltage = 1500.0;
 float phAcidicVoltage =  2032.44;
 unsigned long co2GasTime = 0;
@@ -680,7 +679,7 @@ dht DHT(pin::dht22);
 #endif
 Adafruit_VL53L0X lox = Adafruit_VL53L0X();
 DFRobot_PH ph;
-DFRobot_EC ec;
+GravityTDS gravityTds;
 
 void(*reset)(void) = 0; // Reset function
 

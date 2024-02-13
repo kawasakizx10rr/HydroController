@@ -176,8 +176,19 @@ void initializeDevice() {
   Serial2.flush();
 
   ph.begin(sensor::phAcidicVoltage, sensor::phNeutralVoltage);
-  ec.begin(sensor::ecKvalueLow, sensor::ecKvalueHigh);
 
+  gravityTds.setAref(5.0);  //reference voltage on ADC, default 5.0V on Arduino UNO
+  gravityTds.setAdcRange(1024);  //1024 for 10bit ADC;4096 for 12bit ADC
+  gravityTds.setAref(5.0);  //reference voltage on ADC, default 5.0V on Arduino UNO
+  gravityTds.setKvalueLow(sensor::tdsKvalueLow);
+  gravityTds.setKvalueHigh(sensor::tdsKvalueHigh);
+  if (device::conversionType == device::EU) // European 1 ms/cm (EC 1.0 or CF 10) = 640 ppm
+    gravityTds.setTdsFactor(0.64);  // 0.5 for EU, 0.7 for AU and 0.8 for US
+  else if (device::conversionType == device::US) // USA 1 ms/cm (EC 1.0 or CF 10) = 500 ppm
+    gravityTds.setTdsFactor(0.5);  // 0.5 for EU, 0.7 for AU and 0.8 for US
+  else if (device::conversionType == device::AU) // Australian 1 ms/cm (EC 1.0 or CF 10) = 700 ppm
+    gravityTds.setTdsFactor(0.7);  // 0.5 for EU, 0.7 for AU and 0.8 for US
+ 
   // Dont adjust, set graph data out of range of viewed precison, thus 0
   if (sensor::sensorArrayPos == 0) {
     sensor::phArray[0] = 0.001; 
