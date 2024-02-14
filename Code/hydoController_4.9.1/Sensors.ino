@@ -103,7 +103,7 @@ void readSensors() {
         device::phWaitTillNextCall = true;
       }
       else {
-        float voltage = analogRead(pin::phSensor) * device::aref / 1024.0;   
+        float voltage = (analogRead(pin::phSensor) * device::aref / 1024.0) * 1000.0; // read the voltage in mV  
         sensor::ph = ph.readPH(voltage, sensor::waterTemp); // ph.calibration(voltageEC, sensor::waterTemp, cmd);
          //Serial.print(F("PH:")); Serial.println(sensor::ph, 2);
         if (sensor::ph > 14)
@@ -221,14 +221,14 @@ bool phCallbration() {
   // Turn on the TDS sensor
   digitalWrite(pin::phTransistor, HIGH);
   // allow TDS sensor to power up
-  delay(1000);
+  delay(3000);
   // Get the water temperature in celsius
   dallasTemperature.requestTemperatures();
   sensor::waterTemp = dallasTemperature.getTempCByIndex(0);
   // Print the current calibration solution value
-  float voltage = analogRead(pin::phSensor) * device::aref / 1024.0;   
+  float voltage = (analogRead(pin::phSensor) * device::aref / 1024.0) * 1000.0; // read the voltage in mV  
   if (device::globalDebug) {
-    Serial.print(F("Raw PH voltage = ")); Serial.println(voltage, 2);
+    Serial.print(F("Raw PH voltage in mV = ")); Serial.println(voltage, 2);
   }
   if(ph.calibration(voltage, sensor::waterTemp))
     returnVal = true;
@@ -246,7 +246,7 @@ bool tdsCalibration(const bool a_lowCal) {
   // Turn on the TDS sensor
   digitalWrite(pin::tdsTransistor, HIGH);
   // allow TDS sensor to power up
-  delay(1000);
+  delay(3000);
   // Get the water temperature in celsius
   dallasTemperature.requestTemperatures();
   sensor::waterTemp = dallasTemperature.getTempCByIndex(0);
