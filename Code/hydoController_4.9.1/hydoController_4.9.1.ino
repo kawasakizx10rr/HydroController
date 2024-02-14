@@ -726,6 +726,6 @@ void loop() {
   touchEvent();
   readSensors();
   drawPages();
-  //envriomentalControl();
+  envriomentalControl();
   displayWarnings();
 }
