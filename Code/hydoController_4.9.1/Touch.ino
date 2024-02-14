@@ -1714,7 +1714,7 @@ void settingsFourPageTouched() {
             display::showingDialog = false;         
             sensor::tdsKvalueHigh = gravityTds.getKvalueHigh();
             if (device::globalDebug) {
-              Serial.print(F("tdsKvalueHigh: ")); Serial.println(sensor::tdsKvalueHigh);
+              Serial.print(F("tdsKvalueHigh: ")); Serial.println(sensor::tdsKvalueLow);
             }
             clearPage();
           }
