@@ -504,6 +504,21 @@ void showResetMessage() {
   tft.print(startX + 8, startY + 76, F("for the first time."));
 }
 
+void pleaseWaitMessage() {
+  int startX = 166; // makes it eaiser to position
+  int startY = 186;
+  //Frame
+  tft.fillRoundRect(startX - 20, startY, 580, 110, 5, RA8875_WHITE);
+  tft.drawRoundRect(startX - 22, startY - 2, 582, 114, 5, RA8875_BLACK);
+  tft.drawRoundRect(startX - 22, startY - 1, 581, 112, 5, RA8875_BLACK);
+  // Draw text
+  tft.setFont(&akashi_36px_Regular);
+  tft.setFontScale(1);
+  tft.setTextColor(RA8875_BLACK, RA8875_WHITE);
+  tft.print(startX + 8, startY, F("Please wait while the"));
+  tft.print(startX + 8, startY + 38, F("calibration is preformed..."));
+}
+
 // Show the dosing dialog, it has many different states so it is its own function..
 void displayDosingNotification(const uint8_t& a_seconds, const float& a_outOfRange, const uint8_t& a_dosingMode, bool& a_refreshDosingNotification) {
   uint16_t startX = 166, startY = 166;

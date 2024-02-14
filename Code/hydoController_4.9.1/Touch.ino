@@ -1678,55 +1678,6 @@ void settingsFourPageTouched() {
     }
   }
   //
-  else if (display::showTdsCalibration) {
-    if (display::showCalErrorMessage) {
-      if (display::touch_x >= 366 && display::touch_x <= 504 && display::touch_y >= 368 && display::touch_y <= 414) { // confirm error message
-        display::showCalErrorMessage = false;
-        display::refreshPage = true;
-      }
-    }
-    else {
-      if (display::touch_x >= 284 && display::touch_x <= 422 && display::touch_y >= 368 && display::touch_y <= 414) { // cancel Tds Calibration
-        beep();
-        display::calTdsPageScrollPos = 0;
-        display::showTdsCalibration = false;
-        display::showingDialog = false;
-        display::refreshPage = true;
-        clearPage();
-      }
-      else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with Tds Calibration
-        beep();        
-        if (display::calTdsPageScrollPos == 0) {
-          if (tdsCalibration(true)) {
-            sensor::tdsKvalueLow = gravityTds.getKvalueLow();         
-            if (device::globalDebug) {
-              Serial.print(F("tdsKvalueLow: ")); Serial.println(sensor::tdsKvalueLow);
-            }
-            display::calTdsPageScrollPos++;
-          }
-          else {       
-            display::showCalErrorMessage = true;  // show error message
-          }
-        }
-        else {
-          if (tdsCalibration(false)) {
-            display::showTdsCalibration = false;
-            display::showingDialog = false;         
-            sensor::tdsKvalueHigh = gravityTds.getKvalueHigh();
-            if (device::globalDebug) {
-              Serial.print(F("tdsKvalueHigh: ")); Serial.println(sensor::tdsKvalueLow);
-            }
-            clearPage();
-          }
-          else {       
-            display::showCalErrorMessage = true;  // show error message
-          }
-        }
-        display::refreshPage = true;      
-      }
-    }
-  }
-  //
   else if (display::showCo2Calibration) {
     if (display::touch_x >= 284 && display::touch_x <= 422 && display::touch_y >= 368 && display::touch_y <= 414) { // cancel calibrating the Co2 sensor
       beep();
@@ -1744,41 +1695,105 @@ void settingsFourPageTouched() {
     }
   }
   //
-  else if (display::showPhCalibration) {
-    if (display::showCalErrorMessage) {
-      if (display::touch_x >= 366 && display::touch_x <= 504 && display::touch_y >= 368 && display::touch_y <= 414) { // confirm error message
-        display::showCalErrorMessage = false;
-        display::showingDialog = false;
-        display::refreshPage = true;
+  else if (display::showTdsCalibration) {
+    static unsigned long lastCalTouch = millis();
+    if (millis() - lastCalTouch >= 2000UL) {
+      if (display::showCalErrorMessage) {
+        if (display::touch_x >= 366 && display::touch_x <= 504 && display::touch_y >= 368 && display::touch_y <= 414) { // confirm error message
+          display::showCalErrorMessage = false;
+          display::refreshPage = true;
+          lastCalTouch = millis();
+        }
       }
-    }
-    else {
-      if (display::touch_x >= 284 && display::touch_x <= 422 && display::touch_y >= 368 && display::touch_y <= 414) { // cancel Ph Calibration
-        beep();
-        display::calPhPageScrollPos = 0;
-        display::showPhCalibration = false;
-        display::showingDialog = false;
-        display::refreshPage = true;
-        clearPage();
-      }
-      else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with Ph Calibration
-        beep();
-        if (phCallbration()) {
-          if (display::calPhPageScrollPos < 1) {
-            display::calPhPageScrollPos++;
+      else {
+        if (display::touch_x >= 284 && display::touch_x <= 422 && display::touch_y >= 368 && display::touch_y <= 414) { // cancel Tds Calibration
+          beep();
+          display::calTdsPageScrollPos = 0;
+          display::showTdsCalibration = false;
+          display::showingDialog = false;
+          display::refreshPage = true;
+          lastCalTouch = millis();
+          clearPage();
+        }
+        else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with Tds Calibration
+          clearPage();
+          pleaseWaitMessage();       
+          if (display::calTdsPageScrollPos == 0) {
+            if (tdsCalibration(true)) {
+              sensor::tdsKvalueLow = gravityTds.getKvalueLow();         
+              if (device::globalDebug) {
+                Serial.print(F("tdsKvalueLow: ")); Serial.println(sensor::tdsKvalueLow);
+              }
+              display::calTdsPageScrollPos++;
+            }
+            else {       
+              display::showCalErrorMessage = true;  // show error message
+            }
           }
           else {
-            display::showPhCalibration = false;
-            display::showingDialog = false;
-            sensor::phAcidicVoltage = ph.getAcidicVoltage();
-            sensor::phNeutralVoltage = ph.getNeutralVoltage();
-            clearPage();
+            if (tdsCalibration(false)) {
+              display::showTdsCalibration = false;
+              display::showingDialog = false;         
+              sensor::tdsKvalueHigh = gravityTds.getKvalueHigh();
+              if (device::globalDebug) {
+                Serial.print(F("tdsKvalueHigh: ")); Serial.println(sensor::tdsKvalueLow);
+              }
+              clearPage();
+            }
+            else {       
+              display::showCalErrorMessage = true;  // show error message
+            }
           }
+          lastCalTouch = millis();
+          display::refreshPage = true;      
         }
-        else {       
-          display::showCalErrorMessage = true;  // show error message
+      }     
+    }
+  }
+  //
+  else if (display::showPhCalibration) {
+    static unsigned long lastCalTouch = millis();
+    if (millis() - lastCalTouch >= 2000UL) {
+      if (display::showCalErrorMessage) {
+        if (display::touch_x >= 366 && display::touch_x <= 504 && display::touch_y >= 368 && display::touch_y <= 414) { // confirm error message
+          display::showCalErrorMessage = false;
+          display::showingDialog = false;
+          display::refreshPage = true;
+          lastCalTouch = millis();
         }
-        display::refreshPage = true;      
+      }
+      else {
+        if (display::touch_x >= 284 && display::touch_x <= 422 && display::touch_y >= 368 && display::touch_y <= 414) { // cancel Ph Calibration
+          beep();
+          display::calPhPageScrollPos = 0;
+          display::showPhCalibration = false;
+          display::showingDialog = false;
+          display::refreshPage = true;
+          lastCalTouch = millis();
+          clearPage();
+        }
+        else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with Ph Calibration
+          beep();
+          clearPage();
+          pleaseWaitMessage();
+          if (phCallbration()) {
+            if (display::calPhPageScrollPos < 1) {
+              display::calPhPageScrollPos++;
+            }
+            else {
+              display::showPhCalibration = false;
+              display::showingDialog = false;
+              sensor::phAcidicVoltage = ph.getAcidicVoltage();
+              sensor::phNeutralVoltage = ph.getNeutralVoltage();
+              clearPage();
+            }
+          }
+          else {       
+            display::showCalErrorMessage = true;  // show error message
+          }
+          lastCalTouch = millis();
+          display::refreshPage = true;      
+        }
       }
     }
   }

@@ -105,7 +105,7 @@ void readSensors() {
       else {
         float voltage = (analogRead(pin::phSensor) * device::aref / 1024.0) * 1000.0; // read the voltage in mV  
         sensor::ph = ph.readPH(voltage, sensor::waterTemp); // ph.calibration(voltageEC, sensor::waterTemp, cmd);
-         //Serial.print(F("PH:")); Serial.println(sensor::ph, 2);
+        Serial.print(F("PH:")); Serial.println(sensor::ph, 2);
         if (sensor::ph > 14)
           sensor::ph = 14.0;
         else if (sensor::ph < 0)
@@ -225,11 +225,17 @@ bool phCallbration() {
   // Get the water temperature in celsius
   dallasTemperature.requestTemperatures();
   sensor::waterTemp = dallasTemperature.getTempCByIndex(0);
-  // Print the current calibration solution value
-  float voltage = (analogRead(pin::phSensor) * device::aref / 1024.0) * 1000.0; // read the voltage in mV  
+  // Get the average voltage
+  float voltage = 0;
+  for (int i = 0; i < 10; i++) {
+    voltage += (analogRead(pin::phSensor) * device::aref / 1024.0) * 1000.0; // read the voltage in mv   
+    delay(250);
+  } 
+  voltage = voltage / 10.0;
   if (device::globalDebug) {
     Serial.print(F("Raw PH voltage in mV = ")); Serial.println(voltage, 2);
   }
+  // Attempt the calibration
   if(ph.calibration(voltage, sensor::waterTemp))
     returnVal = true;
   // Turn off the TDS sensor
@@ -251,6 +257,7 @@ bool tdsCalibration(const bool a_lowCal) {
   dallasTemperature.requestTemperatures();
   sensor::waterTemp = dallasTemperature.getTempCByIndex(0);
   gravityTds.setTemperature(sensor::waterTemp);
+  // Attempt the calibration
   if (a_lowCal && gravityTds.calibrateLow(analogRead(pin::tdsSensor)))
     returnVal = true;
   else if (!a_lowCal && gravityTds.calibrateHigh(analogRead(pin::tdsSensor)))

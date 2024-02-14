@@ -217,6 +217,7 @@ const char wifiSsidPageInfo[]           PROGMEM = "Set the SSID for the WiFi hot
 const char wifiPassPageInfo[]           PROGMEM = "Set the password for the WiFi hotspot, note the minimum password length is 8 characters and 16 characters maximum.";
 const char auxRelayTimerPageInfo[]      PROGMEM = "Set the duration for relays cyclic timer. When set to auto, the relay will turn on and off every duration, else it can be set to be permanently on or off.";
 const char selectBrightnessInfo[]       PROGMEM = "Set the display brightness in precent. Please avoid setting the display brighter than required, as it can impact the lifetime of the display.";
+const char pleaseWait[]                 PROGMEM = "Please wait a few seconds while the calibration is preformed.";
 const char* const infoMessageArray[] PROGMEM = {
   ecPageInfo,                    // 0
   tdsPageInfo,                   // 1
@@ -254,7 +255,8 @@ const char* const infoMessageArray[] PROGMEM = {
   wifiSsidPageInfo,              // 33
   wifiPassPageInfo,              // 34
   auxRelayTimerPageInfo,         // 35
-  selectBrightnessInfo           // 36
+  selectBrightnessInfo,          // 36
+  pleaseWait                     // 37
 };
 // log messages
 const char bootNotification[]           PROGMEM = "System started";     // 0
@@ -321,7 +323,7 @@ namespace device {
 uint32_t profileEEPROMSize = 0;
 uint32_t systemEEPROMSize = 0;
 bool globalDebug = true;
-const char* versionNumber = "4.9.2"; // do not adjust !
+const char* versionNumber = "4.9.1"; // do not adjust !
 bool relayOffState = HIGH;
 bool disableVL53L0X = false; // TO DO
 const uint8_t slaveAddress = 9;
@@ -617,8 +619,8 @@ float waterVolumeLtrs = 0;
 float waterVolumeGallons = 0;
 float emptyWaterTankDepth = 0;
 long hcsrDuration = 0;
-float tdsKvalueLow = 1.0;
-float tdsKvalueHigh = 1.0; // TO DO...
+float tdsKvalueLow = 1.21;
+float tdsKvalueHigh = 1.05;
 float phDownSolution = 4.0;
 float phUpSolution = 11.0;
 float ecSolution = 1.0;
@@ -627,8 +629,8 @@ const float phCalSolutionPart1 = 7.0;
 const float phCalSolutionPart2 = 4.0;
 const float tdsCalSolutionPart1 = 1413; // uS
 const float tdsCalSolutionPart2 = 2760; // uS
-float phNeutralVoltage = 1500.0;
-float phAcidicVoltage =  2032.44;
+float phNeutralVoltage = 1605.47;
+float phAcidicVoltage =  2001.46;
 unsigned long co2GasTime = 0;
 float temp_etapeZeroVolumeResistance = 0;
 float etapeZeroVolumeResistance = 1877.79; // 2104.56  resistance value (in ohms) when no liquid is present.
@@ -724,6 +726,6 @@ void loop() {
   touchEvent();
   readSensors();
   drawPages();
-  envriomentalControl();
+  //envriomentalControl();
   displayWarnings();
 }
