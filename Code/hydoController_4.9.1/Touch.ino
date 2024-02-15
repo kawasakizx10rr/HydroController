@@ -562,7 +562,7 @@ void profilesPageTouched() {
       getSetSystemEEPROM(device::EEPROM_SET);
       device::settingsAdjusted = true;
       delay(20);
-      EEPROM.put(7, device::userProfile);
+      EEPROM.put(6, device::userProfile);
       delay(20);
       device::lockSaveButtons = true;
       device::keyBoardClosedTime = millis();
@@ -639,7 +639,7 @@ void profilesPageTouched() {
       device::lockSaveButtons = true;
       device::keyBoardClosedTime = millis();
       getSetProfileEEPROM(device::userProfile, device::EEPROM_GET);
-      EEPROM.put(7, device::userProfile);
+      EEPROM.put(6, device::userProfile);
       delay(20);
     }
     else if (display::touch_x >= 630 && display::touch_x <= 760 && display::touch_y >= 222 && display::touch_y <= 262) {
@@ -650,7 +650,7 @@ void profilesPageTouched() {
       device::lockSaveButtons = true;
       device::keyBoardClosedTime = millis();
       getSetProfileEEPROM(device::userProfile, device::EEPROM_GET);
-      EEPROM.put(7, device::userProfile);
+      EEPROM.put(6, device::userProfile);
       delay(20);
     }
     else if (display::touch_x >= 630 && display::touch_x <= 760 && display::touch_y >= 284 && display::touch_y <= 326) {
@@ -661,7 +661,7 @@ void profilesPageTouched() {
       device::lockSaveButtons = true;
       device::keyBoardClosedTime = millis();
       getSetProfileEEPROM(device::userProfile, device::EEPROM_GET);
-      EEPROM.put(7, device::userProfile);
+      EEPROM.put(6, device::userProfile);
       delay(20);
     }
     else if (display::touch_x >= 630 && display::touch_x <= 760 && display::touch_y >= 346 && display::touch_y <= 388) {
@@ -672,7 +672,7 @@ void profilesPageTouched() {
       device::lockSaveButtons = true;
       device::keyBoardClosedTime = millis();
       getSetProfileEEPROM(device::userProfile, device::EEPROM_GET);
-      EEPROM.put(7, device::userProfile);
+      EEPROM.put(6, device::userProfile);
       delay(20);
     }
     else if (display::touch_x >= 630 && display::touch_x <= 760 && display::touch_y >= 408 && display::touch_y <= 450) {
@@ -683,7 +683,7 @@ void profilesPageTouched() {
       device::lockSaveButtons = true;
       device::keyBoardClosedTime = millis();
       getSetProfileEEPROM(device::userProfile, device::EEPROM_GET);
-      EEPROM.put(7, device::userProfile);
+      EEPROM.put(6, device::userProfile);
       delay(20);
     }
   }
