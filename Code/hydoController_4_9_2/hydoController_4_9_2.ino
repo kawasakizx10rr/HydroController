@@ -323,7 +323,7 @@ namespace device {
 uint32_t profileEEPROMSize = 0;
 uint32_t systemEEPROMSize = 0;
 bool globalDebug = true;
-const char* versionNumber = "4.9.1";
+const char* versionNumber = "4.9.2";
 bool relayOffState = HIGH;
 bool disableVL53L0X = false;
 const uint8_t slaveAddress = 9;
