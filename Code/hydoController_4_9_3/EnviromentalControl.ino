@@ -650,8 +650,9 @@ void waterEcPhControl() {
         adjustWaterPh();
         adjustmentMode = ADJUSTED_PH;
       }
+      clearPage();
+      display::refreshPage = true;
     }
-    
   }
 }
 
@@ -946,8 +947,6 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
       if (device::globalDebug)
         Serial.println(F("Dosing complete"));
       device::currentlyDosing = false;
-      clearPage();
-      display::refreshPage = true;
     }
     // touch event - cancel button
     const uint16_t startX = 166, startY = 166;
@@ -961,8 +960,6 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
           device::currentlyDosing = false;
           for (uint8_t i = 0; i < 6; i++)
             a_enabledDosers[i] = false;
-          clearPage();
-          display::refreshPage = true;
         }
       }
     }
