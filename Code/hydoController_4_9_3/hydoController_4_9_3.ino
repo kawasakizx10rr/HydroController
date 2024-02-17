@@ -721,7 +721,7 @@ void loop() {
   touchEvent();
   readSensors();
   drawPages();
-  //envriomentalControl();
+  envriomentalControl();
   displayWarnings();
   //esp8266DataHandler();
 }
