@@ -1,0 +1,802 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="fontComboBox.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="fontComboBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 46</value>
+  </data>
+  <data name="fontComboBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>164, 21</value>
+  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="fontComboBox.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;fontComboBox.Name" xml:space="preserve">
+    <value>fontComboBox</value>
+  </data>
+  <data name="&gt;&gt;fontComboBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;fontComboBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;fontComboBox.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="fontSizeComboBox.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="fontSizeComboBox.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 6.75pt</value>
+  </data>
+  <data name="fontSizeComboBox.Items" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="fontSizeComboBox.Items1" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="fontSizeComboBox.Items2" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="fontSizeComboBox.Items3" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="fontSizeComboBox.Items4" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="fontSizeComboBox.Items5" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="fontSizeComboBox.Items6" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="fontSizeComboBox.Items7" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="fontSizeComboBox.Items8" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="fontSizeComboBox.Items9" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="fontSizeComboBox.Items10" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="fontSizeComboBox.Items11" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="fontSizeComboBox.Items12" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="fontSizeComboBox.Items13" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="fontSizeComboBox.Items14" xml:space="preserve">
+    <value>22</value>
+  </data>
+  <data name="fontSizeComboBox.Items15" xml:space="preserve">
+    <value>23</value>
+  </data>
+  <data name="fontSizeComboBox.Items16" xml:space="preserve">
+    <value>24</value>
+  </data>
+  <data name="fontSizeComboBox.Items17" xml:space="preserve">
+    <value>25</value>
+  </data>
+  <data name="fontSizeComboBox.Items18" xml:space="preserve">
+    <value>26</value>
+  </data>
+  <data name="fontSizeComboBox.Items19" xml:space="preserve">
+    <value>27</value>
+  </data>
+  <data name="fontSizeComboBox.Items20" xml:space="preserve">
+    <value>28</value>
+  </data>
+  <data name="fontSizeComboBox.Items21" xml:space="preserve">
+    <value>29</value>
+  </data>
+  <data name="fontSizeComboBox.Items22" xml:space="preserve">
+    <value>30</value>
+  </data>
+  <data name="fontSizeComboBox.Items23" xml:space="preserve">
+    <value>31</value>
+  </data>
+  <data name="fontSizeComboBox.Items24" xml:space="preserve">
+    <value>32</value>
+  </data>
+  <data name="fontSizeComboBox.Items25" xml:space="preserve">
+    <value>33</value>
+  </data>
+  <data name="fontSizeComboBox.Items26" xml:space="preserve">
+    <value>34</value>
+  </data>
+  <data name="fontSizeComboBox.Items27" xml:space="preserve">
+    <value>35</value>
+  </data>
+  <data name="fontSizeComboBox.Items28" xml:space="preserve">
+    <value>36</value>
+  </data>
+  <data name="fontSizeComboBox.Items29" xml:space="preserve">
+    <value>37</value>
+  </data>
+  <data name="fontSizeComboBox.Items30" xml:space="preserve">
+    <value>38</value>
+  </data>
+  <data name="fontSizeComboBox.Items31" xml:space="preserve">
+    <value>39</value>
+  </data>
+  <data name="fontSizeComboBox.Items32" xml:space="preserve">
+    <value>40</value>
+  </data>
+  <data name="fontSizeComboBox.Items33" xml:space="preserve">
+    <value>41</value>
+  </data>
+  <data name="fontSizeComboBox.Items34" xml:space="preserve">
+    <value>42</value>
+  </data>
+  <data name="fontSizeComboBox.Items35" xml:space="preserve">
+    <value>43</value>
+  </data>
+  <data name="fontSizeComboBox.Items36" xml:space="preserve">
+    <value>44</value>
+  </data>
+  <data name="fontSizeComboBox.Items37" xml:space="preserve">
+    <value>45</value>
+  </data>
+  <data name="fontSizeComboBox.Items38" xml:space="preserve">
+    <value>46</value>
+  </data>
+  <data name="fontSizeComboBox.Items39" xml:space="preserve">
+    <value>47</value>
+  </data>
+  <data name="fontSizeComboBox.Items40" xml:space="preserve">
+    <value>48</value>
+  </data>
+  <data name="fontSizeComboBox.Items41" xml:space="preserve">
+    <value>49</value>
+  </data>
+  <data name="fontSizeComboBox.Items42" xml:space="preserve">
+    <value>50</value>
+  </data>
+  <data name="fontSizeComboBox.Items43" xml:space="preserve">
+    <value>51</value>
+  </data>
+  <data name="fontSizeComboBox.Items44" xml:space="preserve">
+    <value>52</value>
+  </data>
+  <data name="fontSizeComboBox.Items45" xml:space="preserve">
+    <value>53</value>
+  </data>
+  <data name="fontSizeComboBox.Items46" xml:space="preserve">
+    <value>54</value>
+  </data>
+  <data name="fontSizeComboBox.Items47" xml:space="preserve">
+    <value>55</value>
+  </data>
+  <data name="fontSizeComboBox.Items48" xml:space="preserve">
+    <value>56</value>
+  </data>
+  <data name="fontSizeComboBox.Items49" xml:space="preserve">
+    <value>57</value>
+  </data>
+  <data name="fontSizeComboBox.Items50" xml:space="preserve">
+    <value>58</value>
+  </data>
+  <data name="fontSizeComboBox.Items51" xml:space="preserve">
+    <value>59</value>
+  </data>
+  <data name="fontSizeComboBox.Items52" xml:space="preserve">
+    <value>60</value>
+  </data>
+  <data name="fontSizeComboBox.Items53" xml:space="preserve">
+    <value>61</value>
+  </data>
+  <data name="fontSizeComboBox.Items54" xml:space="preserve">
+    <value>62</value>
+  </data>
+  <data name="fontSizeComboBox.Items55" xml:space="preserve">
+    <value>63</value>
+  </data>
+  <data name="fontSizeComboBox.Items56" xml:space="preserve">
+    <value>64</value>
+  </data>
+  <data name="fontSizeComboBox.Items57" xml:space="preserve">
+    <value>65</value>
+  </data>
+  <data name="fontSizeComboBox.Items58" xml:space="preserve">
+    <value>66</value>
+  </data>
+  <data name="fontSizeComboBox.Items59" xml:space="preserve">
+    <value>67</value>
+  </data>
+  <data name="fontSizeComboBox.Items60" xml:space="preserve">
+    <value>68</value>
+  </data>
+  <data name="fontSizeComboBox.Items61" xml:space="preserve">
+    <value>69</value>
+  </data>
+  <data name="fontSizeComboBox.Items62" xml:space="preserve">
+    <value>70</value>
+  </data>
+  <data name="fontSizeComboBox.Items63" xml:space="preserve">
+    <value>71</value>
+  </data>
+  <data name="fontSizeComboBox.Items64" xml:space="preserve">
+    <value>72</value>
+  </data>
+  <data name="fontSizeComboBox.Items65" xml:space="preserve">
+    <value>73</value>
+  </data>
+  <data name="fontSizeComboBox.Items66" xml:space="preserve">
+    <value>74</value>
+  </data>
+  <data name="fontSizeComboBox.Items67" xml:space="preserve">
+    <value>75</value>
+  </data>
+  <data name="fontSizeComboBox.Items68" xml:space="preserve">
+    <value>76</value>
+  </data>
+  <data name="fontSizeComboBox.Items69" xml:space="preserve">
+    <value>77</value>
+  </data>
+  <data name="fontSizeComboBox.Items70" xml:space="preserve">
+    <value>78</value>
+  </data>
+  <data name="fontSizeComboBox.Items71" xml:space="preserve">
+    <value>79</value>
+  </data>
+  <data name="fontSizeComboBox.Items72" xml:space="preserve">
+    <value>80</value>
+  </data>
+  <data name="fontSizeComboBox.Items73" xml:space="preserve">
+    <value>81</value>
+  </data>
+  <data name="fontSizeComboBox.Items74" xml:space="preserve">
+    <value>82</value>
+  </data>
+  <data name="fontSizeComboBox.Items75" xml:space="preserve">
+    <value>83</value>
+  </data>
+  <data name="fontSizeComboBox.Items76" xml:space="preserve">
+    <value>84</value>
+  </data>
+  <data name="fontSizeComboBox.Items77" xml:space="preserve">
+    <value>85</value>
+  </data>
+  <data name="fontSizeComboBox.Items78" xml:space="preserve">
+    <value>86</value>
+  </data>
+  <data name="fontSizeComboBox.Items79" xml:space="preserve">
+    <value>87</value>
+  </data>
+  <data name="fontSizeComboBox.Items80" xml:space="preserve">
+    <value>88</value>
+  </data>
+  <data name="fontSizeComboBox.Items81" xml:space="preserve">
+    <value>89</value>
+  </data>
+  <data name="fontSizeComboBox.Items82" xml:space="preserve">
+    <value>90</value>
+  </data>
+  <data name="fontSizeComboBox.Items83" xml:space="preserve">
+    <value>91</value>
+  </data>
+  <data name="fontSizeComboBox.Items84" xml:space="preserve">
+    <value>92</value>
+  </data>
+  <data name="fontSizeComboBox.Items85" xml:space="preserve">
+    <value>93</value>
+  </data>
+  <data name="fontSizeComboBox.Items86" xml:space="preserve">
+    <value>94</value>
+  </data>
+  <data name="fontSizeComboBox.Items87" xml:space="preserve">
+    <value>95</value>
+  </data>
+  <data name="fontSizeComboBox.Items88" xml:space="preserve">
+    <value>96</value>
+  </data>
+  <data name="fontSizeComboBox.Items89" xml:space="preserve">
+    <value>97</value>
+  </data>
+  <data name="fontSizeComboBox.Items90" xml:space="preserve">
+    <value>98</value>
+  </data>
+  <data name="fontSizeComboBox.Items91" xml:space="preserve">
+    <value>99</value>
+  </data>
+  <data name="fontSizeComboBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>195, 47</value>
+  </data>
+  <data name="fontSizeComboBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 20</value>
+  </data>
+  <data name="fontSizeComboBox.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;fontSizeComboBox.Name" xml:space="preserve">
+    <value>fontSizeComboBox</value>
+  </data>
+  <data name="&gt;&gt;fontSizeComboBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;fontSizeComboBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;fontSizeComboBox.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="fontStyleComboBox.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
+    <value>Flat</value>
+  </data>
+  <data name="fontStyleComboBox.Items" xml:space="preserve">
+    <value>Regular</value>
+  </data>
+  <data name="fontStyleComboBox.Items1" xml:space="preserve">
+    <value>Bold</value>
+  </data>
+  <data name="fontStyleComboBox.Items2" xml:space="preserve">
+    <value>Italic</value>
+  </data>
+  <data name="fontStyleComboBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>273, 46</value>
+  </data>
+  <data name="fontStyleComboBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 21</value>
+  </data>
+  <data name="fontStyleComboBox.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;fontStyleComboBox.Name" xml:space="preserve">
+    <value>fontStyleComboBox</value>
+  </data>
+  <data name="&gt;&gt;fontStyleComboBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;fontStyleComboBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;fontStyleComboBox.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="startButton.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>Top, Right</value>
+  </data>
+  <data name="startButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>273, 85</value>
+  </data>
+  <data name="startButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 23</value>
+  </data>
+  <data name="startButton.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="startButton.Text" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="&gt;&gt;startButton.Name" xml:space="preserve">
+    <value>startButton</value>
+  </data>
+  <data name="&gt;&gt;startButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;startButton.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;startButton.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 30</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>28, 13</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Font</value>
+  </data>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>192, 32</value>
+  </data>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>27, 13</value>
+  </data>
+  <data name="label2.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="&gt;&gt;label2.Name" xml:space="preserve">
+    <value>label2</value>
+  </data>
+  <data name="&gt;&gt;label2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>270, 32</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>30, 13</value>
+  </data>
+  <data name="label3.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Style</value>
+  </data>
+  <data name="&gt;&gt;label3.Name" xml:space="preserve">
+    <value>label3</value>
+  </data>
+  <data name="&gt;&gt;label3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <data name="nerwToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="nerwToolStripMenuItem.Text" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="loadFileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="loadFileToolStripMenuItem.Text" xml:space="preserve">
+    <value>Load file</value>
+  </data>
+  <data name="exitToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 22</value>
+  </data>
+  <data name="exitToolStripMenuItem.Text" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="menuToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>50, 20</value>
+  </data>
+  <data name="menuToolStripMenuItem.Text" xml:space="preserve">
+    <value>Menu</value>
+  </data>
+  <data name="menuStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="menuStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>357, 24</value>
+  </data>
+  <data name="menuStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="menuStrip1.Text" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Name" xml:space="preserve">
+    <value>menuStrip1</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;menuStrip1.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>132, 17</value>
+  </metadata>
+  <data name="exctendedCharsCheckBox.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="exctendedCharsCheckBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 91</value>
+  </data>
+  <data name="exctendedCharsCheckBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 17</value>
+  </data>
+  <data name="exctendedCharsCheckBox.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="exctendedCharsCheckBox.Text" xml:space="preserve">
+    <value>Extended chars</value>
+  </data>
+  <data name="&gt;&gt;exctendedCharsCheckBox.Name" xml:space="preserve">
+    <value>exctendedCharsCheckBox</value>
+  </data>
+  <data name="&gt;&gt;exctendedCharsCheckBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;exctendedCharsCheckBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;exctendedCharsCheckBox.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
+    <value>6, 13</value>
+  </data>
+  <data name="$this.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>357, 114</value>
+  </data>
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAABAAAMIOAADCDgAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/wAA
+        AP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAA
+        AP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAAAAAA
+        AAAAAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAA
+        AP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAA
+        AP8AAAAAAAAAAAAAAP8AAAD/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZ
+        mf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZ
+        mf8AAAD/AAAA/wAAAAAAAAAAAAAA/wAAAP/q2Zn/6tmZ/+rZmf8AAAD/AAAA/wAAAP86AAD/AAAA/+rZ
+        mf/q2Zn/AAAA/wAAAP8AAAD/OgAA/+rZmf/q2Zn/AAAA/wAAAP8AAAD/6tmZ/+rZmf/q2Zn/6tmZ/+rZ
+        mf/q2Zn/6tmZ/wAAAP8AAAD/AAAAAAAAAAAAAAD/AAAA/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/AAAA/+rZ
+        mf/q2Zn/6tmZ/+rZmf8AAAD/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf8AAAD/6tmZ/+rZ
+        mf/q2Zn/6tmZ/+rZmf/q2Zn/AAAA/wAAAP8AAAAAAAAAAAAAAP8AAAD/6tmZ/+rZmf/q2Zn/6tmZ/+rZ
+        mf8AAAD/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf8AAAD/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/wAA
+        AP/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf8AAAD/AAAA/wAAAAAAAAAAAAAA/wAAAP/q2Zn/6tmZ/+rZ
+        mf/q2Zn/6tmZ/wAAAP/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf8AAAD/6tmZ/+rZmf/q2Zn/6tmZ/wAA
+        AP9mAAD/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/wAAAP8AAAD/AAAAAAAAAAAAAAD/AAAA/+rZ
+        mf/q2Zn/6tmZ/+rZmf/q2Zn/AAAA/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf8AAAD/6tmZ/+rZ
+        mf/q2Zn/6tmZ/+rZmf8AAAD/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/AAAA/wAAAP8AAAAAAAAAAAAA
+        AP8AAAD/6tmZ/+rZmf/q2Zn/AAAA/+rZmf8AAAD/6tmZ/+rZmf/q2Zn/6tmZ/wAAAP/q2Zn/6tmZ/wAA
+        AP/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/2YAOv/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf8AAAD/AAAA/wAA
+        AAAAAAAAAAAA/wAAAP/q2Zn/6tmZ/+rZmf/q2Zn/AAAA/wAAAP/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/wAA
+        AP86AAD/6tmZ/+rZmf/q2Zn/AAA6/wAAAP8AAAD/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/wAA
+        AP8AAAD/AAAAAAAAAAAAAAD/AAAA/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZ
+        mf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZ
+        mf/q2Zn/AAAA/wAAAP8AAAAAAAAAAAAAAP8AAAD/6tmZ/+rZmf/q2Zn/AAAA/+rZmf/q2Zn/6tmZ/wAA
+        AP/q2Zn/6tmZ/wAAAP8AAAD/AAAA/+rZmf/q2Zn/6tmZ/+rZmf8AAAD/AAAA/2YAAP/q2Zn/6tmZ/+rZ
+        mf/q2Zn/6tmZ/+rZmf8AAAD/AAAA/wAAAAAAAAAAAAAA/wAAAP/q2Zn/6tmZ/+rZmf8AAAD/6tmZ/+rZ
+        mf/q2Zn/AAAA/+rZmf/q2Zn/ZgAA/+rZmf/q2Zn/AAAA/+rZmf/q2Zn/AAA6/+rZmf/q2Zn/6tmZ/wAA
+        AP/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/wAAAP8AAAD/AAAAAAAAAAAAAAD/AAAA/+rZmf/q2Zn/6tmZ/wAA
+        Ov/q2Zn/6tmZ/+rZmf8AAAD/6tmZ/+rZmf9mAAD/6tmZ/+rZmf8AAAD/6tmZ/+rZmf8AAAD/6tmZ/+rZ
+        mf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/AAAA/wAAAP8AAAAAAAAAAAAAAP8AAAD/6tmZ/+rZ
+        mf/q2Zn/AAAA/wAAAP8AAAD/AAAA/wAAAP/q2Zn/6tmZ/wAAAP8AAAD/AAAA/+rZmf/q2Zn/6tmZ/wAA
+        AP/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf8AAAD/AAAA/wAAAAAAAAAAAAAA/wAA
+        AP/q2Zn/6tmZ/+rZmf8AAAD/6tmZ/+rZmf/q2Zn/AAAA/+rZmf/q2Zn/ZgAA/+rZmf/q2Zn/OgAA/+rZ
+        mf/q2Zn/AAAA/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/wAAAP8AAAD/AAAAAAAA
+        AAAAAAD/AAAA/+rZmf/q2Zn/6tmZ/+rZmf8AAAD/6tmZ/wAAAP/q2Zn/6tmZ/+rZmf9mAAD/6tmZ/+rZ
+        mf8AAAD/6tmZ/+rZmf8AAGb/6tmZ/+rZmf/q2Zn/AAAA/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/AAAA/wAA
+        AP8AAAAAAAAAAAAAAP8AAAD/6tmZ/+rZmf/q2Zn/6tmZ/wAAAP8AAAD/AAAA/+rZmf/q2Zn/6tmZ/wAA
+        AP8AAAD/AAAA/+rZmf/q2Zn/6tmZ/+rZmf8AADr/AAAA/2YAAP/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZ
+        mf8AAAD/AAAA/wAAAAAAAAAAAAAA/wAAAP/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZ
+        mf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZmf/q2Zn/6tmZ/+rZ
+        mf/q2Zn/6tmZ/wAAAP8AAAD/AAAAAAAAAAAAAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAA
+        AP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAA
+        AP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAAAAAAAAAAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAA
+        AP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAA
+        AP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAP8AAAD/AAAA/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAA////////////////////////////////gAAAAYAAAAGAAAABgAAAAYAA
+        AAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAA
+        AAGAAAAB//////////////////////////8=
+</value>
+  </data>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Font Generator</value>
+  </data>
+  <data name="&gt;&gt;menuToolStripMenuItem.Name" xml:space="preserve">
+    <value>menuToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;menuToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nerwToolStripMenuItem.Name" xml:space="preserve">
+    <value>nerwToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;nerwToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;loadFileToolStripMenuItem.Name" xml:space="preserve">
+    <value>loadFileToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;loadFileToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;exitToolStripMenuItem.Name" xml:space="preserve">
+    <value>exitToolStripMenuItem</value>
+  </data>
+  <data name="&gt;&gt;exitToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;openFileDialog1.Name" xml:space="preserve">
+    <value>openFileDialog1</value>
+  </data>
+  <data name="&gt;&gt;openFileDialog1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.OpenFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>Form1</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+</root>
