@@ -187,7 +187,7 @@ void launchDosingNotification(const float& a_sensorPercent, const uint8_t& a_dos
   device::continueDosing = device::NOT_SET;
   tft.backlight(true);
   tft.displayOn(true);
-  while (dosingDialogTimer != 0 && device::continueDosing == device::NOT_SET) {
+  while (dosingDialogTimer > 0 && device::continueDosing == device::NOT_SET) {
     displayDosingNotification(dosingDialogTimer, a_sensorPercent, a_dosingMode, refreshDosingNotification);
     if (millis() - continuePreviousMillis >= 1000UL) {
       dosingDialogTimer--;
