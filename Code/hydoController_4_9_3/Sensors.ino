@@ -281,7 +281,7 @@ float readResistance(const int16_t& a_pin, const int16_t& a_seriesResistance) {
   // Get ADC value.
   float resistance = analogRead(a_pin);
   // Convert ADC reading to resistance.
-  resistance = (4096.0 / resistance) - 1.0;
+  resistance = (1024 / resistance) - 1.0;
   resistance = a_seriesResistance / resistance;
   return resistance;
 }

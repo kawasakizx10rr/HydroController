@@ -3,6 +3,7 @@
 */
 // TO DO: add user setup guide for new device / reset
 // add back in esp8266 wifi
+// waterEcPhControl has been adjusted for testing, must be reverted prior to release
 
 //#define USING_HDC1080 // comment this line to use a dht22
 
