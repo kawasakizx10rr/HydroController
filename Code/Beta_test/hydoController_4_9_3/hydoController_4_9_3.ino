@@ -33,43 +33,43 @@
 // pins used
 namespace pin {
 // analog sensors
-const byte ldr = A0;
-const byte tdsSensor = A1;
-const byte phSensor = A3;
-const byte etapeSensor = A2;
+const uint8_t ldr = A0;
+const uint8_t tdsSensor = A1;
+const uint8_t phSensor = A3;
+const uint8_t etapeSensor = A2;
 // display
-const byte ra8875_int = 2;
-const byte ra8875_rst = 33;
-const byte ra8875_cs = 34;
-const byte ra8875_sdo = 50;
-const byte ra8875_sdi = 51;
-const byte ra8875_sck = 52;
+const uint8_t ra8875_int = 2;
+const uint8_t ra8875_rst = 33;
+const uint8_t ra8875_cs = 34;
+const uint8_t ra8875_sdo = 50;
+const uint8_t ra8875_sdi = 51;
+const uint8_t ra8875_sck = 52;
 // dosers
-const byte doserOne = 9;
-const byte doserTwo = 4;
-const byte doserThree = 5;
-const byte doserFour = 6;
-const byte doserFive = 7;
-const byte doserSix = 8;
+const uint8_t doserOne = 9;
+const uint8_t doserTwo = 4;
+const uint8_t doserThree = 5;
+const uint8_t doserFour = 6;
+const uint8_t doserFive = 7;
+const uint8_t doserSix = 8;
 // temp / humidity sensors
-const byte oneWireBus = 38;
-const byte dht22 = 39;
+const uint8_t oneWireBus = 38;
+const uint8_t dht22 = 39;
 // ultrasonic sensor
-const byte hcsrTrigger = 40;
-const byte hcsrEcho = 41;
+const uint8_t hcsrTrigger = 40;
+const uint8_t hcsrEcho = 41;
 // relays
-const byte airHeater = 22;
-const byte co2Solenoid = 23;
-const byte inletPump = 24;
-const byte outletPump = 25;
-const byte light = 26;
-const byte waterHeater = 27;
-const byte auxRelayOnePin = 28;
-const byte auxRelayTwoPin = 29;
+const uint8_t airHeater = 22;
+const uint8_t co2Solenoid = 23;
+const uint8_t inletPump = 24;
+const uint8_t outletPump = 25;
+const uint8_t light = 26;
+const uint8_t waterHeater = 27;
+const uint8_t auxRelayOnePin = 28;
+const uint8_t auxRelayTwoPin = 29;
 // transistors
-const byte phTransistor = 36;
-const byte tdsTransistor = 37;
-const byte espTransistor = 42;
+const uint8_t phTransistor = 36;
+const uint8_t tdsTransistor = 37;
+const uint8_t espTransistor = 42;
 }
 
 enum fanModes {
@@ -138,23 +138,23 @@ uint8_t fansPage = 0;
 uint8_t warningsPage = 0;
 bool displayIsOff = false;
 bool refreshPage = true;
-int cursourPosition = 0;
+int16_t cursourPosition = 0;
 bool refreshCalander;
-unsigned long debounceTime = 200; // in millis
-unsigned long lastTouchMillis = 0;
-unsigned long touchStartMillis = 0; // time button has been held downconst char*
-unsigned long infoDialogDisplayTime = 0;
-const unsigned int RA8875_SEABLUE      = 0x1C1F;
-const unsigned int RA8875_DARKGREY     = 0x8C51;
-const unsigned int RA8875_LIGHTGREY    = 0xE71C;
-const unsigned int RA8875_MIDGREY      = 0x8410;
-const unsigned int RA8875_ORANGE       = 0xFD06;
-//const unsigned int RA8875_SMOKE_WHITE  = 0xF79E;
-const unsigned int RA8875_LIGHT_BLUE   = 0xA67E;
-const unsigned int RA8875_LIGHT_GREEN  = 0x87F0;
-const unsigned int RA8875_LIGHT_YELLOW = 0xFFF0;
-const unsigned int RA8875_LIGHT_PINK   = 0xFC1F;
-const unsigned int RA8875_PURPLE       = 0x981F;
+uint16_t debounceTime = 200; // in millis
+uint32_t lastTouchMillis = 0;
+uint32_t touchStartMillis = 0; // time button has been held downconst char*
+uint32_t infoDialogDisplayTime = 0;
+const uint16_t RA8875_SEABLUE      = 0x1C1F;
+const uint16_t RA8875_DARKGREY     = 0x8C51;
+const uint16_t RA8875_LIGHTGREY    = 0xE71C;
+const uint16_t RA8875_MIDGREY      = 0x8410;
+const uint16_t RA8875_ORANGE       = 0xFD06;
+//const uint16_t RA8875_SMOKE_WHITE  = 0xF79E;
+const uint16_t RA8875_LIGHT_BLUE   = 0xA67E;
+const uint16_t RA8875_LIGHT_GREEN  = 0x87F0;
+const uint16_t RA8875_LIGHT_YELLOW = 0xFFF0;
+const uint16_t RA8875_LIGHT_PINK   = 0xFC1F;
+const uint16_t RA8875_PURPLE       = 0x981F;
 }
 
 namespace message {
@@ -310,7 +310,7 @@ const char* const setupMessageArray[] PROGMEM = {
   sizeConversionSetup
 };
 const uint8_t maxLogs = 20;
-const uint8_t maxCharsPerLog = 16;
+const uint8_t maxCharsPerLog = 13; // 31 Jan 13:45
 uint8_t logTypeArray[maxLogs];
 char timeStrArray[maxLogs][maxCharsPerLog];
 uint8_t systemLogPos = 0;
@@ -318,8 +318,8 @@ uint8_t infoPos = 0;
 }
 
 namespace device {
-uint32_t profileEEPROMSize = 0;
-uint32_t systemEEPROMSize = 0;
+uint16_t profileEEPROMSize = 0;
+uint16_t systemEEPROMSize = 0;
 bool globalDebug = true;
 const char* versionNumber = "4.9.3";
 bool relayOffState = HIGH;
@@ -332,11 +332,11 @@ bool waterHeaterIsOn = false;
 uint8_t currentDoserNum = 0;
 // bool currentlyDraining;
 uint8_t dosingTimerHourCounter = 0;
-unsigned long primeTouchTime = 0;
+uint32_t primeTouchTime = 0;
 bool doserIsPriming[6] {0,0,0,0,0,0};
 uint8_t previousDosingMinute = 0, previousDosingHour = 0;
-unsigned long slideShowpreviousMillis = millis();
-unsigned long sensorPreviousMillis = 0;
+uint32_t slideShowpreviousMillis = millis();
+uint32_t sensorPreviousMillis = 0;
 uint8_t continueDosing = 0;
 uint8_t phCalStage = 0;
 bool newGraphData = false;
@@ -345,16 +345,16 @@ bool phWaitTillNextCall = false;
 uint8_t lightSwitchedOnHour = 0;
 uint8_t lightSwitchedOnMin = 0;
 bool lightOn = false;
-int intputPosition = 0;
+int16_t intputPosition = 0;
 enum charTypes {LOWER, UPPER, SPECIAL};
 charTypes charType = LOWER;
 const char specialSymbols[11]{ '!', '@', '#', '&', '$', '%', '?', '/', '-', '~', '*' };
 bool refreshKeys = false;
 uint8_t profileInputNumber = 0;
 uint8_t userProfile = 0;
-int lastIntputPosition = 0;
+int16_t lastIntputPosition = 0;
 bool lockSaveButtons = false, updateKeyboardInput = false;
-unsigned long keyBoardClosedTime = millis();
+uint32_t keyBoardClosedTime = millis();
 float minPh = 0;
 float maxPh = 0;
 float minCo2 = 0;
@@ -365,8 +365,8 @@ float minWaterTemp = 0;
 float maxWaterTemp = 0;
 float minWaterLevel = 0;
 float maxWaterLevel = 0;
-int minTds = 0;
-int maxTds = 0;
+uint16_t minTds = 0;
+uint16_t maxTds = 0;
 uint8_t auxRelayOneSwitchedOnDay = 0;
 uint8_t auxRelayOneSwitchedOnHour = 0;
 uint8_t auxRelayOneSwitchedOnMin = 0;
@@ -464,8 +464,8 @@ uint8_t lightOnTimeMin = 0;
 uint8_t lightOffTimeHour = 22;
 uint8_t lightOffTimeMin = 30;
 uint8_t lightMode = 1;
-int auxRelayOneTimer = 2; // in mins
-int auxRelayTwoTimer = 2; // in mins
+uint16_t auxRelayOneTimer = 2; // in mins
+uint16_t auxRelayTwoTimer = 2; // in mins
 uint8_t auxRelayOneMode = 0;
 uint8_t auxRelayTwoMode = 0;
 uint8_t targetMinFanOneSpeed = 25;
@@ -489,29 +489,29 @@ uint8_t doserThreeMode = device::DOSER_PH_DOWN;
 uint8_t doserFourMode = device::DOSER_PH_UP;
 uint8_t doserFiveMode = device::DOSER_EC_OP;
 uint8_t doserSixMode = device::DOSER_EC_OP;
-int doserOneMills = 10;
-int doserTwoMills = 10;
-int doserThreeMills = 10;
-int doserFourMills = 10;
-int doserFiveMills = 10;
-int doserSixMills = 10;
-int targetMinTds = 400;
-int targetMaxTds = 600;
-int targetCo2 = 400;
-int co2Offset = 99;
-int roomWidthCm = 120;
-int roomLengthCm = 120;
-int roomHeightCm = 200;
+uint16_t doserOneMills = 10;
+uint16_t doserTwoMills = 10;
+uint16_t doserThreeMills = 10;
+uint16_t doserFourMills = 10;
+uint16_t doserFiveMills = 10;
+uint16_t doserSixMills = 10;
+uint16_t targetMinTds = 400;
+uint16_t targetMaxTds = 600;
+uint16_t targetCo2 = 400;
+uint16_t co2Offset = 99;
+uint16_t roomWidthCm = 120;
+uint16_t roomLengthCm = 120;
+uint16_t roomHeightCm = 200;
 float co2FlowrateLtrs = 6;
-int roomWidthInches = 120;
-int roomLengthInches = 120;
-int roomHeightInches = 200;
+uint16_t roomWidthInches = 120;
+uint16_t roomLengthInches = 120;
+uint16_t roomHeightInches = 200;
 float co2FlowrateFeet3 = 6;
 uint8_t co2CheckTimeMinute = 0;
 uint8_t co2CheckTimeHour = 22;
-int disableFansTimer = 30;
+uint16_t disableFansTimer = 30;
 bool enableManualCo2Duration = false;
-int manualCo2GasDuration = 30;
+uint16_t manualCo2GasDuration = 30;
 bool disableCo2Control = true;
 float targetMinPh = 6.0;
 float targetMaxPh = 6.5;
@@ -529,31 +529,31 @@ float waterTankLength = 50;
 float waterTankWidth = 50; 
 float waterTankLengthInches = 20;
 float waterTankWidthInches = 20;
-int doserOneSpeed = 255;
-int doserTwoSpeed = 255;
-int doserThreeSpeed = 255;
-int doserFourSpeed = 255;
-int doserFiveSpeed = 255;
-int doserSixSpeed = 255;
+uint8_t doserOneSpeed = 255;
+uint8_t doserTwoSpeed = 255;
+uint8_t doserThreeSpeed = 255;
+uint8_t doserFourSpeed = 255;
+uint8_t doserFiveSpeed = 255;
+uint8_t doserSixSpeed = 255;
 uint8_t dosingInterval = 6;
-int refillDoserOneMills = 10;
-int refillDoserTwoMills = 10;
-int refillDoserThreeMills = 10;
-int refillDoserFourMills = 10;
-int refillDoserFiveMills = 10;
-int refillDoserSixMills = 10;
+uint16_t refillDoserOneMills = 10;
+uint16_t refillDoserTwoMills = 10;
+uint16_t refillDoserThreeMills = 10;
+uint16_t refillDoserFourMills = 10;
+uint16_t refillDoserFiveMills = 10;
+uint16_t refillDoserSixMills = 10;
 uint32_t autoFillDays = 0; //bool autoFillDays[31];
 uint8_t autoFillHour = 12;
 uint8_t autoFillMinute = 0;
 uint8_t drainTimeout = 1;
-unsigned int backgroundColor = display::RA8875_LIGHT_BLUE;
-unsigned long graphInterval = 2;
-unsigned long afkTime = 1;
+uint16_t backgroundColor = display::RA8875_LIGHT_BLUE;
+uint16_t graphInterval = 2;
+uint16_t afkTime = 1;
 uint8_t brightness = 80;
 bool convertToF  = false;
 bool convertToInches = false;
 bool convertToTds = false;
-int tdsErrorMargin = 50;
+uint16_t tdsErrorMargin = 50;
 float ecErrorMargin = 0.5;
 float phErrorMargin = 0.5;
 float co2ErrorMargin = 100;
@@ -584,7 +584,7 @@ uint8_t rtcMinute = 0;
 uint8_t rtcHour = 0;
 uint8_t rtcDay = 0;
 uint8_t rtcMonth = 0;
-int rtcYear = 0;
+uint8_t rtcYear = 0;
 enum heightSensors {
   SR04,
   ETAPE,
@@ -602,31 +602,29 @@ dosingModes phDosingMode = PRECISE;
 namespace sensor {
 float ec = 0;
 float ph = 0;
-int tds = 0;
-int co2 = 0;
-int ldr = 0;
+uint16_t tds = 0;
+uint16_t co2 = 0;
+uint16_t ldr = 0;
 float waterTemp = 0;
 float airTemp = 0;
 float humidity = 0;
 float waterLevel = 0;
-float waterLevelInches = 0;
 float waterVolumeLtrs = 0;
-float waterVolumeGallons = 0;
 float emptyWaterTankDepth = 0;
-long hcsrDuration = 0;
+uint32_t hcsrDuration = 0;
 float tdsKvalueLow = 1.21;
 float tdsKvalueHigh = 1.05;
 float phDownSolution = 4.0;
 float phUpSolution = 11.0;
 float ecSolution = 1.0;
-float tdsSolution = 640.0;
+uint16_t tdsSolution = 640;
 const float phCalSolutionPart1 = 7.0;
 const float phCalSolutionPart2 = 4.0;
 const float tdsCalSolutionPart1 = 1413; // uS
 const float tdsCalSolutionPart2 = 2760; // uS
 float phNeutralVoltage = 1605.47;
 float phAcidicVoltage =  2001.46;
-unsigned long co2GasTime = 0;
+uint32_t co2GasTime = 0;
 float temp_etapeZeroVolumeResistance = 0;
 float etapeZeroVolumeResistance = 1877.79; // 2104.56  resistance value (in ohms) when no liquid is present.
 float etapeMaxVolumeResistance = 271.4; // 288.71 resistance value (in ohms) when liquid is at max line.
@@ -634,31 +632,31 @@ const float etapeCalibrationCm = 31.00; // maximum mesurement in centimeters on 
 const float etapeOffset = 2.5; // Lowest value read on etape in Centimeters, datasheet says 2.5 but i get 2.5
 const uint8_t co2Request[] {0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};
 uint8_t sensorArrayPos = 0;
-const uint8_t maxSensorArrayVals = 12;
-short phArray[maxSensorArrayVals]; // compressed floats * 100
-short co2Array[maxSensorArrayVals];
-short ecArray[maxSensorArrayVals]; // compressed floats * 100
-short tdsArray[maxSensorArrayVals];
-short waterTemperatureArray[maxSensorArrayVals]; // compressed floats * 100
-short waterTemperatureArrayF[maxSensorArrayVals]; // compressed floats * 100
-short waterLevelArray[maxSensorArrayVals]; // compressed floats * 100
-short waterLevelArrayInInches[maxSensorArrayVals]; // compressed floats * 100
-short airTemperatureArray[maxSensorArrayVals]; // compressed floats * 100
-short airTemperatureArrayF[maxSensorArrayVals]; // compressed floats * 100
-short humidityArray[maxSensorArrayVals]; // compressed floats * 100
-short fanOneSpeedArray[maxSensorArrayVals];
-short fanTwoSpeedArray[maxSensorArrayVals];
+const uint8_t maxSensorArrayVals = 24;
+uint16_t phArray[maxSensorArrayVals]; // compressed floats * 100
+uint16_t co2Array[maxSensorArrayVals];
+uint16_t ecArray[maxSensorArrayVals]; // compressed floats * 100
+uint16_t tdsArray[maxSensorArrayVals];
+uint16_t waterTemperatureArray[maxSensorArrayVals]; // compressed floats * 100
+uint16_t waterTemperatureArrayF[maxSensorArrayVals]; // compressed floats * 100
+uint16_t waterLevelArray[maxSensorArrayVals]; // compressed floats * 100
+uint16_t waterLevelArrayInInches[maxSensorArrayVals]; // compressed floats * 100
+uint16_t airTemperatureArray[maxSensorArrayVals]; // compressed floats * 100
+uint16_t airTemperatureArrayF[maxSensorArrayVals]; // compressed floats * 100
+uint16_t humidityArray[maxSensorArrayVals]; // compressed floats * 100
+uint16_t fanOneSpeedArray[maxSensorArrayVals];
+uint16_t fanTwoSpeedArray[maxSensorArrayVals];
 uint8_t fanArrayPos = 0;
 const uint8_t maxFanArrayVals = 60;
-short fanTemperatureArray[maxFanArrayVals]; // compressed floats * 100
-short fanHumidityArray[maxFanArrayVals]; // compressed floats * 100
+uint16_t fanTemperatureArray[maxFanArrayVals]; // compressed floats * 100
+uint16_t fanHumidityArray[maxFanArrayVals]; // compressed floats * 100
 enum airStates{ IS_FALLING, IS_RISING, IS_SAME};
 }
 
 namespace wifi {
 bool wifiEnabled = false;
-unsigned long connectionTime = 0;
-unsigned long wifiPreviousMillis = 0;
+uint32_t connectionTime = 0;
+uint32_t wifiPreviousMillis = 0;
 bool remotlyLoadUserProfile = false;
 bool remotlySaveUserProfile = false;
 char ssid[16] = "HydroController";
@@ -725,4 +723,5 @@ void loop() {
   drawPages();
   envriomentalControl();
   displayWarnings();
+  esp8266DataHandler();
 }

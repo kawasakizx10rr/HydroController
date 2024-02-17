@@ -1,5 +1,461 @@
-void setValue(const int a_cmd, const char* a_val) {
-  Serial.print(F("Received cmd: ")); Serial.print(a_cmd); Serial.print(F(" and val: ")); Serial.println(a_val);
+void esp8266DataHandler(){
+  static bool getData = false;
+  static uint8_t value = 0;
+  static uint8_t bytesRecived = 0;
+  static uint8_t charCnt = 0;
+  static char buffer[16] {0};
+  uint32_t timeout = millis() + 100UL;
+  while (Serial1.available() > 0 && timeout < 100UL) {
+    char c = Serial1.read();
+    // reset local variables
+    if (c == '!') {
+      memset(buffer, 0 , 16);
+      getData = 0;
+      value = 0;
+      bytesRecived = 0;
+      charCnt = 0;
+    }
+    // value is read to be stored
+    else if (c == ',') {
+      if (bytesRecived == 0) {
+        getData = atoi(buffer);
+      }
+      else if (bytesRecived == 1) {
+        value = atoi(buffer);
+      }
+      else if (bytesRecived == 2) {
+        if (getData)
+          setValues(value, buffer);
+        else
+          getValues(value, atoi(buffer));
+      }
+      memset(buffer, 0 , 16);
+      bytesRecived++;
+      charCnt = 0;
+    }
+    // add serial data to buffer
+    else if (c >= 32 && c <= 126 && charCnt < 16) { // 'space' to '~'
+      buffer[charCnt++] = c;
+    }
+  }
+}
+
+void getValues(const uint8_t a_page, const uint8_t a_slide) {
+  Serial.print(__FUNCTION__); Serial.print(F(" Received page: ")); Serial.print(a_page); Serial.print(F(" and slide: ")); Serial.println(a_slide);
+    // Page 0 (Home page)
+  if (a_page == 0) {
+    Serial1.print(user::convertToF); 
+    Serial1.print(user::convertToInches); 
+    if (a_slide == 0) { // home page slide 0
+      Serial1.print(sensor::ec, 2);
+      Serial1.print(user::targetMinEc, 2); 
+      Serial1.print(user::targetMaxEc, 2); 
+      printShortArray(sensor::ecArray, 24);   
+    }
+    else if (a_slide == 1) { // home page slide 1
+      Serial1.print(sensor::tds);
+      Serial1.print(user::targetMinTds); 
+      Serial1.print(user::targetMaxTds); 
+      printShortArray(sensor::tdsArray, 24);   
+    }
+    else if (a_slide == 2) { // home page slide 2
+      Serial1.print(sensor::ph, 2); 
+      Serial1.print(user::targetMinPh, 2); 
+      Serial1.print(user::targetMaxPh, 2); 
+      printShortArray(sensor::phArray, 24);
+    }
+    else if (a_slide == 3) { // home page slide 3
+      Serial1.print(sensor::co2); 
+      Serial1.print(user::targetCo2); 
+      Serial1.print(user::targetCo2); 
+      printShortArray(sensor::co2Array, 24);
+    }
+    else if (a_slide == 4) { // home page slide 4
+      if (user::convertToF) {
+        Serial1.print(convertToF(sensor::waterTemp), 1); 
+        Serial1.print(user::targetMinWaterTempF, 1); 
+        Serial1.print(user::targetMaxWaterTempF, 1); 
+        printShortArray(sensor::waterTemperatureArrayF, 24);
+      }
+      else {
+        Serial1.print(sensor::waterTemp, 1); 
+        Serial1.print(user::targetMinWaterTemp, 1); 
+        Serial1.print(user::targetMaxWaterTemp, 1); 
+        printShortArray(sensor::waterTemperatureArray, 24);
+      }
+    }
+    else if (a_slide == 5) { // home page slide 5
+      if (user::convertToInches) {
+        Serial1.print(convertToInches(sensor::waterLevel), 1); 
+        Serial1.print(user::targetMinWaterHeightInches, 1); 
+        Serial1.print(user::targetMaxWaterHeightInches, 1); 
+        printShortArray(sensor::waterLevelArrayInInches, 24);
+      }
+      else {
+        Serial1.print(sensor::waterLevel, 1); 
+        Serial1.print(user::targetMinWaterHeight, 1); 
+        Serial1.print(user::targetMaxWaterHeight, 1); 
+        printShortArray(sensor::waterLevelArray, 24);
+      }
+    }
+    else if (a_slide == 6) { // home page slide 6
+      if (user::convertToF) {
+        Serial1.print(convertToF(sensor::airTemp), 1); 
+        Serial1.print(user::targetMinAirTempF, 1); 
+        Serial1.print(user::targetMaxAirTempF, 1); 
+        printShortArray(sensor::airTemperatureArrayF, 24);
+      }
+      else {
+        Serial1.print(sensor::airTemp, 1); 
+        Serial1.print(user::targetMinAirTemp, 1); 
+        Serial1.print(user::targetMaxAirTemp, 1); 
+        printShortArray(sensor::airTemperatureArray, 24);
+      }
+    }
+    else if (a_slide == 7) { // home page slide 7
+      Serial1.print(sensor::humidity, 1); 
+      Serial1.print(user::targetMinHumidity, 1); 
+      Serial1.print(user::targetMaxHumidity, 1); 
+      printShortArray(sensor::humidityArray, 24);
+    }
+    else if (a_slide == 8) { // home page slide 8
+      Serial1.print(device::fanOneSpeed); 
+      Serial1.print(user::targetMinFanOneSpeed); 
+      Serial1.print(user::targetMaxFanOneSpeed); 
+      printShortArray(sensor::fanOneSpeedArray, 24);
+    }
+    else if (a_slide == 9) { // home page slide 9
+      Serial1.print(device::fanTwoSpeed); 
+      Serial1.print(user::targetMinFanTwoSpeed); 
+      Serial1.print(user::targetMaxFanTwoSpeed); 
+      printShortArray(sensor::fanTwoSpeedArray, 24);
+    }
+  }
+  // Page 1 (Graphs page)
+  else if (a_page == 1) {
+    Serial1.print(user::convertToF); 
+    Serial1.print(user::convertToInches); 
+    if (a_slide == 0) {
+      printShortArray(sensor::ecArray, 24);     
+    }
+    else if (a_slide == 1) {
+       printShortArray(sensor::tdsArray, 24); 
+    }
+    else if (a_slide == 2) {
+      printShortArray(sensor::phArray, 24);
+    }
+    else if (a_slide == 3) {
+      printShortArray(sensor::co2Array, 24);
+    }
+    else if (a_slide == 4) {
+      if (user::convertToF)
+        printShortArray(sensor::waterTemperatureArrayF, 24);
+      else
+        printShortArray(sensor::waterTemperatureArray, 24);
+    }
+    else if (a_slide == 5) {
+      if (user::convertToInches) 
+        printShortArray(sensor::waterLevelArrayInInches, 24);
+      else
+        printShortArray(sensor::waterLevelArray, 24);
+    }
+    else if (a_slide == 6) {
+      if (user::convertToF)
+        printShortArray(sensor::airTemperatureArrayF, 24);
+      else
+        printShortArray(sensor::airTemperatureArray, 24);
+    }
+    else if (a_slide == 7) {
+      printShortArray(sensor::humidityArray, 24);
+    }
+    else if (a_slide == 8) {
+      printShortArray(sensor::fanOneSpeedArray, 24);
+    }
+    else if (a_slide == 9) {
+      printShortArray(sensor::fanTwoSpeedArray, 24);
+    }
+  }
+   // Page 2 (Max mins page)
+  else if (a_page == 2) {
+    Serial1.print(user::convertToF); 
+    Serial1.print(user::convertToInches); 
+    if (a_slide == 0) {
+      Serial1.print(device::minEc, 2); 
+      Serial1.print(device::maxEc, 2); 
+    }
+    else if (a_slide == 1) {
+      Serial1.print(device::minTds); 
+      Serial1.print(device::maxTds); 
+    }
+    else if (a_slide == 2) {
+      Serial1.print(device::minPh, 2); 
+      Serial1.print(device::maxPh, 2); 
+    }
+    else if (a_slide == 3) {
+      Serial1.print(device::minCo2); 
+      Serial1.print(device::maxCo2); 
+    }
+    else if (a_slide == 4) {
+      if (user::convertToF) {
+        Serial1.print(convertToF(device::minWaterTemp), 1); 
+        Serial1.print(convertToF(device::maxWaterTemp), 1); 
+      }
+      else {
+        Serial1.print(device::minWaterTemp, 1); 
+        Serial1.print(device::maxWaterTemp, 1); 
+      }
+    }
+    else if (a_slide == 5) {
+      if (user::convertToInches) {
+        Serial1.print(convertToInches(device::minWaterLevel), 1); 
+        Serial1.print(convertToInches(device::maxWaterLevel), 1); 
+      }
+      else {
+        Serial1.print(device::minWaterLevel, 1); 
+        Serial1.print(device::maxWaterLevel, 1); 
+      }
+    }
+    else if (a_slide == 6) {
+      if (user::convertToF) {
+        Serial1.print(convertToF(device::minAirTemp), 1); 
+        Serial1.print(convertToF(device::maxAirTemp), 1); 
+      }
+      else {
+        Serial1.print(device::minAirTemp, 1); 
+        Serial1.print(device::maxAirTemp, 1); 
+      }
+    }
+    else if (a_slide == 7) {
+      Serial1.print(device::minHumidity, 1); 
+      Serial1.print(device::maxHumidity, 1); 
+    }
+    else if (a_slide == 8) {
+      Serial1.print(device::minFanOneSpeed); 
+      Serial1.print(device::maxFanOneSpeed); 
+    }
+    else if (a_slide == 9) {
+      Serial1.print(device::minFanTwoSpeed, 1); 
+      Serial1.print(device::maxFanTwoSpeed, 1); 
+    }
+  }
+  // Page 3 (Profiles page)
+  else if (a_page == 3) {
+    Serial1.print(user::profileOneName);
+    Serial1.print(user::profileTwoName);
+    Serial1.print(user::profileThreeName);
+    Serial1.print(user::profileFourName);
+    Serial1.print(user::profileOneName);
+  }
+  // Page 4 (Settings page)
+  else if (a_page == 4) {
+    Serial1.print(user::numberOfDosers); 
+    Serial1.print(user::dosingInterval); 
+    Serial1.print(user::convertToF); 
+    Serial1.print(user::convertToInches); 
+    Serial1.print(user::convertToTds); 
+    Serial1.print(user::disablePpmWarnings);
+    Serial1.print(user::disableEcWarnings);
+    Serial1.print(user::disableCo2Warnings);
+    Serial1.print(user::disablePhWarnings);
+    Serial1.print(user::disableWaterTempWarnings);
+    Serial1.print(user::disableWaterHeightWarnings);
+    Serial1.print(user::disableAirTempWarnings);
+    Serial1.print(user::disableHumidityWarnings);
+  }
+  // Page 5 (EC\TDS page)
+  else if (a_page == 5) {
+    Serial1.print(user::convertToTds); 
+    Serial1.print(user::targetMinTds); 
+    Serial1.print(user::targetMaxTds); 
+    Serial1.print(user::targetMinEc, 2); 
+    Serial1.print(user::targetMaxEc, 2); 
+  }
+  // Page 6 (PH page)
+  else if (a_page == 6) {
+    Serial1.print(user::targetMinPh, 2); 
+    Serial1.print(user::targetMaxPh, 2); 
+  }
+  // Page 7 (Co2 page) 
+  else if (a_page == 7) { // small amount of data so no need to segment based on slider 
+    Serial1.print(user::convertToInches); 
+    if (user::convertToInches) {
+      Serial1.print(user::roomLengthInches, 1);
+      Serial1.print(user::roomWidthInches, 1);
+      Serial1.print(user::roomHeightInches, 1);
+      Serial1.print(user::co2FlowrateFeet3, 1);
+    }
+    else {
+      Serial1.print(user::roomLengthCm, 1);
+      Serial1.print(user::roomWidthCm, 1);
+      Serial1.print(user::roomHeightCm, 1);
+      Serial1.print(user::co2FlowrateLtrs, 1);
+    }
+    Serial1.print(user::co2CheckTimeMinute);
+    Serial1.print(user::co2CheckTimeHour);
+    Serial1.print(user::disableFansTimer);
+    Serial1.print(user::enableManualCo2Duration);
+    Serial1.print(user::disableCo2Control);
+    Serial1.print(user::manualCo2GasDuration);
+  }
+  // Page 8 (Water page)
+  else if (a_page == 8) { // small amount of data so no need to segment based on slider
+    Serial1.print(user::convertToF); 
+    Serial1.print(user::convertToInches); 
+    if (user::convertToInches) {
+      Serial1.print(user::targetMinWaterHeightInches, 1);
+      Serial1.print(user::targetMaxWaterHeightInches, 1);
+    }
+    else {
+      Serial1.print(user::targetMinWaterHeight, 1);
+      Serial1.print(user::targetMaxWaterHeight, 1);
+    }
+    if (user::convertToF) {
+      Serial1.print(user::targetMinWaterTempF, 1);
+      Serial1.print(user::targetMaxWaterTempF, 1);
+    }
+    else {
+      Serial1.print(user::targetMinWaterTemp, 1);
+      Serial1.print(user::targetMaxWaterTemp, 1);
+    }
+    if (user::convertToInches) {
+      Serial1.print(user::waterTankLengthInches, 1);
+      Serial1.print(user::waterTankWidthInches, 1);
+    }
+    else {
+      Serial1.print(user::waterTankLength, 1);
+      Serial1.print(user::waterTankWidth, 1);
+    }
+    Serial1.print(user::autoFillDays);
+    Serial1.print(user::autoFillMinute);
+    Serial1.print(user::autoFillHour);
+    Serial1.print(user::disableDrainAndRefill);
+    Serial1.print(user::refillDoserOneMills);
+    Serial1.print(user::refillDoserTwoMills);
+    Serial1.print(user::refillDoserThreeMills);
+    Serial1.print(user::refillDoserFourMills);
+    Serial1.print(user::refillDoserFiveMills);
+    Serial1.print(user::refillDoserSixMills);
+  }
+  // Page 9 (Doser page) 
+  else if (a_page == 9) {
+    Serial1.print(user::numberOfDosers); 
+    Serial1.print(user::doserOneMode);
+    Serial1.print(user::doserTwoMode);
+    Serial1.print(user::doserThreeMode);
+    Serial1.print(user::doserFourMode);
+    Serial1.print(user::doserFiveMode);
+    Serial1.print(user::doserSixMode);
+    Serial1.print(user::doserOneMills);
+    Serial1.print(user::doserTwoMills);
+    Serial1.print(user::doserThreeMills);
+    Serial1.print(user::doserFourMills);
+    Serial1.print(user::doserFiveMills);
+    Serial1.print(user::doserSixMills);
+    //doserOneSpeed = values[cnt++];
+    //doserTwoSpeed = values[cnt++];
+    //doserThreeSpeed = values[cnt++];
+    //doserFourSpeed = values[cnt++];
+    //doserFiveSpeed = values[cnt++];
+    //doserSixSpeed = values[cnt++];
+  }
+  // Page 10 (Lighting page) 
+  else if (a_page == 10) {
+    Serial1.print(user::lightOnTimeMin);
+    Serial1.print(user::lightOnTimeHour);
+    Serial1.print(user::lightOffTimeMin);
+    Serial1.print(user::lightOffTimeHour);
+    Serial1.print(user::lightMode);
+  }
+  // Page 11 (Fans page)
+  else if (a_page == 11) { // small amount of data so no need to segment based on slider
+    Serial1.print(user::convertToF); 
+    Serial1.print(user::targetMinFanOneSpeed);
+    Serial1.print(user::targetMaxFanOneSpeed);
+    Serial1.print(user::targetMinFanTwoSpeed);
+    Serial1.print(user::targetMaxFanTwoSpeed);
+    if (user::convertToF) {
+      Serial1.print(user::targetMinAirTempF, 1);
+      Serial1.print(user::targetMaxAirTempF, 1);
+    }
+    else {
+      Serial1.print(user::targetMinAirTemp, 1);
+      Serial1.print(user::targetMaxAirTemp, 1);
+    }
+    Serial1.print(user::targetMinHumidity, 1);
+    Serial1.print(user::targetMaxHumidity, 1);
+    Serial1.print(user::fansControlTemperature);
+    Serial1.print(user::fansControlHumidity);
+    Serial1.print(user::fanOneFixedSpeed);
+    Serial1.print(user::fanTwoFixedSpeed);
+  }
+  // Page 12 (Warnings page)
+  else if (a_page == 12) {  // small amount of data so no need to segment based on slider
+    Serial1.print(user::convertToF); 
+    Serial1.print(user::convertToInches); 
+    Serial1.print(sensor::tds);
+    Serial1.print(user::targetMinTds);
+    Serial1.print(user::targetMaxTds);
+    Serial1.print(user::tdsErrorMargin);
+    Serial1.print(sensor::ec, 2);
+    Serial1.print(user::targetMinEc, 2);
+    Serial1.print(user::targetMaxEc, 2);
+    Serial1.print(user::ecErrorMargin, 2);
+    Serial1.print(sensor::ph, 2);
+    Serial1.print(user::targetMinPh, 2);
+    Serial1.print(user::targetMaxPh, 2);
+    Serial1.print(user::phErrorMargin, 2);
+    Serial1.print(sensor::co2);
+    Serial1.print(user::targetCo2);
+    Serial1.print(user::targetCo2);
+    Serial1.print(user::co2ErrorMargin);
+    if (user::convertToF) {
+      Serial1.print(convertToF(sensor::waterTemp), 1);
+      Serial1.print(user::targetMinWaterTempF, 1);
+      Serial1.print(user::targetMaxWaterTempF, 1);
+      Serial1.print(user::waterTempErrorMarginF, 1);
+    }
+    else {
+      Serial1.print(sensor::waterTemp, 1);
+      Serial1.print(user::targetMinWaterTemp, 1);
+      Serial1.print(user::targetMaxWaterTemp, 1);
+      Serial1.print(user::waterTempErrorMargin, 1);
+    }
+    if (user::convertToInches) {
+      Serial1.print(convertToInches(sensor::waterLevel), 1);
+      Serial1.print(user::targetMinWaterHeightInches, 1);
+      Serial1.print(user::targetMaxWaterHeightInches, 1);
+      Serial1.print(user::waterHeightErrorMarginInches, 1);
+    }
+    else {
+      Serial1.print(sensor::waterLevel, 1);
+      Serial1.print(user::targetMinWaterHeight, 1);
+      Serial1.print(user::targetMaxWaterHeight, 1);
+      Serial1.print(user::waterHeightErrorMargin, 1);
+    }
+    if (user::convertToF) {
+      Serial1.print(convertToF(sensor::airTemp), 1);
+      Serial1.print(user::targetMinAirTempF, 1);
+      Serial1.print(user::targetMaxAirTempF, 1);
+      Serial1.print(user::airTempErrorMarginF, 1);
+    }
+    else {
+      Serial1.print(sensor::airTemp, 1);
+      Serial1.print(user::targetMinAirTemp, 1);
+      Serial1.print(user::targetMaxAirTemp, 1);
+      Serial1.print(user::airTempErrorMargin, 1);
+    }
+    Serial1.print(sensor::humidity, 1);
+    Serial1.print(user::targetMinHumidity, 1);
+    Serial1.print(user::targetMaxHumidity, 1);
+    Serial1.print(user::humidityErrorMargin, 1);
+  }
+  else {
+    Serial.print(F("Page not found!"));
+  }
+}
+
+void setValues(const uint8_t a_cmd, const char* a_val) {
+  Serial.print(__FUNCTION__); Serial.print(F(" Received cmd: ")); Serial.print(a_cmd); Serial.print(F(" and val: ")); Serial.println(a_val);
   // ============== PROFILES PAGE  ==============
   // profileOneName
   if (a_cmd ==0) {
@@ -42,7 +498,7 @@ void setValue(const int a_cmd, const char* a_val) {
   else if (a_cmd ==9) {
     user::convertToF = strBool(a_val);
   }
-  // convertToInchs
+  // convertToInchess
   else if (a_cmd ==10) {
     user::convertToInches = strBool(a_val);
   }
@@ -380,27 +836,35 @@ void setValue(const int a_cmd, const char* a_val) {
   //server.send(200, "text/plane", "OK");
 }
 
-void buffToCharArray(const char* a_src, char* a_dest, const int& a_size) {
+bool strBool(const char* buffer) {
+  if (strstr(buffer, "true") != NULL)
+    return true;
+  else
+    return false;
+}
+
+void printShortArray(const uint16_t* a_array, const int16_t a_len) {
+  for (int i = 0; i < a_len; i++) {
+    Serial1.print(a_array[i]);
+  }
+}
+
+void buffToCharArray(const char* a_src, char* a_dest, const int16_t a_size) {
   for (uint8_t i = 0; i < a_size; i++) {
     a_dest[i] = a_src[i];
   }
   delay(1);
+  yield();
 }
 
-void buffToBoolArray(const char* a_src, bool* a_dest, const int& a_size) {
+void buffToBoolArray(char* a_src, bool* a_dest, const int16_t a_size) {
   uint8_t i = 0;
-  char* data = strtok((char*)a_src, ",");
+  char* data = strtok(a_src, ",");
   while (data != NULL) {
     if (i < a_size)
       a_dest[i++] = atoi(data);
     data = strtok(NULL, ",");
   }
   delay(1);
-}
-
-bool strBool(const char* buffer) {
-  if (strstr(buffer, "true") != NULL)
-    return true;
-  else
-    return false;
+  yield();
 }

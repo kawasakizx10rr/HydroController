@@ -1,8 +1,8 @@
 // The scaling line graph function
 void drawGraph (
-  const int& a_xStartPos, const int& a_yStartPos, const int& a_graphHeight,
-  const int& a_graphWidth, const int& a_numYLabels, short** a_data, const bool* a_compressed, 
-  const int a_numArrays, const int& a_arrayNumber, const int& a_percision, const unsigned int* a_colors)
+  const int16_t& a_xStartPos, const int16_t& a_yStartPos, const int16_t& a_graphHeight,
+  const int16_t& a_graphWidth, const int16_t& a_numYLabels, uint16_t** a_data, const bool* a_compressed, 
+  const int16_t a_numArrays, const int16_t& a_arrayNumber, const int16_t& a_percision, const uint16_t* a_colors)
 {
   float minArrayVal = __FLT_MAX__, maxArrayVal = __FLT_MIN__; 
   tft.setFontScale(1);
@@ -10,15 +10,15 @@ void drawGraph (
   tft.setTextColor(RA8875_BLACK, user::backgroundColor); 
 
   // work out the greatest number to display on the y axis.
-  for (int i = 0; i < a_numArrays; i++) {
-    for (int n = 0; n < a_arrayNumber; n++) {
+  for (int16_t i = 0; i < a_numArrays; i++) {
+    for (int16_t n = 0; n < a_arrayNumber; n++) {
       if (uncompressShort(a_data[i][n], a_compressed[i]) > maxArrayVal)
        maxArrayVal = uncompressShort(a_data[i][n], a_compressed[i]);
       if (uncompressShort(a_data[i][n], a_compressed[i]) < minArrayVal)
        minArrayVal = uncompressShort(a_data[i][n], a_compressed[i]);
     }
   }
-  int maxGraphArrayValues = sensor::maxSensorArrayVals;
+  int16_t maxGraphArrayValues = sensor::maxSensorArrayVals;
   bool redrawGraph = device::newGraphData;
   static float graphXstartPosition = a_xStartPos;
   static float xSpacing = 0;
@@ -35,7 +35,7 @@ void drawGraph (
     float tempYmax = maxArrayVal;
     graphXstartPosition = a_xStartPos;
 
-    for (int i = 0; i < a_numYLabels + 1; i++) {
+    for (int16_t i = 0; i < a_numYLabels + 1; i++) {
       tft.setCursor(a_xStartPos, yLablePosition);
       tft.print(tempYmax, a_percision);
       yLablePosition += (a_graphHeight - 10) / a_numYLabels;
@@ -51,12 +51,12 @@ void drawGraph (
     float xLablePosition = graphXstartPosition + 2;
     xSpacing = ((float)(a_graphWidth - (graphXstartPosition - a_xStartPos)) / maxGraphArrayValues) + 1;
     float lableSpacing = (float)(a_graphWidth - (graphXstartPosition - a_xStartPos)) / (maxGraphArrayValues  + 1);
-    for (int i = 0; i < maxGraphArrayValues + 1; i++) {
+    for (int16_t i = 0; i < maxGraphArrayValues + 1; i++) {
       tft.setCursor(xLablePosition, a_yStartPos + a_graphHeight - 1);
       tft.print(i);
       xLablePosition += lableSpacing;
     }
-    int lineEnd = tft.getFontX();
+    int16_t lineEnd = tft.getFontX();
     tft.drawLine(graphXstartPosition + 2, a_yStartPos + a_graphHeight, lineEnd, a_yStartPos + a_graphHeight, RA8875_BLACK);
     redrawGraph = true;
     prevMinArrayVal = minArrayVal;
@@ -69,10 +69,10 @@ void drawGraph (
   // draw line graph
   if (redrawGraph) { // display::refreshPage || 
     if (a_arrayNumber >= 2) {
-      for (int i = 0; i < a_numArrays; i++) {
+      for (int16_t i = 0; i < a_numArrays; i++) {
         float xGap = graphXstartPosition + 2;
         float plotYstartPosition = 0, plotYendPosition = 0;
-        for (int n = 0; n < a_arrayNumber - 1; n++) {
+        for (int16_t n = 0; n < a_arrayNumber - 1; n++) {
           plotYstartPosition = mapFloat(uncompressShort(a_data[i][n], a_compressed[i]), minArrayVal, maxArrayVal, a_yStartPos + a_graphHeight - 1, a_yStartPos);
           plotYendPosition = mapFloat(uncompressShort(a_data[i][n+1], a_compressed[i]), minArrayVal, maxArrayVal, a_yStartPos + a_graphHeight - 1, a_yStartPos);
           tft.drawLine(xGap, plotYstartPosition, xGap + xSpacing, plotYendPosition, a_colors[i]);

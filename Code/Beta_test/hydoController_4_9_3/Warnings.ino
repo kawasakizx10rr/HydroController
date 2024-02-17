@@ -4,7 +4,7 @@
 void displayWarnings() {
   device::globalErrorState = device::NO_WARNING;
   static uint8_t previousErrorState = 0;
-  static unsigned long prevWarnMillis = millis();
+  static uint32_t prevWarnMillis = millis();
   if (device::sensorsReady && millis() - prevWarnMillis >= 1000UL) {
     setErrorState(sensor::ec, user::targetMinEc, user::targetMaxEc, user::ecErrorMargin, user::disableEcWarnings, device::ecErrorState);
     setErrorState(sensor::tds, user::targetMinTds, user::targetMaxTds, user::tdsErrorMargin, user::disableEcWarnings, device::ecErrorState);
@@ -16,7 +16,7 @@ void displayWarnings() {
     if (!user::convertToInches)
       setErrorState(sensor::waterLevel, user::targetMinWaterHeight, user::targetMaxWaterHeight, user::waterHeightErrorMargin, user::disableWaterHeightWarnings, device::waterLevelErrorState);
     else
-      setErrorState(sensor::waterLevelInches, user::targetMinWaterHeightInches, user::targetMaxWaterHeightInches, user::waterHeightErrorMarginInches, user::disableWaterHeightWarnings, device::waterLevelErrorState);
+      setErrorState(convertToInches(sensor::waterLevel), user::targetMinWaterHeightInches, user::targetMaxWaterHeightInches, user::waterHeightErrorMarginInches, user::disableWaterHeightWarnings, device::waterLevelErrorState);
     if (!user::convertToF)
       setErrorState(sensor::airTemp, user::targetMinAirTemp, user::targetMaxAirTemp, user::airTempErrorMargin, user::disableAirTempWarnings, device::airTempErrorState);
     else

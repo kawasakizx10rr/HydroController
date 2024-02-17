@@ -20,7 +20,7 @@ void initializeDevice() {
   tft.setFontScale(1);
   tft.setCursor(120, 276);
   tft.print(F("version ")); tft.print(device::versionNumber);
-  int startX = 305;
+  int16_t startX = 305;
   //
   tft.setFont(&Arial_22px_Regular);
   tft.print(120, 370, F("Initilizing device..."));
@@ -224,16 +224,16 @@ void initializeDevice() {
 }
 
 // Send a switchcase and command to the 328P via i2c
-void sendToSlave(const char& a_switchcase, const byte& a_value) {
+void sendToSlave(const char& a_switchcase, const uint8_t& a_value) {
   Wire.beginTransmission(device::unoAddress);
   Wire.write(a_switchcase);
   Wire.write(a_value);
   Wire.endTransmission();
 }
 
-void setTimer(uint8_t& a_min, uint8_t& a_hour, const unsigned int& a_interalInMinutes) {
-  unsigned int hours = a_interalInMinutes / 60;
-  unsigned int minutes = a_interalInMinutes % 60;
+void setTimer(uint8_t& a_min, uint8_t& a_hour, const uint16_t& a_interalInMinutes) {
+  uint16_t hours = a_interalInMinutes / 60;
+  uint16_t minutes = a_interalInMinutes % 60;
   if (rtc.minute() + minutes < 60)
     a_min = rtc.minute() + minutes;
   else {
@@ -254,7 +254,7 @@ void beep() {
     sendToSlave('T', 0);
 }
 
-// Adjust any (uint8_t,int,float or long) value by x increment within the range of min and max
+// Adjust any (uint8_t,int16_t,float or int32_t) value by x increment within the range of min and max
 float adjustValue(float a_val, float a_increment, const float& a_min, const float& a_max) {
   beep();
   if (display::lastTouchMillis - display::touchStartMillis > 5000UL)
@@ -279,7 +279,7 @@ float adjustValue(float a_val, float a_increment, const float& a_min, const floa
   return a_val;
 }
 
-unsigned long adjustInterval(unsigned long a_val, const int a_increment) {
+uint32_t adjustInterval(uint32_t a_val, const int16_t a_increment) {
   beep();
   if (display::lastTouchMillis - display::touchStartMillis > 5000UL)
     display::debounceTime = 0;
@@ -331,16 +331,16 @@ void adjustrtc() {
   if (device::globalDebug)
     Serial.println(F("Setting RTC rtc"));
   // Day-of-Week: monday = 1, sunday = 7
-  rtc.set(0, user::rtcMinute, user::rtcHour, user::rtcDayOfWeek + 1, user::rtcDay, user::rtcMonth, user::rtcYear - 2000);
+  rtc.set(0, user::rtcMinute, user::rtcHour, user::rtcDayOfWeek + 1, user::rtcDay, user::rtcMonth, user::rtcYear);
   delay(100);
   rtc.refresh();
 }
 
 // prime a doser at a given speed in PWM 0-255
-void prime(const uint8_t& a_doser, const uint8_t& a_pin, const int& a_speed) {
+void prime(const uint8_t& a_doser, const uint8_t& a_pin, const int16_t& a_speed) {
   static uint8_t previousDoser = 0;
-  static int currentDosingAmount = 0;
-  static unsigned long primeRunTime = 0;
+  static int16_t currentDosingAmount = 0;
+  static uint32_t primeRunTime = 0;
   device::primeTouchTime = millis();
   if (a_speed != 0) {
     if (a_doser != previousDoser) {
@@ -382,7 +382,7 @@ void saveLogMessage(const uint8_t& a_logType) {
   char t_day[8];
   itoa(rtc.day(), t_day, 10);
   // Push back log array if full
-  int arraypos = message::systemLogPos;
+  int16_t arraypos = message::systemLogPos;
   if (message::systemLogPos == message::maxLogs) {
     if (device::globalDebug)
       Serial.println(F("Pushing logs back..."));
@@ -421,15 +421,15 @@ void saveLogMessage(const uint8_t& a_logType) {
     message::systemLogPos++;
 }
 
-// Convert a float to int, with a precison of 2 decimal places
-int fltToInt(const float& a_value) {
-  int val = a_value * 100;
+// Convert a float to int16_t, with a precison of 2 decimal places
+int16_t fltToInt(const float& a_value) {
+  int16_t val = a_value * 100;
   return val;
 }
 
-// Convert a float to int, with a precison of 3 decimal places
-int doubleToInt(const float& a_value) {
-  int val = a_value * 1000;
+// Convert a float to int16_t, with a precison of 3 decimal places
+int16_t doubleToInt(const float& a_value) {
+  int16_t val = a_value * 1000;
   return val;
 }
 
@@ -439,18 +439,18 @@ float convertToF(const float& a_value) {
 }
 
 // convert a centimeter value to inches
-float convertToInch(const float& a_value) {
+float convertToInches(const float& a_value) {
   return a_value / 2.54;
 }
 
-short compressFloatToShort(const float a_value) {
-  return (short)a_value * 100;
+uint16_t compressFloatToShort(const float a_value) {
+  return (uint16_t)a_value * 100;
 }
 
 // when the graph arrays are full push back the array values by 1
 void pushBackDataArrays() {
   static bool graphFirstSave = true;
-  static unsigned long graphPreviousMillis = 0;
+  static uint32_t graphPreviousMillis = 0;
   if ((millis() - graphPreviousMillis >= user::graphInterval * 1000UL) || graphFirstSave) {
     if (sensor::sensorArrayPos < sensor::maxSensorArrayVals) {
       updateGraphArrays(sensor::sensorArrayPos);
@@ -480,16 +480,16 @@ void pushBackDataArrays() {
   }
   //
   if (sensor::fanArrayPos == sensor::maxFanArrayVals) {
-    for (int i = 0; i < sensor::maxFanArrayVals - 1; i++) {
+    for (int16_t i = 0; i < sensor::maxFanArrayVals - 1; i++) {
       sensor::fanTemperatureArray[i] = sensor::fanTemperatureArray[i + 1];
       sensor::fanHumidityArray[i] = sensor::fanHumidityArray[i + 1];
     }
-    sensor::fanTemperatureArray[sensor::fanArrayPos -1] = (short)sensor::airTemp * 100;
-    sensor::fanHumidityArray[sensor::fanArrayPos - 1] = (short)sensor::humidity * 100;
+    sensor::fanTemperatureArray[sensor::fanArrayPos -1] = (uint16_t)sensor::airTemp * 100;
+    sensor::fanHumidityArray[sensor::fanArrayPos - 1] = (uint16_t)sensor::humidity * 100;
   }
   else {
-    sensor::fanTemperatureArray[sensor::fanArrayPos] = (short)sensor::airTemp * 100;
-    sensor::fanHumidityArray[sensor::fanArrayPos] = (short)sensor::humidity * 100;
+    sensor::fanTemperatureArray[sensor::fanArrayPos] = (uint16_t)sensor::airTemp * 100;
+    sensor::fanHumidityArray[sensor::fanArrayPos] = (uint16_t)sensor::humidity * 100;
     sensor::fanArrayPos++;
   }
 }
@@ -503,7 +503,7 @@ void updateGraphArrays(const uint8_t& a_arrayPosition) {
   sensor::waterTemperatureArray[a_arrayPosition] = compressFloatToShort(sensor::waterTemp);
   sensor::waterTemperatureArrayF[a_arrayPosition] = compressFloatToShort(convertToF(sensor::waterTemp));
   sensor::waterLevelArray[a_arrayPosition] = compressFloatToShort(sensor::waterLevel);
-  sensor::waterLevelArrayInInches[a_arrayPosition] = compressFloatToShort(sensor::waterLevelInches);
+  sensor::waterLevelArrayInInches[a_arrayPosition] = compressFloatToShort(convertToInches( sensor::waterLevel));
   sensor::airTemperatureArray[a_arrayPosition] = compressFloatToShort(sensor::airTemp);
   sensor::airTemperatureArrayF[a_arrayPosition] = compressFloatToShort(convertToF(sensor::airTemp));
   sensor::humidityArray[a_arrayPosition] = compressFloatToShort(sensor::humidity);
@@ -566,22 +566,22 @@ void setMaxMins() {
 }
 
 // Average any float array
-float averageFltArray(const float* a_array, const int a_length) {
+float averageFltArray(const float* a_array, const int16_t a_length) {
   float rtnVal = 0;
-  for (int i = 0; i < a_length; i++)
+  for (int16_t i = 0; i < a_length; i++)
     rtnVal += a_array[i];
   return rtnVal / a_length;
 } 
 
 // Average any float array
-float averageShortToFltArray(const short* a_array, const int a_length) {
+float averageShortToFltArray(const uint16_t* a_array, const int16_t a_length) {
   float rtnVal = 0;
-  for (int i = 0; i < a_length; i++)
+  for (int16_t i = 0; i < a_length; i++)
     rtnVal += (float)a_array[i] / 100.0;
   return rtnVal / a_length;
 } 
 
-float uncompressShort(const short a_value, const bool a_isCompressed) {
+float uncompressShort(const uint16_t a_value, const bool a_isCompressed) {
   if (a_isCompressed)
     return (float)a_value / 100.0;
   return (float)a_value;
@@ -612,17 +612,17 @@ bool isEqual(const float a_val, const float a_val2, const float a_epsilon) {
   return fabs(a_val - a_val2) < a_epsilon;
 }
 
-bool hasChanged(const float a_val, const float a_val2, const int a_precision) {
-  long long val = a_precision != 0 ? a_val * pow(10, a_precision) : a_val;
-  long long val2 = a_precision != 0 ? a_val2 * pow(10, a_precision) : a_val2;
+bool hasChanged(const float a_val, const float a_val2, const int16_t a_precision) {
+  uint32_t val = a_precision != 0 ? a_val * pow(10, a_precision) : a_val;
+  uint32_t val2 = a_precision != 0 ? a_val2 * pow(10, a_precision) : a_val2;
   if (val != val2) {
     return true;
   }
   return false;
 }
 
-void addCharToStr(char* a_charPtr, const int a_arrayLen, const char a_char) {
-  for (int i = 0; i < a_arrayLen; i++) {
+void addCharToStr(char* a_charPtr, const int16_t a_arrayLen, const char a_char) {
+  for (int16_t i = 0; i < a_arrayLen; i++) {
     if (tft.getStringWidth(a_charPtr) + tft.getStringWidth(a_char) > 336) {
       if (device::intputPosition > 0)
         device::intputPosition--;
@@ -664,17 +664,17 @@ float convertGallonsToLtrs(const float a_gallons) {
   return a_gallons / 3.78541;
 }
 
-float lessThan(const float a_val, const float a_target, const int a_precision) {
-  long long val = a_val * pow(10, a_precision);
-  long long target = a_target * pow(10, a_precision);
+float lessThan(const float a_val, const float a_target, const int16_t a_precision) {
+  uint32_t val = a_val * pow(10, a_precision);
+  uint32_t target = a_target * pow(10, a_precision);
   if (hasChanged(a_val, a_target, a_precision) && val < target)
     return true;
   return false;
 }
 
-float greaterThan(const float a_val, const float a_target, const int a_precision) {
-  long long val = a_val * pow(10, a_precision);
-  long long target = a_target * pow(10, a_precision);
+float greaterThan(const float a_val, const float a_target, const int16_t a_precision) {
+  uint32_t val = a_val * pow(10, a_precision);
+  uint32_t target = a_target * pow(10, a_precision);
   if (hasChanged(a_val, a_target, a_precision) && val > target)
     return true;
   return false;

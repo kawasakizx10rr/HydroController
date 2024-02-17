@@ -12,18 +12,12 @@ void readSensors() {
       sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
     else
       sensor::waterLevel = getWaterHeight();
-    sensor::waterLevelInches = sensor::waterLevel / 2.5;
     if (sensor::waterLevel < 0)
       sensor::waterLevel = 0;
     else if (sensor::waterLevel > 999)
       sensor::waterLevel = 999;
-    if (sensor::waterLevelInches < 0)
-      sensor::waterLevelInches = 0;
-    else if (sensor::waterLevelInches > 999)
-      sensor::waterLevelInches = 999;
     // calculate the water volume
     sensor::waterVolumeLtrs = sensor::waterLevel * user::waterTankLength * user::waterTankWidth;
-    sensor::waterVolumeGallons = (sensor::waterLevelInches * user::waterTankLengthInches * user::waterTankWidthInches) * 0.004329;
     // AIR TEMP AND HUMIDITY============================================================
 #ifdef USING_HDC1080
     sensor::airTemp = hdc.readTemperature();
@@ -43,18 +37,18 @@ void readSensors() {
     sensor::ldr = analogRead(pin::ldr);
     //Serial.print(F("LDR: ")); Serial.println(sensor::ldr);
     // CO2 ===============================================================================
-    const unsigned long responceWindow = millis() + 50UL;
+    const uint32_t timeout = millis() + 50UL;
     Serial2.write(sensor::co2Request, 9);
     uint8_t buffer[8] {0, 0, 0, 0, 0, 0, 0, 0};
     uint8_t bufferPosition = 0;
-    while (millis() <= responceWindow && Serial2.available() > 0) {
+    while (millis() <= timeout && Serial2.available() > 0) {
       char c = Serial2.read();
       if (bufferPosition < 8)
         buffer[bufferPosition++] = c;
     }
     float sensorValue = 0;
     if (buffer[0] == 255 && buffer[5] == 0 && buffer[7] == 0)
-      sensorValue = (256 * (int)buffer[2]) + (int)buffer[3];
+      sensorValue = (256 * (int16_t)buffer[2]) + (int16_t)buffer[3];
     if (sensorValue <= 0) {
       // if (device::globalDebug) {
       //   Serial.print(F("Error reading Co2 sensor buffer: "));
@@ -135,7 +129,7 @@ void calibrateCo2() {
 }
 
 float getWaterHeight() {
-  static unsigned long sensorPreviousMillis = 0;
+  static uint32_t sensorPreviousMillis = 0;
   float waterLevel = 0;
   if (millis() - sensorPreviousMillis >= 1000UL) {
     if (user::heightSensor == user::ETAPE) {
@@ -227,7 +221,7 @@ bool phCallbration() {
   sensor::waterTemp = dallasTemperature.getTempCByIndex(0);
   // Get the average voltage
   float voltage = 0;
-  for (int i = 0; i < 10; i++) {
+  for (int16_t i = 0; i < 10; i++) {
     voltage += (analogRead(pin::phSensor) * device::aref / 1024.0) * 1000.0; // read the voltage in mv   
     delay(250);
   } 
@@ -283,7 +277,7 @@ void setEtapeMaxVolumeResistance() {
   }
 }
 
-float readResistance(const int& a_pin, const int& a_seriesResistance) {
+float readResistance(const int16_t& a_pin, const int16_t& a_seriesResistance) {
   // Get ADC value.
   float resistance = analogRead(a_pin);
   // Convert ADC reading to resistance.

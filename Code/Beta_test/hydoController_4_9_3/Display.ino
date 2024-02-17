@@ -99,12 +99,12 @@ void homePage() {
     tft.setFont(&akashi_36px_Regular);
     tft.setFontScale(1);
     tft.setTextColor(RA8875_BLACK, user::backgroundColor);
-    static int statusBarStartX = 0, statusBarWidth = 0;
+    static int16_t statusBarStartX = 0, statusBarWidth = 0;
     tft.fillRect(statusBarStartX, 92, statusBarWidth, 34, user::backgroundColor);
     char timeStr[16]{0};
     strcpy(timeStr, rtc.getTimeStr());
     strcat(timeStr, (rtc.hour() <= 12 ? " AM" : " PM"));
-    int timeStrOffset = tft.getStringWidth(timeStr);
+    int16_t timeStrOffset = tft.getStringWidth(timeStr);
     tft.print(795-timeStrOffset, 92, timeStr);
     // Wifi symbol
     tft.drawXBMP(795 - (timeStrOffset + 45), 99, miniWifiIcon, 97, 30, 26, wifi::wifiEnabled ? RA8875_BLUE : display::RA8875_DARKGREY, user::backgroundColor, 1);
@@ -137,7 +137,7 @@ void homePage() {
     }
     else if (display::homePage == 5) {
       if (user::convertToInches)
-        drawSensorSlide(sensor::waterLevelInches, user::targetMinWaterHeightInches, user::targetMaxWaterHeightInches, sensor::waterLevelArrayInInches, true, 1);
+        drawSensorSlide(convertToInches(sensor::waterLevel), user::targetMinWaterHeightInches, user::targetMaxWaterHeightInches, sensor::waterLevelArrayInInches, true, 1);
       else
         drawSensorSlide(sensor::waterLevel, user::targetMinWaterHeight, user::targetMaxWaterHeight, sensor::waterLevelArray, true, 1);
     }
@@ -166,9 +166,9 @@ void graphsPage() {
       drawGraphIcons();
     }
     
-    int numOfGraphs = 0;
-    short* graphArrays[10] {};
-    unsigned int graphColors[10] {};
+    int16_t numOfGraphs = 0;
+    uint16_t* graphArrays[10] {};
+    uint16_t graphColors[10] {};
     bool compressed[10] {};
 
     if (display::showTdsGraph) {
@@ -228,8 +228,8 @@ void graphsPage() {
 // =============================================================================================================================================================================================
 // =============================================================================================================================================================================================
 void maxminsPage() {
-  unsigned int color = 0;
-  unsigned int color2 = 0;
+  uint16_t color = 0;
+  uint16_t color2 = 0;
   if (display::refreshPage) {
     drawSlideIcons(110, 112, display::maxMinsPage, 10);
     tft.setFont(&akashi_36px_Regular);
@@ -272,7 +272,7 @@ void maxminsPage() {
     if (display::refreshPage)
       tft.print(234, 126, F("Water height history"));
     if (user::convertToInches) {
-      drawTwoValues(285, convertToInch(device::minWaterLevel), RA8875_BLACK, 0, 650, convertToInch(device::maxWaterLevel), RA8875_BLACK, 0, "\"", 0);
+      drawTwoValues(285, convertToInches(device::minWaterLevel), RA8875_BLACK, 0, 650, convertToInches(device::maxWaterLevel), RA8875_BLACK, 0, "\"", 0);
     }
     else {
       drawTwoValues(285, device::minWaterLevel, RA8875_BLACK, 0, 650, device::maxWaterLevel, RA8875_BLACK, 0, "CM", 50);
@@ -333,7 +333,7 @@ void profilesPage() {
     inputBox(130, 408, user::profileFiveName);
     saveButton(493, 408);
     loadButton(631, 408);
-    const int position = 160 + (device::userProfile * 62);
+    const int16_t position = 160 + (device::userProfile * 62);
     tft.drawRect(125, position - 5, 350, 51, RA8875_BLUE);
     tft.drawRect(126, position - 4, 348, 49, RA8875_BLUE);
     tft.drawRect(127, position - 3, 346, 47, RA8875_BLUE);
@@ -462,7 +462,7 @@ void co2Page() {
     tft.setFont(&HallfeticaLargenum_42px_Regular);
     tft.setFontScale(1);
     // ROOM LENGTH
-    static int roomLengthStartPos = 0, roomLengthEndPos = 0;
+    static int16_t roomLengthStartPos = 0, roomLengthEndPos = 0;
     static float previousRoomLength;
     float roomLength = user::convertToInches ? user::roomLengthInches : user::roomLengthCm;
     if (display::refreshPage || hasChanged(roomLength, previousRoomLength, 2)) {
@@ -487,7 +487,7 @@ void co2Page() {
     // ROOM WIDTH
     tft.setFont(&HallfeticaLargenum_42px_Regular);
     tft.setFontScale(1);
-    static int roomWidthStartPos = 0, roomWidthEndPos = 0;
+    static int16_t roomWidthStartPos = 0, roomWidthEndPos = 0;
     static float previousRoomWidth;
     float roomWidth = user::convertToInches ? user::roomWidthInches : user::roomWidthCm;
     if (display::refreshPage || hasChanged(roomWidth, previousRoomWidth, 2)) {
@@ -512,7 +512,7 @@ void co2Page() {
     // ROOM HEIGHT
     tft.setFont(&HallfeticaLargenum_42px_Regular);
     tft.setFontScale(1);
-    static int roomHeightStartPos = 0, roomHeightEndPos = 0;
+    static int16_t roomHeightStartPos = 0, roomHeightEndPos = 0;
     static float previousRoomHeight;
     float roomHeight = user::convertToInches ? user::roomHeightInches : user::roomHeightCm;
     if (display::refreshPage || hasChanged(roomHeight, previousRoomHeight, 2)) {
@@ -551,7 +551,7 @@ void co2Page() {
     tft.setFont(&HallfeticaLargenum_42px_Regular);
     tft.setFontScale(1);
     // CO2 FLOW RATE LTR/MIN
-    static int co2FlowrateStartPos = 0, co2FlowrateEndPos = 0;
+    static int16_t co2FlowrateStartPos = 0, co2FlowrateEndPos = 0;
     static float previousCo2Flowrate;
     float co2Flowrate = user::convertToInches ? user::co2FlowrateFeet3 : user::co2FlowrateLtrs;
     if (display::refreshPage || hasChanged(co2Flowrate, previousCo2Flowrate, 2)) {
@@ -581,8 +581,8 @@ void co2Page() {
     // CO2 CHECK TIME
     tft.setFont(&HallfeticaLargenum_42px_Regular);
     tft.setFontScale(1);
-    static int co2CheckTimePosition;
-    static int previousCo2CheckTimeMinute;
+    static int16_t co2CheckTimePosition;
+    static int16_t previousCo2CheckTimeMinute;
     if (display::refreshPage || user::co2CheckTimeMinute != previousCo2CheckTimeMinute) {
       tft.fillRect(338, 238, co2CheckTimePosition - 336, 50, user::backgroundColor);
       tft.setCursor(350, 240);
@@ -603,8 +603,8 @@ void co2Page() {
     // DISABLE FANS TIMER
     tft.setFont(&HallfeticaLargenum_42px_Regular);
     tft.setFontScale(1);
-    static int disableFansTimerStartPos = 0, disableFansTimerEndPos = 0;
-    static int previousDisableFansTimer;
+    static int16_t disableFansTimerStartPos = 0, disableFansTimerEndPos = 0;
+    static int16_t previousDisableFansTimer;
 
     if (display::refreshPage || user::disableFansTimer != previousDisableFansTimer) {
       tft.fillRect(disableFansTimerStartPos, 238, disableFansTimerEndPos - disableFansTimerStartPos, 50, user::backgroundColor);
@@ -680,7 +680,7 @@ void co2Page() {
       previousDisableCo2Control = user::disableCo2Control;
     }
     // CO2 MANUAL GAS DURATION TIMER
-    static int manualCo2GasDurationStartPos = 0, manualCo2GasDurationEndPos = 0;
+    static int16_t manualCo2GasDurationStartPos = 0, manualCo2GasDurationEndPos = 0;
     static float previousManualCo2GasDuration;
     if (display::refreshPage || user::manualCo2GasDuration != previousManualCo2GasDuration) {
       tft.setTextColor(RA8875_BLACK, user::backgroundColor);
@@ -774,7 +774,7 @@ void waterPage() {
       tft.setFont(&akashi_36px_Regular);
       tft.setFontScale(1);
       tft.setTextColor(RA8875_BLACK, RA8875_WHITE);
-      int calanderX = 110, calanderY = 205;
+      int16_t calanderX = 110, calanderY = 205;
       for (uint8_t i = 1; i < 32; i++) {
         if (i < 10)
           tft.setCursor(calanderX + 14, calanderY);
@@ -799,7 +799,7 @@ void waterPage() {
       display::refreshCalander = false;
     }
     static uint8_t previousAutoFillMinute;
-    static int autoFillTimePosition;
+    static int16_t autoFillTimePosition;
     if (display::refreshPage || user::autoFillMinute != previousAutoFillMinute) {
       tft.setFont(&akashi_36px_Regular);
       tft.setFontScale(1);
@@ -837,41 +837,41 @@ void waterPage() {
     if (display::refillDoserPageScrollPos < user::numberOfDosers - 4) {
       tft.fillTriangle(779, 200, 799, 240, 779, 280, RA8875_BLUE);
     }
-    int startPosition = display::refillDoserPageScrollPos * 178;
+    int16_t startPosition = display::refillDoserPageScrollPos * 178;
     // The below method may look odd but it is much faster than a for loop "after testing"
     if (display::refillDoserPageScrollPos == 0) { // DOSER 1
       static uint8_t previousDoserOneMode;
-      static int doserOneMlsPosition, previousDoserOneMls;
+      static int16_t doserOneMlsPosition, previousDoserOneMls;
       drawDoser(100 - startPosition, 150, 1, user::refillDoserOneMills, previousDoserOneMls, doserOneMlsPosition, 0, 0);
       drawEcPhButton(149 - startPosition, 300, user::doserOneMode, previousDoserOneMode, false);
     }
     if (display::refillDoserPageScrollPos <= 1) { // DOSER 2
       static uint8_t previousDoserTwoMode;
-      static int doserTwoMlsPosition, previousDoserTwoMls;
+      static int16_t doserTwoMlsPosition, previousDoserTwoMls;
       drawDoser(278 - startPosition, 150, 2, user::refillDoserTwoMills, previousDoserTwoMls, doserTwoMlsPosition, 0, 0);
       drawEcPhButton(327 - startPosition, 300, user::doserTwoMode, previousDoserTwoMode, false);
     }
     if (display::refillDoserPageScrollPos <= 2) { // DOSER 3
       static uint8_t previousDoserThreeMode;
-      static int doserThreeMlsPosition, previousDoserThreeMls;
+      static int16_t doserThreeMlsPosition, previousDoserThreeMls;
       drawDoser(456 - startPosition, 150, 3, user::refillDoserThreeMills, previousDoserThreeMls, doserThreeMlsPosition, 0, 0);
       drawEcPhButton(505 - startPosition, 300, user::doserThreeMode, previousDoserThreeMode, false);
     }
     if (display::refillDoserPageScrollPos <= 2) { // DOSER 4
       static uint8_t previousDoserFourMode;
-      static int doserFourMlsPosition, previousDoserFourMls;
+      static int16_t doserFourMlsPosition, previousDoserFourMls;
       drawDoser(634 - startPosition, 150, 4, user::refillDoserFourMills, previousDoserFourMls, doserFourMlsPosition, 0, 0);
       drawEcPhButton(683 - startPosition, 300, user::doserFourMode, previousDoserFourMode, false);
     }
     if (display::refillDoserPageScrollPos >= 1) { // DOSER 5
       static uint8_t previousDoserFiveMode;
-      static int doserFiveMlsPosition, previousDoserFiveMls;
+      static int16_t doserFiveMlsPosition, previousDoserFiveMls;
       drawDoser(812 - startPosition, 150, 5, user::refillDoserFiveMills, previousDoserFiveMls, doserFiveMlsPosition, 0, 0);
       drawEcPhButton(861 - startPosition, 300, user::doserFiveMode, previousDoserFiveMode, false);
     }
     if (display::refillDoserPageScrollPos == 2) { // DOSER 6
       static uint8_t previousDoserSixMode;
-      static int doserSixMlsPosition, previousDoserSixMls;
+      static int16_t doserSixMlsPosition, previousDoserSixMls;
       drawDoser(990 - startPosition, 150, 6, user::refillDoserSixMills, previousDoserSixMls, doserSixMlsPosition, 0, 0);
       drawEcPhButton(1039 - startPosition, 300, user::doserSixMode, previousDoserSixMode, false);
     }
@@ -894,10 +894,10 @@ void dosersPage() {
     }
   }
   static bool prevDoserIsPriming[6]{};
-  int startPosition = display::doserPageScrollPos * 178;
+  int16_t startPosition = display::doserPageScrollPos * 178;
   if (display::doserPageScrollPos == 0) { // DOSER 1
     static uint8_t previousDoserOneMode;
-    static int doserOneMlsPosition, previousDoserOneMls;
+    static int16_t doserOneMlsPosition, previousDoserOneMls;
     drawDoser(100 - startPosition, 90, 1, user::doserOneMills, previousDoserOneMls, doserOneMlsPosition, 0, 0);
     drawEcPhButton(149 - startPosition, 255, user::doserOneMode, previousDoserOneMode, true);
     if (display::refreshPage || device::doserIsPriming[0] != prevDoserIsPriming[0]) {
@@ -907,7 +907,7 @@ void dosersPage() {
   }
   if (display::doserPageScrollPos <= 1) { // DOSER 2
     static uint8_t previousDoserTwoMode;
-    static int doserTwoMlsPosition, previousDoserTwoMls;
+    static int16_t doserTwoMlsPosition, previousDoserTwoMls;
     drawDoser(278 - startPosition, 90, 2, user::doserTwoMills, previousDoserTwoMls, doserTwoMlsPosition, 0, 0);
     drawEcPhButton(327 - startPosition, 255, user::doserTwoMode, previousDoserTwoMode, true);
     if (display::refreshPage || device::doserIsPriming[1] != prevDoserIsPriming[1]) {
@@ -917,7 +917,7 @@ void dosersPage() {
   }
   if (display::doserPageScrollPos <= 2) { // DOSER 3
     static uint8_t previousDoserThreeMode;
-    static int doserThreeMlsPosition, previousDoserThreeMls;
+    static int16_t doserThreeMlsPosition, previousDoserThreeMls;
     drawDoser(456 - startPosition, 90, 3, user::doserThreeMills, previousDoserThreeMls, doserThreeMlsPosition, 0, 0);
     drawEcPhButton(505 - startPosition, 255, user::doserThreeMode, previousDoserThreeMode, true);
     if (display::refreshPage || device::doserIsPriming[2] != prevDoserIsPriming[2]) {
@@ -927,7 +927,7 @@ void dosersPage() {
   }
   if (display::doserPageScrollPos <= 2) { // DOSER 4
     static uint8_t previousDoserFourMode;
-    static int doserFourMlsPosition, previousDoserFourMls;
+    static int16_t doserFourMlsPosition, previousDoserFourMls;
     drawDoser(634 - startPosition, 90, 4, user::doserFourMills, previousDoserFourMls, doserFourMlsPosition, 0, 0);
     drawEcPhButton(683 - startPosition, 255, user::doserFourMode, previousDoserFourMode, true);
     if (display::refreshPage || device::doserIsPriming[3] != prevDoserIsPriming[3]) {
@@ -937,7 +937,7 @@ void dosersPage() {
   }
   if (display::doserPageScrollPos >= 1) { // DOSER 5
     static uint8_t previousDoserFiveMode;
-    static int doserFiveMlsPosition, previousDoserFiveMls;
+    static int16_t doserFiveMlsPosition, previousDoserFiveMls;
     drawDoser(812 - startPosition, 90, 5, user::doserFiveMills, previousDoserFiveMls, doserFiveMlsPosition, 0, 0);
     drawEcPhButton(861 - startPosition, 255, user::doserFiveMode, previousDoserFiveMode, true);
     if (display::refreshPage || device::doserIsPriming[4] != prevDoserIsPriming[4]) {
@@ -947,7 +947,7 @@ void dosersPage() {
   }
   if (display::doserPageScrollPos >= 2) { // DOSER 6
     static uint8_t previousDoserSixMode;
-    static int doserSixMlsPosition, previousDoserSixMls;
+    static int16_t doserSixMlsPosition, previousDoserSixMls;
     drawDoser(990 - startPosition, 90, 6, user::doserSixMills, previousDoserSixMls, doserSixMlsPosition, 0, 0);
     drawEcPhButton(1039 - startPosition, 255, user::doserSixMode, previousDoserSixMode, true);
     if (display::refreshPage || device::doserIsPriming[5] != prevDoserIsPriming[5]) {
@@ -1055,14 +1055,14 @@ void timerPage() {
       tft.setTextColor(RA8875_BLACK, user::backgroundColor);
     }
 
-    static int textStartX = 0, textEndX =0;
-    static int previousAuxRelayOneTimer;
+    static int16_t textStartX = 0, textEndX =0;
+    static int16_t previousAuxRelayOneTimer;
     if (display::refreshPage || previousAuxRelayOneTimer != user::auxRelayOneTimer) {
       tft.setFont(&HallfeticaLargenum_42px_Regular);
       tft.setFontScale(1);
       tft.fillRect(textStartX, 239, textEndX - textStartX, 50, user::backgroundColor);
       if (user::auxRelayOneTimer < 60) {    
-        int stringWidth = tft.getStringWidth(user::auxRelayOneTimer);
+        int16_t stringWidth = tft.getStringWidth(user::auxRelayOneTimer);
         tft.setFont(&akashi_36px_Regular);
         stringWidth += tft.getStringWidth(" mins");
         textStartX = 310 - (stringWidth / 2);
@@ -1076,7 +1076,7 @@ void timerPage() {
       }
       else {        
         if (user::auxRelayOneTimer % 60 == 0) {
-          int stringWidth = tft.getStringWidth(user::auxRelayOneTimer);
+          int16_t stringWidth = tft.getStringWidth(user::auxRelayOneTimer);
           tft.setFont(&akashi_36px_Regular);
           stringWidth += tft.getStringWidth(" hr");
           textStartX = 310 - (stringWidth / 2);
@@ -1089,9 +1089,9 @@ void timerPage() {
           tft.print(F(" hr"));
         }         
         else {
-          int stringWidth = tft.getStringWidth((int)(user::auxRelayOneTimer / 60));
+          int16_t stringWidth = tft.getStringWidth((int16_t)(user::auxRelayOneTimer / 60));
           tft.setFont(&akashi_36px_Regular);
-          stringWidth += (int)(user::auxRelayOneTimer / 60) > 1 ? tft.getStringWidth(" hrs ") : tft.getStringWidth(" hr ");
+          stringWidth += (int16_t)(user::auxRelayOneTimer / 60) > 1 ? tft.getStringWidth(" hrs ") : tft.getStringWidth(" hr ");
           tft.setFont(&HallfeticaLargenum_42px_Regular);
           stringWidth += tft.getStringWidth(user::auxRelayOneTimer % 60);
           tft.setFont(&akashi_36px_Regular);
@@ -1100,10 +1100,10 @@ void timerPage() {
 
           tft.setCursor(textStartX, 240);
           tft.setFont(&HallfeticaLargenum_42px_Regular);
-          tft.print((int)(user::auxRelayOneTimer / 60));
+          tft.print((int16_t)(user::auxRelayOneTimer / 60));
           tft.setFont(&akashi_36px_Regular);
           tft.setCursor(tft.getFontX(), 250);
-          (int)(user::auxRelayOneTimer / 60) > 1 ? tft.print(F(" hrs ")) : tft.print(F(" hr "));
+          (int16_t)(user::auxRelayOneTimer / 60) > 1 ? tft.print(F(" hrs ")) : tft.print(F(" hr "));
           tft.setFont(&HallfeticaLargenum_42px_Regular);
           tft.setCursor(tft.getFontX(), 240);
           tft.print(user::auxRelayOneTimer % 60);
@@ -1152,14 +1152,14 @@ void timerPage() {
       tft.setTextColor(RA8875_BLACK, user::backgroundColor);
     }
 
-    static int textStartX = 0, textEndX =0;
-    static int previousAuxRelayTwoTimer;
+    static int16_t textStartX = 0, textEndX =0;
+    static int16_t previousAuxRelayTwoTimer;
     if (display::refreshPage || previousAuxRelayTwoTimer != user::auxRelayTwoTimer) {
       tft.setFont(&HallfeticaLargenum_42px_Regular);
       tft.setFontScale(1);
       tft.fillRect(textStartX, 239, textEndX - textStartX, 50, user::backgroundColor);
       if (user::auxRelayTwoTimer < 60) {    
-        int stringWidth = tft.getStringWidth(user::auxRelayTwoTimer);
+        int16_t stringWidth = tft.getStringWidth(user::auxRelayTwoTimer);
         tft.setFont(&akashi_36px_Regular);
         stringWidth += tft.getStringWidth(" mins");
         textStartX = 310 - (stringWidth / 2);
@@ -1173,7 +1173,7 @@ void timerPage() {
       }
       else {        
         if (user::auxRelayTwoTimer % 60 == 0) {
-          int stringWidth = tft.getStringWidth(user::auxRelayTwoTimer);
+          int16_t stringWidth = tft.getStringWidth(user::auxRelayTwoTimer);
           tft.setFont(&akashi_36px_Regular);
           stringWidth += tft.getStringWidth(" hr");
           textStartX = 310 - (stringWidth / 2);
@@ -1186,9 +1186,9 @@ void timerPage() {
           tft.print(F(" hr"));
         }         
         else {
-          int stringWidth = tft.getStringWidth((int)(user::auxRelayTwoTimer / 60));
+          int16_t stringWidth = tft.getStringWidth((int16_t)(user::auxRelayTwoTimer / 60));
           tft.setFont(&akashi_36px_Regular);
-          stringWidth += (int)(user::auxRelayTwoTimer / 60) > 1 ? tft.getStringWidth(" hrs ") : tft.getStringWidth(" hr ");
+          stringWidth += (int16_t)(user::auxRelayTwoTimer / 60) > 1 ? tft.getStringWidth(" hrs ") : tft.getStringWidth(" hr ");
           tft.setFont(&HallfeticaLargenum_42px_Regular);
           stringWidth += tft.getStringWidth(user::auxRelayTwoTimer % 60);
           tft.setFont(&akashi_36px_Regular);
@@ -1197,10 +1197,10 @@ void timerPage() {
 
           tft.setCursor(textStartX, 240);
           tft.setFont(&HallfeticaLargenum_42px_Regular);
-          tft.print((int)(user::auxRelayTwoTimer / 60));
+          tft.print((int16_t)(user::auxRelayTwoTimer / 60));
           tft.setFont(&akashi_36px_Regular);
           tft.setCursor(tft.getFontX(), 250);
-          (int)(user::auxRelayTwoTimer / 60) > 1 ? tft.print(F(" hrs ")) : tft.print(F(" hr "));
+          (int16_t)(user::auxRelayTwoTimer / 60) > 1 ? tft.print(F(" hrs ")) : tft.print(F(" hr "));
           tft.setFont(&HallfeticaLargenum_42px_Regular);
           tft.setCursor(tft.getFontX(), 240);
           tft.print(user::auxRelayTwoTimer % 60);
@@ -1339,7 +1339,7 @@ void fansPage() {
 // =============================================================================================================================================================================================
 // =============================================================================================================================================================================================
 void warningsPage() {
-  unsigned int color;
+  uint16_t color;
   if (display::refreshPage) {
     drawSlideIcons(110, 112, display::warningsPage, 8);
     tft.setFont(&akashi_36px_Regular);
@@ -1391,8 +1391,8 @@ void warningsPage() {
     if (display::refreshPage)
       tft.print(224, 126, F("Water height warning"));
     if (user::convertToInches) {
-      color = setWarningColor(sensor::waterLevelInches, user::targetMinWaterHeightInches, user::targetMaxWaterHeightInches, user::waterHeightErrorMarginInches);
-      drawTwoValues(285, sensor::waterLevelInches, color, 1, 620, user::waterHeightErrorMarginInches, RA8875_BLACK, 1, "\"", 0);
+      color = setWarningColor(convertToInches(sensor::waterLevel), user::targetMinWaterHeightInches, user::targetMaxWaterHeightInches, user::waterHeightErrorMarginInches);
+      drawTwoValues(285, convertToInches(sensor::waterLevel), color, 1, 620, user::waterHeightErrorMarginInches, RA8875_BLACK, 1, "\"", 0);
     }
     else {
       color = setWarningColor(sensor::waterLevel, user::targetMinWaterHeight, user::targetMaxWaterHeight, user::waterHeightErrorMargin);
@@ -1436,10 +1436,10 @@ void drawSettingsPageZero() {
       tft.setFontScale(1);
       tft.setTextColor(RA8875_BLUE, user::backgroundColor);
       tft.print(110, 130, F("Display"));
-      int scrollPercentage = map(display::settingsPageZeroScrollPos, 0, 3, 0, 100);
+      int16_t scrollPercentage = map(display::settingsPageZeroScrollPos, 0, 3, 0, 100);
       drawVerticalSlider(756, 100, 370, scrollPercentage);
     }
-    int scrollMargin = display::settingsPageZeroScrollPos * 50;
+    int16_t scrollMargin = display::settingsPageZeroScrollPos * 50;
     if (display::settingsPageZeroScrollPos == 0) {
       if (display::refreshPage) {
         tft.setFont(&akashi_36px_Regular);
@@ -1547,10 +1547,10 @@ void drawSettingsPageOne() {
       tft.setFontScale(1);
       tft.setTextColor(RA8875_BLUE, user::backgroundColor);
       tft.print(110, 130, F("System"));
-      int scrollPercentage = map(display::settingsPageOneScrollPos, 0, 5, 0, 100);
+      int16_t scrollPercentage = map(display::settingsPageOneScrollPos, 0, 5, 0, 100);
       drawVerticalSlider(760, 100, 370, scrollPercentage);
     }
-    int scrollMargin = display::settingsPageOneScrollPos * 50;
+    int16_t scrollMargin = display::settingsPageOneScrollPos * 50;
     if (display::settingsPageOneScrollPos == 0) {
       if (display::refreshPage) {
         tft.setTextColor(RA8875_BLACK, user::backgroundColor);
@@ -1641,7 +1641,7 @@ void drawSettingsPageOne() {
 // =============================================================================================================================================================================================
 // =============================================================================================================================================================================================
 void drawSettingsPageTwo() {
-  int scrollMargin = display::settingsPageTwoScrollPos * 50;
+  int16_t scrollMargin = display::settingsPageTwoScrollPos * 50;
   if (display::showNumberOfDosers) {
     displaySetNumberOfDosers();
   }
@@ -1666,7 +1666,7 @@ void drawSettingsPageTwo() {
       tft.setFontScale(1);
       tft.setTextColor(RA8875_BLUE, user::backgroundColor);
       tft.print(110, 130, F("Enviroment"));
-      int scrollPercentage = map(display::settingsPageTwoScrollPos, 0, 1, 0, 100);
+      int16_t scrollPercentage = map(display::settingsPageTwoScrollPos, 0, 1, 0, 100);
       drawVerticalSlider(760, 100, 370, scrollPercentage);
     }
     if (display::settingsPageTwoScrollPos <= 0) {
@@ -1730,10 +1730,10 @@ void drawSettingsPageThree() {
     tft.setFontScale(1);
     tft.setTextColor(RA8875_BLUE, user::backgroundColor);
     tft.print(110, 130, F("Warnings"));
-    int scrollPercentage = map(display::settingsPageThreeScrollPos, 0, 2, 0, 100);
+    int16_t scrollPercentage = map(display::settingsPageThreeScrollPos, 0, 2, 0, 100);
     drawVerticalSlider(760, 100, 370, scrollPercentage);
   }
-  int scrollMargin = display::settingsPageThreeScrollPos * 50;
+  int16_t scrollMargin = display::settingsPageThreeScrollPos * 50;
   if (display::settingsPageThreeScrollPos == 0) {
     static bool previousDisablePpmWarnings;
     if (display::refreshPage || user::disablePpmWarnings != previousDisablePpmWarnings) {
@@ -1843,9 +1843,9 @@ void drawSettingsPageFour() {
       tft.fillTriangle(779, 200, 799, 240, 779, 280, RA8875_BLUE);
     }
     static bool prevDoserIsPriming[6]{};
-    int startPosition = display::calDoserPageScrollPos * 178;
+    int16_t startPosition = display::calDoserPageScrollPos * 178;
     if (display::calDoserPageScrollPos == 0) { // DOSER 1
-      static int doserOnSpeedPosition, previousDoserOneSpeed;
+      static int16_t doserOnSpeedPosition, previousDoserOneSpeed;
       drawDoser(100 - startPosition, 90, 1, user::doserOneSpeed, previousDoserOneSpeed, doserOnSpeedPosition, 1, -45);
       if (display::refreshPage || device::doserIsPriming[0] != prevDoserIsPriming[0]) {
         device::doserIsPriming[0] ? stopButton(136 - startPosition, 308) : primeButton(136 - startPosition, 308);
@@ -1853,7 +1853,7 @@ void drawSettingsPageFour() {
       }
     }
     if (display::calDoserPageScrollPos <= 1) { // DOSER 2
-      static int doserTwoSpeedPosition, previousDoserTwoSpeed;
+      static int16_t doserTwoSpeedPosition, previousDoserTwoSpeed;
       drawDoser(278 - startPosition, 90, 2, user::doserTwoSpeed, previousDoserTwoSpeed, doserTwoSpeedPosition, 1, -45);
       if (display::refreshPage || device::doserIsPriming[1] != prevDoserIsPriming[1]) {
         device::doserIsPriming[1] ? stopButton(314 - startPosition, 308) : primeButton(314 - startPosition, 308);
@@ -1861,7 +1861,7 @@ void drawSettingsPageFour() {
       }
     }
     if (display::calDoserPageScrollPos <= 2) { // DOSER 3
-      static int doserThreeSpeedPosition, previousDoserThreeSpeed;
+      static int16_t doserThreeSpeedPosition, previousDoserThreeSpeed;
       drawDoser(456 - startPosition, 90, 3, user::doserThreeSpeed, previousDoserThreeSpeed, doserThreeSpeedPosition, 1, -45);
       if (display::refreshPage || device::doserIsPriming[2] != prevDoserIsPriming[2]) {
         device::doserIsPriming[2] ? stopButton(492 - startPosition, 308) : primeButton(492 - startPosition, 308);
@@ -1869,7 +1869,7 @@ void drawSettingsPageFour() {
       }
     }
     if (display::calDoserPageScrollPos <= 2) { // DOSER 4
-      static int doserFourSpeedPosition, previousDoserFourSpeed;
+      static int16_t doserFourSpeedPosition, previousDoserFourSpeed;
       drawDoser(634 - startPosition, 90, 4, user::doserFourSpeed, previousDoserFourSpeed, doserFourSpeedPosition, 1, -45);
       if (display::refreshPage || device::doserIsPriming[3] != prevDoserIsPriming[3]) {      
         device::doserIsPriming[3] ? stopButton(670 - startPosition, 308) : primeButton(670 - startPosition, 308);
@@ -1877,7 +1877,7 @@ void drawSettingsPageFour() {
       }
     }
     if (display::calDoserPageScrollPos >= 1) { // DOSER 5
-      static int doserFiveSpeedPosition, previousDoserFiveSpeed;
+      static int16_t doserFiveSpeedPosition, previousDoserFiveSpeed;
       drawDoser(812 - startPosition, 90, 5, user::doserFiveSpeed, previousDoserFiveSpeed, doserFiveSpeedPosition, 1, -45);
       if (display::refreshPage || device::doserIsPriming[4] != prevDoserIsPriming[4]) {      
         device::doserIsPriming[4] ? stopButton(848 - startPosition, 308) : primeButton(848 - startPosition, 308);
@@ -1885,7 +1885,7 @@ void drawSettingsPageFour() {
       }
     }
     if (display::calDoserPageScrollPos == 2) { // DOSER 6
-      static int doserSixSpeedPosition, previousDoserSixSpeed;
+      static int16_t doserSixSpeedPosition, previousDoserSixSpeed;
       drawDoser(990 - startPosition, 90, 6, user::doserSixSpeed, previousDoserSixSpeed, doserSixSpeedPosition, 1, -45);
       if (display::refreshPage || device::doserIsPriming[5] != prevDoserIsPriming[5]) {      
         device::doserIsPriming[5] ? stopButton(1026 - startPosition, 443) : primeButton(1026 - startPosition, 443);

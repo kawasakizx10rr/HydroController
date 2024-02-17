@@ -1,6 +1,6 @@
 void envriomentalControl() {
  // Get current date time
- static unsigned long previousMillis = millis();
+ static uint32_t previousMillis = millis();
   if (millis() - previousMillis >= 1000UL) {
     rtc.refresh();
     previousMillis = millis();
@@ -18,10 +18,10 @@ void envriomentalControl() {
 void waterLevelControl() {
   bool startDraining = false, startRefilling = false;
   static uint8_t previousDate = 0;
-  unsigned long previousMillis = 0;
+  uint32_t previousMillis = 0;
   uint8_t continueRefilling = device::NOT_SET;
   uint8_t continueDraining = device::NOT_SET;
-  unsigned long lastTouch = millis();
+  uint32_t lastTouch = millis();
 
   if (device::sensorsReady) {
     // auto drain and refill tank on set dates and time
@@ -53,7 +53,7 @@ void waterLevelControl() {
     }
 
     // Start draining the water from the tank
-    int previousWaterLevel = sensor::waterLevel;
+    int16_t previousWaterLevel = sensor::waterLevel;
     previousMillis = millis();
     while (startDraining && continueDraining != device::CANCEL) {
       if (sensor::waterLevel > 0) { // drain tank till empty
@@ -67,7 +67,7 @@ void waterLevelControl() {
           if (device::globalDebug)
             Serial.println(F("Failed to pump any further water out of the tank, quiting drain process"));
         }
-        int waterHeight = sensor::emptyWaterTankDepth - getWaterHeight();
+        int16_t waterHeight = sensor::emptyWaterTankDepth - getWaterHeight();
         if (waterHeight >= 0)
           sensor::waterLevel = waterHeight;
 
@@ -100,7 +100,7 @@ void waterLevelControl() {
           }
         }
       }
-      static unsigned long previousMillis = millis();
+      static uint32_t previousMillis = millis();
       if (millis() - previousMillis >= 1000UL) {
         rtc.refresh();
         cyclicTimers();
@@ -110,9 +110,9 @@ void waterLevelControl() {
 
     // refill tank when water is low at any date or time
     if (!user::disableDrainAndRefill && !startRefilling) {
-      static unsigned long previousDelayMillis = millis(); // give the user 5 minutes to disable "refill When Low" else if the water level is below min this will keep showing a dialog over and over..
+      static uint32_t previousDelayMillis = millis(); // give the user 5 minutes to disable "refill When Low" else if the water level is below min this will keep showing a dialog over and over..
       if (millis() - previousDelayMillis >= 300000UL) {
-        if ((sensor::waterLevel < user::targetMinWaterHeight && !user::convertToInches) || (sensor::waterLevelInches < user::targetMinWaterHeightInches && user::convertToInches)) {
+        if ((sensor::waterLevel < user::targetMinWaterHeight && !user::convertToInches) || (convertToInches(sensor::waterLevel) < user::targetMinWaterHeightInches && user::convertToInches)) {
           startRefilling = true;
           if (device::globalDebug)
             Serial.println(F("The water level is below the min target, starting refill process"));
@@ -142,7 +142,7 @@ void waterLevelControl() {
           clearPage();
           display::refreshPage = true;
         }
-        static unsigned long previousMillis = millis();
+        static uint32_t previousMillis = millis();
         if (millis() - previousMillis >= 1000UL) {
           rtc.refresh();
           cyclicTimers();
@@ -154,12 +154,12 @@ void waterLevelControl() {
 }
 
 // Refill the tanks water and run doers all available dosers
-bool refillTank(const unsigned long& a_lastTouch, unsigned long& a_previousMillis, int& a_previousWaterLevel) {
+bool refillTank(const uint32_t& a_lastTouch, uint32_t& a_previousMillis, int16_t& a_previousWaterLevel) {
   static bool startRefilling = true;
   static bool lockPump = false;
   static bool enabledDosers[6] {false, false, false, false, false, false};
-  static unsigned long previousDoserMillis = 0;
-  const float waterLevel = user::convertToInches ? sensor::waterLevelInches : sensor::waterLevel;
+  static uint32_t previousDoserMillis = 0;
+  const float waterLevel = user::convertToInches ? convertToInches(sensor::waterLevel) : sensor::waterLevel;
   const float waterTarget = user::convertToInches ? user::targetMaxWaterHeightInches : user::targetMaxWaterHeight;
 
   if (waterLevel < waterTarget && startRefilling) {
@@ -308,7 +308,7 @@ void lightingControl() {
   }
   prviousLightMode = lightMode;
   // Log any occourance of the light turning off when it should be on "once per day"
-  static int previousLightOnDay = 0;
+  static int16_t previousLightOnDay = 0;
   if (device::lightOn && previousLightOnDay != rtc.day()) {
     if (device::lightSwitchedOnMin <= 57 && rtc.minute() >= device::lightSwitchedOnMin + 2) {
       if (sensor::ldr < 1000)
@@ -329,9 +329,9 @@ void lightingControl() {
 // Check if the current time is in between the users start and end time
 bool restartLightingTimer() {
   using namespace user;
-  int startMinutesSinceMidnight = lightOnTimeMin + 60 * lightOnTimeHour;
-  int endMinutesSinceMidnight = lightOnTimeHour + 60 * lightOffTimeHour;
-  int currentMinutesSinceMidnight = rtc.minute() + 60 * rtc.hour();
+  int16_t startMinutesSinceMidnight = lightOnTimeMin + 60 * lightOnTimeHour;
+  int16_t endMinutesSinceMidnight = lightOnTimeHour + 60 * lightOffTimeHour;
+  int16_t currentMinutesSinceMidnight = rtc.minute() + 60 * rtc.hour();
   if (startMinutesSinceMidnight < endMinutesSinceMidnight) {
     return ((currentMinutesSinceMidnight >= startMinutesSinceMidnight) && (currentMinutesSinceMidnight < endMinutesSinceMidnight));
   }
@@ -343,8 +343,8 @@ bool restartLightingTimer() {
 void cyclicTimers() {
   // Aux relay 1
   if (user::auxRelayOneMode == 0) {
-    int offHour = device::auxRelayOneSwitchedOnHour + (int)(user::auxRelayOneTimer / 60);
-    int offMin =  device::auxRelayOneSwitchedOnMin + user::auxRelayOneTimer % 60;
+    int16_t offHour = device::auxRelayOneSwitchedOnHour + (int16_t)(user::auxRelayOneTimer / 60);
+    int16_t offMin =  device::auxRelayOneSwitchedOnMin + user::auxRelayOneTimer % 60;
     if (offMin >= 60) {
       offHour++;
       offMin -= 60;
@@ -375,8 +375,8 @@ void cyclicTimers() {
   }
   // If aux relay 2 is set to auto mode check timer
   if (user::auxRelayTwoMode == 0) {
-    int offHour = device::auxRelayTwoSwitchedOnHour + (int)(user::auxRelayTwoTimer / 60);
-    int offMin =  device::auxRelayTwoSwitchedOnMin + user::auxRelayTwoTimer % 60;
+    int16_t offHour = device::auxRelayTwoSwitchedOnHour + (int16_t)(user::auxRelayTwoTimer / 60);
+    int16_t offMin =  device::auxRelayTwoSwitchedOnMin + user::auxRelayTwoTimer % 60;
     if (offMin >= 60) {
       offHour++;
       offMin -= 60;
@@ -411,9 +411,9 @@ void cyclicTimers() {
 void co2Control() {
   bool startCo2Relay = false;
   static uint8_t previousDate = 0;
-  unsigned long co2RunTime = millis();
+  uint32_t co2RunTime = millis();
   uint8_t continueCo2Control = device::NOT_SET;
-  unsigned long lastTouch = millis();
+  uint32_t lastTouch = millis();
   sensor::co2GasTime = 0;
   if (device::sensorsReady && !user::disableCo2Control) {
     // Check if it is time to start the Co2 adjustment
@@ -459,9 +459,9 @@ void co2Control() {
 // Control one or two 3rd party AC fans and a 3rd party AC air heater
 // to maintain the air temperature and or humidity.
 void airControl() {
-  static unsigned long previousMillis = millis();
-  static int previousFanOneSpeed = 200;
-  static int previousFanTwoSpeed = 200;
+  static uint32_t previousMillis = millis();
+  static int16_t previousFanOneSpeed = 200;
+  static int16_t previousFanTwoSpeed = 200;
   float tempPercent = 0, humPercent = 0;
 
   if (device::sensorsReady && millis() - previousMillis >= 2000UL) {
@@ -663,15 +663,15 @@ void adjustWaterEc() {
       Serial.print(F("EC is lower than min target by: ")); Serial.print(percentage, 2); Serial.println(F("%"));
     }
     // Display a notification to cancel or continue with the starting of the dosing
-    unsigned long lastTouch = millis();
+    uint32_t lastTouch = millis();
     launchDosingNotification(percentage, 1, lastTouch);
     // Work out dosing amount
-    int dosingAmount = 0;
+    int16_t dosingAmount = 0;
     if (device::continueDosing != device::CANCEL) {
       float dosingMls[6] {0, 0, 0, 0, 0, 0};
       bool enabledDosers[6] {false, false, false, false, false, false};
       const uint8_t currentDoserModes[] {user::doserOneMode, user::doserTwoMode, user::doserThreeMode, user::doserFourMode, user::doserFiveMode, user::doserSixMode};
-      const int currentDoserMls[] {user::doserOneMills, user::doserTwoMills, user::doserThreeMills, user::doserFourMills, user::doserFiveMills, user::doserSixMills};
+      const uint16_t currentDoserMls[] {user::doserOneMills, user::doserTwoMills, user::doserThreeMills, user::doserFourMills, user::doserFiveMills, user::doserSixMills};
       if (user::doserOneMode == device::DOSER_EC || user::doserOneMode == device::DOSER_EC_OP) 
         enabledDosers[0] = true;
       if (user::doserTwoMode == device::DOSER_EC || user::doserTwoMode == device::DOSER_EC_OP)
@@ -684,8 +684,8 @@ void adjustWaterEc() {
         enabledDosers[4] = true;
       if (user::numberOfDosers >= 6 && (user::doserSixMode == device::DOSER_EC || user::doserSixMode == device::DOSER_EC_OP))
         enabledDosers[5] = true;
-      int numEnabledDosers = 0;
-      for (int i = 0; i < 6; i++) {
+      int16_t numEnabledDosers = 0;
+      for (int16_t i = 0; i < 6; i++) {
         if (enabledDosers[i] && currentDoserModes[i] == device::DOSER_EC)
           numEnabledDosers++;
       }
@@ -696,10 +696,9 @@ void adjustWaterEc() {
         if (device::globalDebug)
           Serial.println(F("EC/TDS dosing mode set to precise"));
         // Work out the exact amout of nutrients to dose
-        float waterVolumeLtrs = (user::convertToInches ? sensor::waterVolumeLtrs : convertGallonsToLtrs(sensor::waterVolumeGallons));
-        dosingAmount = (user::targetMinEc - sensor::ec) * waterVolumeLtrs / sensor::ecSolution;
+        dosingAmount = (user::targetMinEc - sensor::ec) * sensor::waterVolumeLtrs / sensor::ecSolution;
         float mlsPerDoser = (float)dosingAmount / numEnabledDosers;
-        for (int i = 0; i < 6; i++) {
+        for (uint16_t i = 0; i < 6; i++) {
           if (enabledDosers[i] && currentDoserModes[i] == device::DOSER_EC)
             dosingMls[i] = mlsPerDoser;
           else if (enabledDosers[i] && currentDoserModes[i] == device::DOSER_EC_OP)
@@ -713,7 +712,7 @@ void adjustWaterEc() {
       else {
         if (device::globalDebug)
           Serial.println(F("EC/TDS dosing mode set to incremental"));
-        for (int i = 0; i < 6; i++) {
+        for (int16_t i = 0; i < 6; i++) {
           if (enabledDosers[i])
             dosingMls[i] = currentDoserMls[i];
         }
@@ -739,15 +738,15 @@ void adjustWaterTds() {
       Serial.print(F("TDS is lower than min target by: ")); Serial.print(percentage, 2); Serial.println(F("%"));
     }
     // Display a notification to cancel or continue with the starting of the dosing
-    unsigned long lastTouch = millis();
+    uint32_t lastTouch = millis();
     launchDosingNotification(percentage, 1, lastTouch);
     // Work out dosing amount
-    int dosingAmount = 0;
+    int16_t dosingAmount = 0;
     if (device::continueDosing != device::CANCEL) {
       float dosingMls[6] {0, 0, 0, 0, 0, 0};
       bool enabledDosers[6] {false, false, false, false, false, false};
       const uint8_t currentDoserModes[] {user::doserOneMode, user::doserTwoMode, user::doserThreeMode, user::doserFourMode, user::doserFiveMode, user::doserSixMode};
-      const int currentDoserMls[] {user::doserOneMills, user::doserTwoMills, user::doserThreeMills, user::doserFourMills, user::doserFiveMills, user::doserSixMills};
+      const uint16_t currentDoserMls[] {user::doserOneMills, user::doserTwoMills, user::doserThreeMills, user::doserFourMills, user::doserFiveMills, user::doserSixMills};
       if (user::doserOneMode == device::DOSER_EC || user::doserOneMode == device::DOSER_EC_OP) 
         enabledDosers[0] = true;
       if (user::doserTwoMode == device::DOSER_EC || user::doserTwoMode == device::DOSER_EC_OP)
@@ -760,8 +759,8 @@ void adjustWaterTds() {
         enabledDosers[4] = true;
       if (user::numberOfDosers >= 6 && (user::doserSixMode == device::DOSER_EC || user::doserSixMode == device::DOSER_EC_OP))
         enabledDosers[5] = true;
-      int numEnabledDosers = 0;
-      for (int i = 0; i < 6; i++) {
+      uint8_t numEnabledDosers = 0;
+      for (uint8_t i = 0; i < 6; i++) {
         if (enabledDosers[i] && currentDoserModes[i] == device::DOSER_EC)
           numEnabledDosers++;
       }
@@ -772,10 +771,9 @@ void adjustWaterTds() {
         if (device::globalDebug)
           Serial.println(F("EC/TDS dosing mode set to precise"));
         // Work out the exact amout of nutrients to dose
-        float waterVolumeLtrs = (user::convertToInches ? sensor::waterVolumeLtrs : convertGallonsToLtrs(sensor::waterVolumeGallons));
-        dosingAmount = (user::targetMinTds - sensor::tds) * waterVolumeLtrs / sensor::tdsSolution;
+        dosingAmount = (user::targetMinTds - sensor::tds) * sensor::waterVolumeLtrs / sensor::tdsSolution;
         float mlsPerDoser = (float)dosingAmount / numEnabledDosers;
-        for (int i = 0; i < 6; i++) {
+        for (uint8_t i = 0; i < 6; i++) {
           if (enabledDosers[i] && currentDoserModes[i] == device::DOSER_EC)
             dosingMls[i] = mlsPerDoser;
           else if (enabledDosers[i] && currentDoserModes[i] == device::DOSER_EC_OP)
@@ -789,7 +787,7 @@ void adjustWaterTds() {
       else {
         if (device::globalDebug)
           Serial.println(F("EC/TDS dosing mode set to incremental"));
-        for (int i = 0; i < 6; i++) {
+        for (uint8_t i = 0; i < 6; i++) {
           if (enabledDosers[i])
             dosingMls[i] = currentDoserMls[i];
         }
@@ -815,10 +813,10 @@ void adjustWaterPh() {
       Serial.print(F("PH is ")); Serial.print(sensor::ph < user::targetMinPh ? F("lower") : F("higher")); Serial.print(F(" than min target by ")); Serial.println(percentage, 2);
     }
     // Display a notification to cancel or continue with the starting of the dosing
-    unsigned long lastTouch = millis();
+    uint32_t lastTouch = millis();
     launchDosingNotification(percentage, 0, lastTouch);
     // Work out dosing amount
-    int dosingAmount = 0;
+    int16_t dosingAmount = 0;
     if (device::continueDosing != device::CANCEL) {
       bool enabledDosers[6] {false, false, false, false, false, false};
       float dosingMls[6] {0, 0, 0, 0, 0, 0};
@@ -852,21 +850,20 @@ void adjustWaterPh() {
         else if (user::numberOfDosers >= 6 && user::doserSixMode == device::DOSER_PH_DOWN) 
           enabledDosers[5] = true;
       }   
-      int numEnabledDosers = 0;
-      for (int i = 0; i < 6; i++) {
+      int16_t numEnabledDosers = 0;
+      for (uint8_t i = 0; i < 6; i++) {
         if (enabledDosers[i])
           numEnabledDosers++;
       }
       sensor::ph < user::targetMinPh ? saveLogMessage(8) : saveLogMessage(7);
-      float waterVolumeLtrs = (user::convertToInches ? sensor::waterVolumeLtrs : convertGallonsToLtrs(sensor::waterVolumeGallons));
       if (user::phDosingMode == user::PRECISE) {
         if (device::globalDebug)
           Serial.println(F("PH dosing mode set to precise"));
         if (sensor::ph < user::targetMinPh) {
           // Work out the exact amout of PH up to dose
-          dosingAmount = (user::targetMinPh - sensor::ph) * waterVolumeLtrs / sensor::phDownSolution;
+          dosingAmount = (user::targetMinPh - sensor::ph) * sensor::waterVolumeLtrs / sensor::phDownSolution;
           float mlsPerDoser = (float)dosingAmount / numEnabledDosers;
-          for (int i = 0; i < 6; i++) {
+          for (uint8_t i = 0; i < 6; i++) {
             if (enabledDosers[i])
               dosingMls[i] = mlsPerDoser;
           }
@@ -876,9 +873,9 @@ void adjustWaterPh() {
         }
         else if (sensor::ph > user::targetMaxPh) {
           // Work out the exact amout of PH down to dose
-          dosingAmount = (sensor::ph - user::targetMaxPh) * waterVolumeLtrs / sensor::phUpSolution;
+          dosingAmount = (sensor::ph - user::targetMaxPh) * sensor::waterVolumeLtrs / sensor::phUpSolution;
           float mlsPerDoser = (float)dosingAmount / numEnabledDosers;
-          for (int i = 0; i < 6; i++) {
+          for (uint8_t i = 0; i < 6; i++) {
             if (enabledDosers[i])
               dosingMls[i] = mlsPerDoser;
           }
@@ -921,11 +918,11 @@ float percentOutOfRange(const float & a_setPoint, const float & a_val) {
   return outOfRange / percent;
 }
 
-void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent, const int a_dosingMode, unsigned long a_lastTouch) {
+void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent, const int16_t a_dosingMode, uint32_t a_lastTouch) {
   uint8_t previousDoserNum = 0;
   device::currentDoserNum = 0;
   const char* str[3] = {"PH", "EC", "TDS"};
-  unsigned long previousDoserMillis = millis();
+  uint32_t previousDoserMillis = millis();
   while (device::currentlyDosing) { // timing is critical we must use a while loop
     // show continue dialog
     if (device::currentDoserNum != previousDoserNum) {
@@ -972,8 +969,8 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
 }
 
 // Run a given doser for a_mls * 1000 on a_doserPin at a_doserSpeed
-bool runDoser(const uint8_t& a_doserNum, const uint8_t& a_doserPin, const int& a_doserSpeed, const float& a_mls, unsigned long& a_previousDoserMillis) {
-  static unsigned long debugPreviousMillis = 0;
+bool runDoser(const uint8_t& a_doserNum, const uint8_t& a_doserPin, const int16_t& a_doserSpeed, const float& a_mls, uint32_t& a_previousDoserMillis) {
+  static uint32_t debugPreviousMillis = 0;
   if (millis() - a_previousDoserMillis <= 1000UL * a_mls) {
     if (device::globalDebug && a_previousDoserMillis != debugPreviousMillis) {
       Serial.print(F("Starting doser: ")); Serial.print(a_doserNum); Serial.print(F(", pumping ")); Serial.print(a_mls, 2); Serial.println(F("mls"));

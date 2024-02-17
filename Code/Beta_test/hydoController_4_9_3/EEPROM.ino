@@ -27,7 +27,7 @@ void initializeEEPROM() {
   }
 }
 
-template <typename T> void eepromGetSet(uint32_t& a_address, const device::eepromModes a_mode, T &t) {
+template <typename T> void eepromGetSet(uint16_t& a_address, const device::eepromModes a_mode, T &t) {
   if (a_mode == device::EEPROM_GET)
     EEPROM.get(a_address, t);
   else if (a_mode == device::EEPROM_SET)
@@ -35,8 +35,8 @@ template <typename T> void eepromGetSet(uint32_t& a_address, const device::eepro
   a_address += sizeof(T);
 }
 
-uint32_t getSetSystemEEPROM(const device::eepromModes a_mode) {
-  uint32_t address = 7;
+uint16_t getSetSystemEEPROM(const device::eepromModes a_mode) {
+  uint16_t address = 7;
   if (device::globalDebug) {
     if (a_mode == device::EEPROM_VERIFY)
       Serial.print(F("Verifying")); 
@@ -77,43 +77,43 @@ uint32_t getSetSystemEEPROM(const device::eepromModes a_mode) {
       eepromGetSet(address, a_mode, message::timeStrArray[i][n]);
     }
   }
-  for (short& val : sensor::phArray) {
+  for (uint16_t& val : sensor::phArray) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::ecArray) {
+  for (uint16_t& val : sensor::ecArray) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::tdsArray) {
+  for (uint16_t& val : sensor::tdsArray) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::co2Array) {
+  for (uint16_t& val : sensor::co2Array) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::waterTemperatureArray) {
+  for (uint16_t& val : sensor::waterTemperatureArray) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::waterTemperatureArrayF) {
+  for (uint16_t& val : sensor::waterTemperatureArrayF) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::waterLevelArray) {
+  for (uint16_t& val : sensor::waterLevelArray) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::waterLevelArrayInInches) {
+  for (uint16_t& val : sensor::waterLevelArrayInInches) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::fanOneSpeedArray) {
+  for (uint16_t& val : sensor::fanOneSpeedArray) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::fanTwoSpeedArray) {
+  for (uint16_t& val : sensor::fanTwoSpeedArray) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::airTemperatureArray) {
+  for (uint16_t& val : sensor::airTemperatureArray) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::airTemperatureArrayF) {
+  for (uint16_t& val : sensor::airTemperatureArrayF) {
     eepromGetSet(address, a_mode, val);
   }
-  for (short& val : sensor::humidityArray) {
+  for (uint16_t& val : sensor::humidityArray) {
     eepromGetSet(address, a_mode, val);
   }
   if (device::globalDebug) {
@@ -132,12 +132,12 @@ void getSetProfileEEPROM(const uint8_t a_profile, const device::eepromModes a_mo
       Serial.print(F("Saving")); 
     Serial.print(F(" profile: ")); Serial.println(a_profile);
   }
-  uint32_t address = device::systemEEPROMSize + (a_profile * device::profileEEPROMSize); 
+  uint16_t address = device::systemEEPROMSize + (a_profile * device::profileEEPROMSize); 
   getSetProfile(address, a_mode);
   delay(250);
 }
 
-uint32_t getSetProfile(uint32_t a_address, const device::eepromModes a_mode) {
+uint16_t getSetProfile(uint16_t a_address, const device::eepromModes a_mode) {
   if (device::globalDebug) {
     Serial.print(F("EEPROM starting at address: ")); Serial.println(a_address);
   }

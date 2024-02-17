@@ -5,7 +5,7 @@ void touchEvent() {
     if (display::touch_x > 0 && display::touch_y > 0) {     
       //tft.fillCircle(display::touch_x, display::touch_y, 2, RA8875_WHITE); // for touch debugging / calibration check
       sliders();
-      static unsigned long previousTouchMillis = 0;
+      static uint32_t previousTouchMillis = 0;
       if (millis() - previousTouchMillis >= display::debounceTime) {       
         if (display::touch_x >= 0 && display::touch_x <= 80 && display::touch_y >= 0 && display::touch_y <= 480
         || display::touch_x >= 0 && display::touch_x <= 800 && display::touch_y >= 0 && display::touch_y <= 80) {
@@ -117,8 +117,8 @@ void mainMenuNavigation() {
 }
 
 void sliders() {
-  const int slideXIncrement = sliderXTouch();
-  const int slideYIncrement = sliderYTouch();
+  const int16_t slideXIncrement = sliderXTouch();
+  const int16_t slideYIncrement = sliderYTouch();
   // Home page X axsis slider
   if (display::page == 0) {
     if (slideXIncrement != 0) {
@@ -402,9 +402,9 @@ void sliders() {
 }
 
 
-int sliderXTouch() {
-  static int scrollLeftCount = 0, scrollRightCount = 0;
-  int returnVal = 0;
+int16_t sliderXTouch() {
+  static int16_t scrollLeftCount = 0, scrollRightCount = 0;
+  int16_t returnVal = 0;
   //if (display::currentTouch > display::lastTouch) {
     if ((int16_t)display::touch_x - (int16_t)display::lastTouchX >= 35) {
       scrollRightCount++;
@@ -436,9 +436,9 @@ int sliderXTouch() {
 }
 
 
-int sliderYTouch() {
-  static int scrollDownCount = 0, scrollUpCount = 0;
-  int returnVal = 0;
+int16_t sliderYTouch() {
+  static int16_t scrollDownCount = 0, scrollUpCount = 0;
+  int16_t returnVal = 0;
   //if (display::currentTouch > display::lastTouch) {
     if ((int16_t)display::touch_y - (int16_t)display::lastTouchY >= 20) {
       scrollDownCount++;
@@ -509,7 +509,7 @@ void infoDialogTouched() {
 }
 
 void graphsPageTouched() {
-  static unsigned long graphTouchPreviousMillis = 0;
+  static uint32_t graphTouchPreviousMillis = 0;
   if (millis() - graphTouchPreviousMillis >= 500UL) {
     if (display::touch_x >= 760 && display::touch_x <= 835) {
       if (display::touch_y >= 90 && display::touch_y <= 124)
@@ -699,7 +699,7 @@ void profilesPageTouched() {
       a_charPtr = user::profileFourName;
     else if (device::profileInputNumber == 5)
       a_charPtr = user::profileFiveName;
-    static unsigned long previousKeyTouch;
+    static uint32_t previousKeyTouch;
     if (millis() - previousKeyTouch > 500UL) {
       keyboardTouched(a_charPtr, 16);
       previousKeyTouch = millis();
@@ -867,9 +867,9 @@ void settingsZeroPageTouched() {
     }
   }
   else {
-    int scrollMargin = display::settingsPageZeroScrollPos * 50;
+    int16_t scrollMargin = display::settingsPageZeroScrollPos * 50;
     // vertical menu slider
-    static unsigned long lastTouchTime = 0;
+    static uint32_t lastTouchTime = 0;
     if (millis() - lastTouchTime >= 1500UL) {
       if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 100 && display::touch_y <= 140) {
         if (display::settingsPageZeroScrollPos > 0) {
@@ -948,10 +948,10 @@ void settingsZeroPageTouched() {
         user::rtcHour = rtc.hour();
         user::rtcDay = rtc.day();
         user::rtcMonth = rtc.month();
-        if (rtc.year() >= 23)
+        if (rtc.year() >= 24)
           user::rtcYear = rtc.year();
         else
-          user::rtcYear = 23;
+          user::rtcYear = 24;
         display::showRTCtime = true;
         clearPage();
         display::refreshPage = true;
@@ -985,7 +985,7 @@ void settingsZeroPageTouched() {
     }
     if (display::settingsPageZeroScrollPos >= 2 && display::settingsPageZeroScrollPos <= 7) {
       if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 570 - scrollMargin && display::touch_y <= 600 - scrollMargin) { // EC conversion mode
-        static unsigned long previousCtTime = millis();
+        static uint32_t previousCtTime = millis();
         if (millis() - previousCtTime >= 500UL) {
           beep();
           if (device::conversionType == device::EU) {
@@ -1011,7 +1011,7 @@ void settingsOnePageTouched() {
   if (display::showSystemLogs) {
     // vertical menu slider
     if (message::systemLogPos > 6) {
-      static unsigned long lastTouchTime = 0;
+      static uint32_t lastTouchTime = 0;
       if (millis() - lastTouchTime >= 1500UL) {
         if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 100 && display::touch_y <= 140) {
           if (display::systemLogScrollPos > 0) {
@@ -1087,7 +1087,7 @@ void settingsOnePageTouched() {
       }
     }
     else {
-      static unsigned long previousKeyTouch;
+      static uint32_t previousKeyTouch;
       if (millis() - previousKeyTouch > 500UL) {
         keyboardTouched(wifi::ssid, 16);
         previousKeyTouch = millis();
@@ -1125,7 +1125,7 @@ void settingsOnePageTouched() {
       }
     }
     else {
-      static unsigned long previousKeyTouch;
+      static uint32_t previousKeyTouch;
       if (millis() - previousKeyTouch > 500UL) {
         keyboardTouched(wifi::password, 16);
         previousKeyTouch = millis();
@@ -1147,7 +1147,7 @@ void settingsOnePageTouched() {
   }
   else {
     // vertical menu slider
-    static unsigned long lastTouchTime = 0;
+    static uint32_t lastTouchTime = 0;
     if (millis() - lastTouchTime >= 1500UL) {
       if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 100 && display::touch_y <= 140) {
         if (display::settingsPageOneScrollPos > 0) {
@@ -1176,7 +1176,7 @@ void settingsOnePageTouched() {
       }
       lastTouchTime = millis();
     }
-    int scrollMargin = display::settingsPageOneScrollPos * 50;  // spacing is 50px
+    int16_t scrollMargin = display::settingsPageOneScrollPos * 50;  // spacing is 50px
     if (display::settingsPageOneScrollPos == 0) {
       if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 170 - scrollMargin && display::touch_y <= 200 - scrollMargin) { // Show system logs
         beep();
@@ -1187,7 +1187,7 @@ void settingsOnePageTouched() {
     }
     if (display::settingsPageOneScrollPos <= 1) {
       if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 220 - scrollMargin && display::touch_y <= 250 - scrollMargin) { // enable Wifi
-        static unsigned long previousWifiOnOffTime = millis();
+        static uint32_t previousWifiOnOffTime = millis();
         if (millis() >= previousWifiOnOffTime + 1000UL) {
           wifi::wifiEnabled = !wifi::wifiEnabled;
           Serial.print(F("Wifi AP ")); Serial.println(wifi::wifiEnabled  ? F("enabled") : F("disabled"));
@@ -1431,7 +1431,7 @@ void settingsTwoPageTouched() {
   }
   else {
     // vertical menu slider
-    static unsigned long lastTouchTime = 0;
+    static uint32_t lastTouchTime = 0;
     if (millis() - lastTouchTime >= 1500UL) {
       if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 100 && display::touch_y <= 140) {
         if (display::settingsPageTwoScrollPos > 0) {
@@ -1460,7 +1460,7 @@ void settingsTwoPageTouched() {
       }
       lastTouchTime = millis();
     }
-    int scrollMargin = display::settingsPageTwoScrollPos * 50;  // spacing is 50px
+    int16_t scrollMargin = display::settingsPageTwoScrollPos * 50;  // spacing is 50px
     if (display::settingsPageTwoScrollPos <= 0) {
       if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 170 - scrollMargin && display::touch_y <= 200 - scrollMargin) { // NumberOfDosers
         beep();
@@ -1517,7 +1517,7 @@ void settingsTwoPageTouched() {
     }
     if (display::settingsPageTwoScrollPos >= 1 && display::settingsPageTwoScrollPos <= 6) {
       if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 470 - scrollMargin && display::touch_y <= 500 - scrollMargin) { // useEtapeSensor
-        static unsigned long previousDMLTime = millis();
+        static uint32_t previousDMLTime = millis();
         if (millis() >= previousDMLTime + 500UL) {
           if (user::heightSensor == user::SR04)
             user::heightSensor = user::ETAPE;
@@ -1535,7 +1535,7 @@ void settingsTwoPageTouched() {
 
 void settingsThreePageTouched() {
   // vertical menu slider
-  static unsigned long lastTouchTime = 0;
+  static uint32_t lastTouchTime = 0;
   if (millis() - lastTouchTime >= 1500UL) {
     if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 100 && display::touch_y <= 140) {
       if (display::settingsPageThreeScrollPos > 0) {
@@ -1564,7 +1564,7 @@ void settingsThreePageTouched() {
     }
     lastTouchTime = millis();
   }
-  int scrollMargin = display::settingsPageThreeScrollPos * 50;
+  int16_t scrollMargin = display::settingsPageThreeScrollPos * 50;
   if (display::settingsPageThreeScrollPos == 0) {
     if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 170 - scrollMargin && display::touch_y <= 200 - scrollMargin) { // disable PPM warnings
       user::disablePpmWarnings = !user::disablePpmWarnings;
@@ -1624,7 +1624,7 @@ void settingsThreePageTouched() {
 }
 
 void settingsFourPageTouched() {
-  static unsigned long etapePageOneContinuePressed = 0;
+  static uint32_t etapePageOneContinuePressed = 0;
   if (display::showSr04HeightCalibration) {
     if (display::touch_x >= 284 && display::touch_x <= 422 && display::touch_y >= 368 && display::touch_y <= 414) { // cancel setting the water empty height / volume
       beep();
@@ -1696,7 +1696,7 @@ void settingsFourPageTouched() {
   }
   //
   else if (display::showTdsCalibration) {
-    static unsigned long lastCalTouch = millis();
+    static uint32_t lastCalTouch = millis();
     if (millis() - lastCalTouch >= 2000UL) {
       if (display::showCalErrorMessage) {
         if (display::touch_x >= 366 && display::touch_x <= 504 && display::touch_y >= 368 && display::touch_y <= 414) { // confirm error message
@@ -1752,7 +1752,7 @@ void settingsFourPageTouched() {
   }
   //
   else if (display::showPhCalibration) {
-    static unsigned long lastCalTouch = millis();
+    static uint32_t lastCalTouch = millis();
     if (millis() - lastCalTouch >= 2000UL) {
       if (display::showCalErrorMessage) {
         if (display::touch_x >= 366 && display::touch_x <= 504 && display::touch_y >= 368 && display::touch_y <= 414) { // confirm error message
@@ -1799,7 +1799,7 @@ void settingsFourPageTouched() {
   }
   //
   else if (display::showDoserCalibration) {
-    int startPosition = display::calDoserPageScrollPos * 178;
+    int16_t startPosition = display::calDoserPageScrollPos * 178;
     for (uint8_t n = display::calDoserPageScrollPos; n < display::calDoserPageScrollPos + 4; n++) {
       if (n == 0) {
         if (display::touch_x >= 105 - startPosition && display::touch_x <= 180 - startPosition && display::touch_y >= 370 && display::touch_y <= 410) // doser speed 1 down
@@ -2292,7 +2292,7 @@ void waterPageTouched() {
     uint16_t calanderY = 205;
     for (uint8_t i = 1; i < 32; i++) {
       if (display::touch_x >= calanderX && display::touch_x <= calanderX + 54 && display::touch_y >= calanderY && display::touch_y <= calanderY + 40) {
-        static unsigned long previousCalanderMillis;
+        static uint32_t previousCalanderMillis;
         if (millis() - previousCalanderMillis >= 1000UL) {
           bitSet(user::autoFillDays, i - 1) = !bitRead(user::autoFillDays, i - 1);
           Serial.print(F("calander ")); Serial.print(i - 1); Serial.print(F(" = ")); Serial.println(bitRead(user::autoFillDays, i - 1) ? F("true") : F("false"));
@@ -2351,7 +2351,7 @@ void waterPageTouched() {
     }
   }
   else if (display::waterPageScrollPos == 4) {
-    int startPosition = display::refillDoserPageScrollPos * 178;
+    int16_t startPosition = display::refillDoserPageScrollPos * 178;
     for (uint8_t n = display::refillDoserPageScrollPos; n < display::refillDoserPageScrollPos + 4; n++) {
       if (n == 0) {
         if (display::touch_x >= (105 - startPosition) && display::touch_x <= (180 - startPosition) && display::touch_y >= 420 && display::touch_y <= 480) { // refill doser 1 down
@@ -2425,8 +2425,8 @@ void waterPageTouched() {
 }
 
 void dosersPageTouched() {
-  static unsigned long prevPrimeTouchTime = 0;
-  int startPosition = display::doserPageScrollPos * 178;
+  static uint32_t prevPrimeTouchTime = 0;
+  int16_t startPosition = display::doserPageScrollPos * 178;
   for (uint8_t n = display::doserPageScrollPos; n < display::doserPageScrollPos + 4; n++) {
     if (n == 0) {
       if (display::touch_x >= (105 - startPosition) && display::touch_x <= (180 - startPosition) && display::touch_y >= 310 && display::touch_y <= 410) { // doser 1 down
@@ -3101,10 +3101,10 @@ void warningsPageTouched() {
 }
 
 // This function is in charge of all keys pressed within the keybaord.
-void keyboardTouched(char* a_charPtr, const int a_arrayLen) {
+void keyboardTouched(char* a_charPtr, const int16_t a_arrayLen) {
   //Serial.println(F("keyboard touched"));
-  unsigned int keyboardColumn = 135;
-  unsigned int keyboardRow = 260;
+  uint16_t keyboardColumn = 135;
+  uint16_t keyboardRow = 260;
   uint8_t characters;
   uint8_t numbers = '0';
   if (device::charType != device::LOWER)
@@ -3125,7 +3125,7 @@ void keyboardTouched(char* a_charPtr, const int a_arrayLen) {
     }
     // 0-9
     keyboardColumn += 60;
-    for (int i = 0; i < 10; i++) {
+    for (int16_t i = 0; i < 10; i++) {
       if (display::touch_x >= keyboardColumn && display::touch_x <= keyboardColumn + 50 && display::touch_y >= keyboardRow - 60 && display::touch_y <= keyboardRow - 2) {
         //Serial.print(F("Touched num: ")); Serial.println((char)numbers);
         beep();
@@ -3137,7 +3137,7 @@ void keyboardTouched(char* a_charPtr, const int a_arrayLen) {
     }
   }
   else {
-    for (int i = 0; i < 11; i++) {
+    for (int16_t i = 0; i < 11; i++) {
       if (display::touch_x >= keyboardColumn && display::touch_x <= keyboardColumn + 50 && display::touch_y >= keyboardRow - 60 && display::touch_y <= keyboardRow - 2) {
         //Serial.print(F("Touched special char: ")); Serial.println(device::specialSymbols[i]);
         beep();  
@@ -3150,7 +3150,7 @@ void keyboardTouched(char* a_charPtr, const int a_arrayLen) {
   // a-z A-Z
   keyboardColumn = 135;
   keyboardRow = 260;
-  for (int i = 0; i < 26; i++) {
+  for (int16_t i = 0; i < 26; i++) {
     if (display::touch_x >= keyboardColumn && display::touch_x <= keyboardColumn + 50 && display::touch_y >= keyboardRow && display::touch_y <= keyboardRow + 58) {
       //Serial.print(F("Touched char: ")); Serial.println((char)characters);
       beep();
@@ -3208,9 +3208,8 @@ void keyboardTouched(char* a_charPtr, const int a_arrayLen) {
   }
   // LOWER CASE - UPPER - SPECIAL
   else if (display::touch_x >= (keyboardColumn += 130) && display::touch_x <= keyboardColumn + 120 && display::touch_y >= keyboardRow && display::touch_y <= keyboardRow + 58) {
-    static unsigned long previousMillis = 0;
-    unsigned long currentMillis = millis();
-    if (currentMillis - previousMillis >= 4000UL) { // time it takes for keyboard to display plus a healthy margin just in case
+    static uint32_t previousMillis = 0;
+    if (millis() - previousMillis >= 4000UL) { // time it takes for keyboard to display plus a healthy margin just in case
       //Serial.println(F("Touched caps"));
       beep();
       display::refreshPage = true;
@@ -3220,7 +3219,7 @@ void keyboardTouched(char* a_charPtr, const int a_arrayLen) {
         device::charType = device::SPECIAL;
       else
         device::charType = device::LOWER;
-      previousMillis = currentMillis;
+      previousMillis = millis();
     }
   }
   //Serial.print(F("device::charPtr = ")); Serial.println(charPtr);

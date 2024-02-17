@@ -18,8 +18,8 @@ void keyBoard() {
   tft.setFontScale(1);
   tft.setTextColor(RA8875_BLACK, RA8875_WHITE);
   tft.fillRect(120, 195, 650, 230, RA8875_WHITE);
-  int keyboardColumn = 135;
-  int keyboardRow = 260;
+  int16_t keyboardColumn = 135;
+  int16_t keyboardRow = 260;
   if (device::charType != device::SPECIAL) {
     tft.print(keyboardColumn + 10, keyboardRow - 60, F("."));
     keyboardColumn += 60;
@@ -31,7 +31,7 @@ void keyBoard() {
   else {   
     tft.print(keyboardColumn + 10, keyboardRow - 60, device::specialSymbols[0]);
     keyboardColumn += 60;
-    for (byte i = 1; i < 11; i++) {
+    for (uint8_t i = 1; i < 11; i++) {
       tft.print(keyboardColumn, keyboardRow - 60, device::specialSymbols[i]);
       if (i == 5)
         keyboardColumn += 5;
@@ -70,7 +70,7 @@ void keyBoard() {
 }
 
 // the function to diaply the input box
-void keyBoardInput(const char* a_text, const int a_arrayLen) {
+void keyBoardInput(const char* a_text, const int16_t a_arrayLen) {
   tft.setFont(&akashi_36px_Regular);
   tft.setFontScale(1);
   tft.setTextColor(RA8875_BLACK, RA8875_WHITE);
@@ -88,11 +88,10 @@ void keyBoardInput(const char* a_text, const int a_arrayLen) {
 // the blinking cursor within the input box
 void showCursor() {
   static bool blinkCursor = true;
-  static unsigned long inputPreviousMillis = 0;
-  unsigned long currentMillis = millis();
-  if (currentMillis - inputPreviousMillis >= 500UL) {
+  static uint32_t inputPreviousMillis = 0;
+  if (millis() - inputPreviousMillis >= 500UL) {
     blinkCursor = !blinkCursor;
-    inputPreviousMillis = currentMillis;
+    inputPreviousMillis = millis();
   }
   if (blinkCursor) {
     tft.drawLine(display::cursourPosition - 3, 111, display::cursourPosition - 3, 148, RA8875_BLACK);
