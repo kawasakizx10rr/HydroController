@@ -629,9 +629,9 @@ void waterEcPhControl() {
   static adjustmentModes adjustmentMode = UNADJUSTED;
   //static adjustmentModes lastAdjustmentMode = UNADJUSTED;
   // Every hour increment the dosing hour counter
-  if (device::previousDosingHour != rtc.minute() && rtc.minute() >= device::previousDosingMinute) { // WAS rtc.hour() && rtc.minute() CHANGED JUST FOR TESTING
+  if (device::previousDosingHour != rtc.hour() && rtc.minute() >= device::previousDosingMinute) {
     device::dosingTimerHourCounter++;
-    device::previousDosingHour = rtc.minute(); // WAS rtc.hour, CHANGED JUST FOR TESTING
+    device::previousDosingHour = rtc.hour();
     if (device::globalDebug) {
       Serial.print(F("Dosing Timer Hour Counter: ")); Serial.println(device::dosingTimerHourCounter);
     }
