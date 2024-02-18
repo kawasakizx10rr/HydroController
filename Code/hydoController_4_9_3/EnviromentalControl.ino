@@ -992,7 +992,7 @@ bool runDoser(const uint8_t& a_doserNum, const uint8_t& a_doserPin, const int16_
     previousDoserMillis = millis();
   }
 
-  if (device::currentDoserMls == 0) {
+  if (device::currentDoserMls <= 0) {
     if (device::globalDebug) {
       Serial.print(F("Stopping doser: ")); Serial.println(a_doserNum);
     }
