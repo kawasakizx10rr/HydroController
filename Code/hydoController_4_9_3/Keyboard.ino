@@ -29,10 +29,10 @@ void keyBoard() {
     }
   } 
   else {   
-    tft.print(keyboardColumn + 10, keyboardRow - 60, device::specialSymbols[0]);
+    tft.print(keyboardColumn + 10, keyboardRow - 60, pgm_read_byte_near(device::specialSymbols));
     keyboardColumn += 60;
     for (uint8_t i = 1; i < 11; i++) {
-      tft.print(keyboardColumn, keyboardRow - 60, device::specialSymbols[i]);
+      tft.print(keyboardColumn, keyboardRow - 60, pgm_read_byte_near(device::specialSymbols + i));
       if (i == 5)
         keyboardColumn += 5;
       keyboardColumn += 60;

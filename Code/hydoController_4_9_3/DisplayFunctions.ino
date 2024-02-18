@@ -34,57 +34,32 @@ void launchCo2Notification(uint8_t& a_continueCo2Control, uint8_t& a_previousDat
         beep();
       }
     }
-    static uint32_t previousMillis = millis();
-    if (millis() - previousMillis >= 1000UL) {
-      rtc.refresh();
-      cyclicTimers();
-      previousMillis = millis();
-    }  
+    updateCyclicTimers(); 
   }
 }
 
-void abortCo2Notification(bool& a_startCo2Relay, uint32_t& a_lastTouch, const uint32_t& a_co2RunTime) {
-  uint32_t gasTimeInMinutes = sensor::co2GasTime;
-  uint32_t previousGasCounterMillis = millis();
-  while (a_startCo2Relay) {
-    float timeRemaining = gasTimeInMinutes / 60000.0;
-    if (timeRemaining > 0 && timeRemaining < 1)
-      timeRemaining = 1;
-    continueMessage(message::cancelCo2, timeRemaining, 0, false, true, true);
-    gasTimeInMinutes -= millis() - previousGasCounterMillis;
-    if (tft.touched()) {
-      tft.touchReadPixel(&display::touch_x, &display::touch_y);
-      const uint16_t startX = 166, startY = 166;
-      if (millis() >= a_lastTouch) {
-        if (display::touch_x >= startX + 200 && display::touch_x <= startX + 400 && display::touch_y >= startY + 200 && display::touch_y <= startY + 250) { // Cancel
-          digitalWrite(pin::co2Solenoid, device::relayOffState);
-          if (device::globalDebug)
-            Serial.println(F("Aborted pumping Co2!"));
-          sensor::co2GasTime = 0;
-          a_startCo2Relay = false;
-          device::co2DisabledFans = false;
-          clearPage();
-          display::refreshPage = true;
-        }
+bool abortCo2Notification(uint32_t& a_lastTouch, const int16_t& a_co2RunTime) {
+  static int16_t prevCo2RunTime = -1;
+  if (prevCo2RunTime != a_co2RunTime) {
+    continueMessage(message::cancelCo2, a_co2RunTime / 60000, 0, false, true, true);
+    prevCo2RunTime = a_co2RunTime;
+  }
+  if (tft.touched()) {
+    tft.touchReadPixel(&display::touch_x, &display::touch_y);
+    const uint16_t startX = 166, startY = 166;
+    if (millis() - a_lastTouch >= 5000UL) {
+      if (display::touch_x >= startX + 200 && display::touch_x <= startX + 400 && display::touch_y >= startY + 200 && display::touch_y <= startY + 250) { // Cancel     
+        if (device::globalDebug)
+          Serial.println(F("Aborted pumping Co2!"));
+        sensor::co2GasTime = 0;
+        device::co2DisabledFans = false;
+        clearPage();
+        display::refreshPage = true;
+        return true;
       }
     }
-    if (millis() > a_co2RunTime) {
-      digitalWrite(pin::co2Solenoid, device::relayOffState);
-      if (device::globalDebug)
-        Serial.println(F("Finished pumping Co2"));
-      sensor::co2GasTime = 0;
-      a_startCo2Relay = false;
-      clearPage();
-      display::refreshPage = true;
-    }
-    static uint32_t previousMillis = millis();
-    if (millis() - previousMillis >= 1000UL) {
-      rtc.refresh();
-      cyclicTimers();
-      previousMillis = millis();
-    }  
-    previousGasCounterMillis = millis();
   }
+  return false;
 }
 
 void launchDrainNotification(uint8_t& a_continueDraining, bool& a_startDraining) {
@@ -124,12 +99,7 @@ void launchDrainNotification(uint8_t& a_continueDraining, bool& a_startDraining)
         display::refreshPage = true;
       }
     }
-    static uint32_t previousMillis = millis();
-    if (millis() - previousMillis >= 1000UL) {
-      rtc.refresh();
-      cyclicTimers();
-      previousMillis = millis();
-    }  
+    updateCyclicTimers();
   }
 }
 
@@ -170,12 +140,7 @@ void launchRefillNotification(bool& a_startRefilling, uint8_t& a_continueRefilli
           beep();
         }
       }
-      static uint32_t previousMillis = millis();
-      if (millis() - previousMillis >= 1000UL) {
-        rtc.refresh();
-        cyclicTimers();
-        previousMillis = millis();
-      }  
+      updateCyclicTimers(); 
     }
   }
 }
@@ -193,12 +158,7 @@ void launchDosingNotification(const float& a_sensorPercent, const uint8_t& a_dos
       dosingDialogTimer--;
       continuePreviousMillis = millis();
     }
-    static uint32_t previousMillis = millis();
-    if (millis() - previousMillis >= 1000UL) {
-      rtc.refresh();
-      cyclicTimers();
-      previousMillis = millis();
-    }  
+    updateCyclicTimers();
   }
   a_lastTouch = millis() + 5000UL;
 }
@@ -217,11 +177,11 @@ void OuterMenuIcons() {
     drawPageIcon(5, 23, 32, ppmIcon, 280, 64, 35);
   else
     drawPageIcon(5, 26, 32, ecIcon, 256, 57, 36);
-  drawPageIcon(6, 126, 32, phIcon, 274, 61, 36);
-  drawPageIcon(7, 227, 32, co2Icon, 369, 72, 41);
-  drawPageIcon(8, 342, 19, waterTemperatureIcon, 418, 54, 62);
-  drawPageIcon(9, 437, 17, doserIcon, 468, 55, 68); 
-  drawPageIcon(10, 522, 15, timerIcon, 480, 60, 64);
+  drawPageIcon(6, 125, 32, phIcon, 274, 61, 36);
+  drawPageIcon(7, 225, 32, co2Icon, 369, 72, 41);
+  drawPageIcon(8, 339, 19, waterTemperatureIcon, 418, 54, 62);
+  drawPageIcon(9, 433, 17, doserIcon, 468, 55, 68); 
+  drawPageIcon(10, 517, 15, timerIcon, 480, 60, 64);
   drawPageIcon(11, 604, 16, fanIcon, 512, 64, 64);
   drawPageIcon(12, 703, 20, warningsIcon, 511, 67, 61);
   display::previousPage = display::page;
@@ -644,7 +604,7 @@ void continueMessage(const char* a_text, const float& a_num, const uint8_t a_pre
 // Show an abort message with the string stored in the Program memory / Flash, and a float and int16_t which can be excluded if -1
 void abortMessage(const char *a_text, const char* a_str, const float& a_value, const int16_t& a_doserNum, const float& a_mls, const uint8_t& a_precison, bool a_update) {
   uint16_t startX = 166, startY = 166;
-  static uint16_t mlsX = 0, mlsY = 0;
+  static uint16_t mlsY = 0;
   if (!a_update) {
     //Frame
     tft.fillRoundRect(startX - 20, startY, 600, 250, 5, RA8875_WHITE);
@@ -672,7 +632,7 @@ void abortMessage(const char *a_text, const char* a_str, const float& a_value, c
     else if (c == '@' && a_mls != -1){
       if (a_update)
         tft.fillRect(startX - 9, mlsY + 5, 588, 36, RA8875_WHITE);
-      tft.print(a_mls);   
+      tft.print(a_mls, 0);   
       mlsY = tft.getFontY();
       a_update = false;
     }
@@ -1184,7 +1144,7 @@ void displaySetRTCTime() {
 // draw a large doser icon its doser number, doser value either mls or speed %
 void drawDoser(
   const int16_t& a_x, const int16_t& a_y, const uint8_t a_doserNum, const int16_t& a_value,
-  int16_t& a_previousValue, int16_t& a_doserPosition, const uint8_t & a_symbol, const int16_t& a_yOffSet)
+  int16_t& a_previousValue, int16_t& a_doserPosition, const uint8_t& a_symbol, const int16_t& a_yOffSet)
 {
   int16_t startPosition = 0;
   if (display::refreshPage) {
@@ -1338,7 +1298,7 @@ uint16_t setWarningColor(const float& a_sensor, const float& a_minTarget, const 
 
 void displaySetAfkTime() {
   static int16_t startX, endX;
-  static uint32_t previousInterval;
+  static uint16_t previousAfkTime;
   if (display::refreshPage) {
     tft.setFont(&akashi_36px_Regular);
     tft.setFontScale(1);
@@ -1349,7 +1309,7 @@ void displaySetAfkTime() {
     infoButton(770, 120);
     tft.setTextColor(RA8875_BLACK, user::backgroundColor);
   }
-  if (display::refreshPage || previousInterval != user::afkTime) {
+  if (display::refreshPage || previousAfkTime != user::afkTime) {
     tft.setFont(&HallfeticaLargenum_42px_Regular);
     tft.setFontScale(1);
 
@@ -1372,7 +1332,7 @@ void displaySetAfkTime() {
       tft.print(F("OFF"));
     }
     endX = tft.getFontX();
-    previousInterval = user::afkTime;
+    previousAfkTime = user::afkTime;
   }
 }
 
@@ -1406,7 +1366,7 @@ void displaySetBrightness() {
 
 void displaySetGraphInterval() {
   static int16_t startX, endX;
-  static uint32_t previousInterval;
+  static uint16_t previousInterval;
   if (display::refreshPage) {
     tft.setFont(&akashi_36px_Regular);
     tft.setFontScale(1);
@@ -1495,7 +1455,6 @@ void displaySetNumberOfDosers() {
 
 void displaySystemLogs() {
   if (display::refreshPage) {
-    tft.setFont(&akashi_36px_Regular);
     tft.setFontScale(1);
     tft.setTextColor(RA8875_BLUE, user::backgroundColor);
     tft.print(320, 110, F("System logs"));
@@ -1506,7 +1465,7 @@ void displaySystemLogs() {
       int16_t scrollPercentage = map(display::systemLogScrollPos, 0, message::systemLogPos - 6, 0, 100);
       drawVerticalSlider(760, 100, 370, scrollPercentage);
     }
-    int16_t startX = 160;
+    int16_t startY = 160;
     int16_t maxLogsToDsiplay = 0;
     if (device::globalDebug) {   
       Serial.print(F("message::systemLogPos: ")); Serial.println(message::systemLogPos);
@@ -1519,17 +1478,19 @@ void displaySystemLogs() {
     if (device::globalDebug) {
       Serial.print(F("maxLogsToDsiplay: ")); Serial.println(maxLogsToDsiplay);
     }
-    
+    tft.setFont(&myriadPro_32px_Regular);
+    tft.print(700, 105, F("Logs ")); tft.print(display::systemLogScrollPos + 1); tft.print(F(" of ")); tft.print(maxLogsToDsiplay);
+    tft.setFont(&akashi_36px_Regular);
     for (uint8_t i = display::systemLogScrollPos; i < maxLogsToDsiplay; i++) {
       int16_t logType = message::logTypeArray[i];   
       const char* logText = pgm_read_word(&message::notificationsArray[logType]);   
       if (device::globalDebug) {
         Serial.print(F("Printing log: ")); Serial.print(i); Serial.print(F(", logType: ")); Serial.println(logType);
       }
-      tft.print(105, startX, (const __FlashStringHelper *)logText);
+      tft.print(105, startY, (const __FlashStringHelper *)logText);
       tft.print(F(" "));
       tft.print(message::timeStrArray[i]);
-      startX += 50;
+      startY += 50;
     }
   }
 }

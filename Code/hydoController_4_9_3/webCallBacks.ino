@@ -4,7 +4,7 @@ void esp8266DataHandler() {
   uint8_t value = 0, cmdsRecived = 0, charCnt = 0;
   char buffer[16] {0};
   uint32_t timeout = millis() + 100UL;
-  while (Serial1.available() > 0 && timeout < 100UL) {
+  while (Serial1.available() > 0 && millis() < timeout) {
     char c = Serial1.read();
     // reset local variables
     if (c == '!') {

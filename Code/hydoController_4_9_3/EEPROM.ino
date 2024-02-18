@@ -1,9 +1,13 @@
 void initializeEEPROM() {
   char versionNum[6] {'\0'};
-  for (uint8_t i = 0; i < 6; i++)
+  for (uint8_t i = 0; i < 5; i++) {
     versionNum[i] = EEPROM.read(i);
+    delay(5);
+  }
   device::systemEEPROMSize = getSetSystemEEPROM(device::EEPROM_VERIFY);
+  delay(50);
   device::profileEEPROMSize = getSetProfile(0, device::EEPROM_VERIFY);
+  delay(50);
   if (device::globalDebug) {
     Serial.println(__FUNCTION__);
     Serial.print(F("Current version number: ")); Serial.println(versionNum);
@@ -11,19 +15,27 @@ void initializeEEPROM() {
     Serial.print(F("System EEPROM size: ")); Serial.println(device::systemEEPROMSize);
     Serial.print(F("Profile EEPROM size: ")); Serial.println(device::profileEEPROMSize);
   }
+  delay(50);
   if (strcmp(versionNum, device::versionNumber) == 0) {
     device::userProfile = EEPROM.read(6);
     getSetSystemEEPROM(device::EEPROM_GET);
+    delay(50);
     getSetProfileEEPROM(device::userProfile, device::EEPROM_GET);
   }
   else {
     //showResetMessage();
-    for (uint8_t i = 0; i < 6; i++)
+    for (uint8_t i = 0; i < 6; i++) {
       EEPROM.put(i, device::versionNumber[i]);
+      delay(5);
+    }
     EEPROM.put(6, device::userProfile);
+    delay(5);
     getSetSystemEEPROM(device::EEPROM_SET);
-    for (uint8_t i = 0; i < 5; i++)
+    delay(50);
+    for (uint8_t i = 0; i < 5; i++) {
       getSetProfileEEPROM(i, device::EEPROM_SET);
+      delay(50);
+    }
     //clearPage();
   }
 }

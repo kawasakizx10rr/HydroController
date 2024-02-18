@@ -17,7 +17,7 @@ void readSensors() {
     else if (sensor::waterLevel > 999)
       sensor::waterLevel = 999;
     // calculate the water volume
-    sensor::waterVolumeLtrs = sensor::waterLevel * user::waterTankLength * user::waterTankWidth;
+    sensor::waterVolumeLtrs = (sensor::waterLevel * user::waterTankLength * user::waterTankWidth) / 1000.0; // mls to ltrs
     // AIR TEMP AND HUMIDITY============================================================
 #ifdef USING_HDC1080
     sensor::airTemp = hdc.readTemperature();
@@ -37,11 +37,11 @@ void readSensors() {
     sensor::ldr = analogRead(pin::ldr);
     //Serial.print(F("LDR: ")); Serial.println(sensor::ldr);
     // CO2 ===============================================================================
-    const uint32_t timeout = millis() + 50UL;
+    device::prevMillis = millis() + 50UL;
     Serial2.write(sensor::co2Request, 9);
     uint8_t buffer[8] {0, 0, 0, 0, 0, 0, 0, 0};
     uint8_t bufferPosition = 0;
-    while (millis() <= timeout && Serial2.available() > 0) {
+    while (millis() - device::prevMillis < 50UL && Serial2.available() > 0) {
       char c = Serial2.read();
       if (bufferPosition < 8)
         buffer[bufferPosition++] = c;
@@ -129,36 +129,31 @@ void calibrateCo2() {
 }
 
 float getWaterHeight() {
-  static uint32_t sensorPreviousMillis = 0;
   float waterLevel = 0;
-  if (millis() - sensorPreviousMillis >= 1000UL) {
-    if (user::heightSensor == user::ETAPE) {
-      float resistance = readResistance(pin::etapeSensor, 560);
-      waterLevel = resistanceToCM(resistance, sensor::etapeZeroVolumeResistance, sensor::etapeMaxVolumeResistance, sensor::etapeCalibrationCm);
-      waterLevel += sensor::etapeOffset;
-      if (waterLevel > sensor::etapeCalibrationCm)
-        waterLevel = sensor::etapeCalibrationCm;
-    }
-    else if (user::heightSensor == user::VL53L0X) {
-      VL53L0X_RangingMeasurementData_t measure;
-      lox.rangingTest(&measure, device::globalDebug); // pass in 'true' to get debug data printout! 
-      if (measure.RangeStatus != 4) {  // phase failures have incorrect data
-        waterLevel = measure.RangeMilliMeter * 10.0; // in cm
-      }   
-    }
-    else if (user::heightSensor == user::SR04) {
-      digitalWrite(pin::hcsrTrigger, LOW);
-      delayMicroseconds(5); //5
-      digitalWrite(pin::hcsrTrigger, HIGH);
-      delayMicroseconds(10);
-      digitalWrite(pin::hcsrTrigger, LOW);
-      float hcsrDuration = pulseIn(pin::hcsrEcho, HIGH);
-      waterLevel = (hcsrDuration / 2) / 29.1; // in cm
-    }
-    sensorPreviousMillis = millis();
-    return waterLevel;
+  if (user::heightSensor == user::ETAPE) {
+    float resistance = readResistance(pin::etapeSensor, 560);
+    waterLevel = resistanceToCM(resistance, sensor::etapeZeroVolumeResistance, sensor::etapeMaxVolumeResistance, sensor::etapeCalibrationCm);
+    waterLevel += sensor::etapeOffset;
+    if (waterLevel > sensor::etapeCalibrationCm)
+      waterLevel = sensor::etapeCalibrationCm;
   }
-  return 0;
+  else if (user::heightSensor == user::VL53L0X) {
+    VL53L0X_RangingMeasurementData_t measure;
+    lox.rangingTest(&measure, device::globalDebug); // pass in 'true' to get debug data printout! 
+    if (measure.RangeStatus != 4) {  // phase failures have incorrect data
+      waterLevel = measure.RangeMilliMeter * 10.0; // in cm
+    }   
+  }
+  else if (user::heightSensor == user::SR04) {
+    digitalWrite(pin::hcsrTrigger, LOW);
+    delayMicroseconds(5); //5
+    digitalWrite(pin::hcsrTrigger, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(pin::hcsrTrigger, LOW);
+    float hcsrDuration = pulseIn(pin::hcsrEcho, HIGH);
+    waterLevel = (hcsrDuration / 2) / 29.1; // in cm
+  }
+  return waterLevel;
 }
 
 // Get the water tanks empty depth in cm
@@ -198,8 +193,6 @@ void generateCo2GasTime() {
   if (device::globalDebug) {
     Serial.print(F("Gas time in minues = ")); Serial.println(gasTime);
   }
-  if (gasTime >= 999)
-    gasTime = 999;
   sensor::co2GasTime = gasTime * 60000UL;
   if (device::globalDebug) {
     Serial.print(F("Co2 gas time in millis = ")); Serial.println(sensor::co2GasTime);
@@ -286,7 +279,7 @@ float readResistance(const int16_t& a_pin, const int16_t& a_seriesResistance) {
   return resistance;
 }
 
-float resistanceToCM(const float & a_resistance, const float & a_zeroResistance, const float & a_calResistance, const float & a_calCM) {
+float resistanceToCM(const float& a_resistance, const float& a_zeroResistance, const float& a_calResistance, const uint8_t a_calCM) {
   if (a_resistance > a_zeroResistance || (a_zeroResistance - a_calResistance) == 0.0) {
     // Stop if the value is above the zero threshold, or no max resistance is set (would be divide by zero).
     return 0.0;

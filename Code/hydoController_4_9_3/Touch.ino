@@ -7,8 +7,8 @@ void touchEvent() {
       sliders();
       static uint32_t previousTouchMillis = 0;
       if (millis() - previousTouchMillis >= display::debounceTime) {       
-        if (display::touch_x >= 0 && display::touch_x <= 80 && display::touch_y >= 0 && display::touch_y <= 480
-        || display::touch_x >= 0 && display::touch_x <= 800 && display::touch_y >= 0 && display::touch_y <= 80) {
+        if ((display::touch_x >= 0 && display::touch_x <= 80 && display::touch_y >= 0 && display::touch_y <= 480)
+        || (display::touch_x >= 0 && display::touch_x <= 800 && display::touch_y >= 0 && display::touch_y <= 80)) {
           mainMenuNavigation();
         }
         else {
@@ -985,8 +985,8 @@ void settingsZeroPageTouched() {
     }
     if (display::settingsPageZeroScrollPos >= 2 && display::settingsPageZeroScrollPos <= 7) {
       if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 570 - scrollMargin && display::touch_y <= 600 - scrollMargin) { // EC conversion mode
-        static uint32_t previousCtTime = millis();
-        if (millis() - previousCtTime >= 500UL) {
+        static uint32_t previousTouch = millis();
+        if (millis() - previousTouch >= 500UL) {
           beep();
           if (device::conversionType == device::EU) {
             device::conversionType = device::US;
@@ -1000,7 +1000,7 @@ void settingsZeroPageTouched() {
             device::conversionType = device::EU;
             gravityTds.setTdsFactor(0.64);
           }
-          previousCtTime = millis();
+          previousTouch = millis();
         }
       }
     }
@@ -1017,6 +1017,7 @@ void settingsOnePageTouched() {
           if (display::systemLogScrollPos > 0) {
             display::systemLogScrollPos--;
             display::refreshPage = true;
+            lastTouchTime = millis();
             beep();
             clearPage();
           }
@@ -1027,6 +1028,7 @@ void settingsOnePageTouched() {
             display::systemLogScrollPos = message::systemLogPos - 6;
           //Serial.print(F("settingsPageZero slider menu pos = ")); Serial.println(display::systemLogScrollPos);
           display::refreshPage = true;
+          lastTouchTime = millis();
           beep();
           clearPage();
         } 
@@ -1034,11 +1036,11 @@ void settingsOnePageTouched() {
           if (display::systemLogScrollPos < message::systemLogPos - 6) {
             display::systemLogScrollPos++;
             display::refreshPage = true;
+            lastTouchTime = millis();
             beep();
             clearPage();
           }
-        }
-        lastTouchTime = millis();
+        }       
       }
     }
     // exit
@@ -1696,13 +1698,12 @@ void settingsFourPageTouched() {
   }
   //
   else if (display::showTdsCalibration) {
-    static uint32_t lastCalTouch = millis();
-    if (millis() - lastCalTouch >= 2000UL) {
+    if (millis() - device::lastCalTouch >= 2000UL) {
       if (display::showCalErrorMessage) {
         if (display::touch_x >= 366 && display::touch_x <= 504 && display::touch_y >= 368 && display::touch_y <= 414) { // confirm error message
           display::showCalErrorMessage = false;
           display::refreshPage = true;
-          lastCalTouch = millis();
+          device::lastCalTouch = millis();
         }
       }
       else {
@@ -1712,7 +1713,7 @@ void settingsFourPageTouched() {
           display::showTdsCalibration = false;
           display::showingDialog = false;
           display::refreshPage = true;
-          lastCalTouch = millis();
+          device::lastCalTouch = millis();
           clearPage();
         }
         else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with Tds Calibration
@@ -1744,7 +1745,7 @@ void settingsFourPageTouched() {
               display::showCalErrorMessage = true;  // show error message
             }
           }
-          lastCalTouch = millis();
+          device::lastCalTouch = millis();
           display::refreshPage = true;      
         }
       }     
@@ -1752,14 +1753,13 @@ void settingsFourPageTouched() {
   }
   //
   else if (display::showPhCalibration) {
-    static uint32_t lastCalTouch = millis();
-    if (millis() - lastCalTouch >= 2000UL) {
+    if (millis() - device::lastCalTouch >= 2000UL) {
       if (display::showCalErrorMessage) {
         if (display::touch_x >= 366 && display::touch_x <= 504 && display::touch_y >= 368 && display::touch_y <= 414) { // confirm error message
           display::showCalErrorMessage = false;
           display::showingDialog = false;
           display::refreshPage = true;
-          lastCalTouch = millis();
+          device::lastCalTouch = millis();
         }
       }
       else {
@@ -1769,7 +1769,7 @@ void settingsFourPageTouched() {
           display::showPhCalibration = false;
           display::showingDialog = false;
           display::refreshPage = true;
-          lastCalTouch = millis();
+          device::lastCalTouch = millis();
           clearPage();
         }
         else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with Ph Calibration
@@ -1791,7 +1791,7 @@ void settingsFourPageTouched() {
           else {       
             display::showCalErrorMessage = true;  // show error message
           }
-          lastCalTouch = millis();
+          device::lastCalTouch = millis();
           display::refreshPage = true;      
         }
       }
@@ -1807,7 +1807,7 @@ void settingsFourPageTouched() {
         else if (display::touch_x >= 190 - startPosition && display::touch_x <= 268 - startPosition && display::touch_y >= 370 && display::touch_y <= 410) // doser speed 1 up
           user::doserOneSpeed = adjustValue(user::doserOneSpeed, 1, 1, 255);
         else if (display::touch_x >= 120 - startPosition && display::touch_x <= 240 - startPosition && display::touch_y >= 310 && display::touch_y <= 350) // doser 1 prime
-          if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+          if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
             prime(1, pin::doserOne, user::doserOneSpeed);
           else if (millis() - device::primeTouchTime >= 1500UL)
             prime(1, pin::doserOne, 0);
@@ -1818,7 +1818,7 @@ void settingsFourPageTouched() {
         else if (display::touch_x >= 368 - startPosition && display::touch_x <= 448 - startPosition && display::touch_y >= 370 && display::touch_y <= 410) // doser speed 2 up
           user::doserTwoSpeed = adjustValue(user::doserTwoSpeed, 1, 1, 255);
         else if (display::touch_x >= 293 - startPosition && display::touch_x <= 413 - startPosition && display::touch_y >= 310 && display::touch_y <= 350) // doser 2 prime
-          if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+          if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
             prime(2, pin::doserTwo, user::doserTwoSpeed);
           else if (millis() - device::primeTouchTime >= 1500UL)
             prime(2, pin::doserTwo, 0);
@@ -1829,7 +1829,7 @@ void settingsFourPageTouched() {
         else if (display::touch_x >= 548 - startPosition && display::touch_x <= 625 - startPosition && display::touch_y >= 370 && display::touch_y <= 410) // doser speed 3 up
           user::doserThreeSpeed = adjustValue(user::doserThreeSpeed, 1, 1, 255);
         else if (display::touch_x >= 473 - startPosition && display::touch_x <= 593 - startPosition && display::touch_y >= 310 && display::touch_y <= 350) // doser 3 prime
-          if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+          if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
             prime(3, pin::doserThree, user::doserThreeSpeed);
           else if (millis() - device::primeTouchTime >= 1500UL)
             prime(3, pin::doserThree, 0);
@@ -1840,7 +1840,7 @@ void settingsFourPageTouched() {
         else if (display::touch_x >= 712 - startPosition && display::touch_x <= 800 - startPosition && display::touch_y >= 370 && display::touch_y <= 410) // doser speed 4 up
           user::doserFourSpeed = adjustValue(user::doserFourSpeed, 1, 1, 255);
         else if (display::touch_x >= 650 - startPosition && display::touch_x <= 770 - startPosition && display::touch_y >= 310 && display::touch_y <= 350) // doser 4 prime
-          if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+          if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
             prime(4, pin::doserFour, user::doserFourSpeed);
           else if (millis() - device::primeTouchTime >= 1500UL)
             prime(4, pin::doserFour, 0);
@@ -1851,7 +1851,7 @@ void settingsFourPageTouched() {
         else if (display::touch_x >= 890 - startPosition && display::touch_x <= 978 - startPosition && display::touch_y >= 370 && display::touch_y <= 410) // doser speed 5 up
           user::doserFiveSpeed = adjustValue(user::doserFiveSpeed, 1, 1, 255);
         else if (display::touch_x >= 828 - startPosition && display::touch_x <= 948 - startPosition && display::touch_y >= 310 && display::touch_y <= 350) // doser 5 prime
-          if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+          if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
             prime(5, pin::doserFive, user::doserFiveSpeed);
           else if (millis() - device::primeTouchTime >= 1500UL)
             prime(5, pin::doserFive, 0);
@@ -1862,7 +1862,7 @@ void settingsFourPageTouched() {
         else if (display::touch_x >= 1068 - startPosition && display::touch_x <= 1156 - startPosition && display::touch_y >= 370 && display::touch_y <= 410) // doser speed 6 up
           user::doserSixSpeed = adjustValue(user::doserSixSpeed, 1, 1, 255);
         else if (display::touch_x >= 1006 - startPosition && display::touch_x <= 1126 - startPosition && display::touch_y >= 310 && display::touch_y <= 350) // doser 6 prime
-          if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+          if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
             prime(6, pin::doserSix, user::doserSixSpeed);
           else if (millis() - device::primeTouchTime >= 1500UL)
             prime(6, pin::doserSix, 0);
@@ -2425,7 +2425,6 @@ void waterPageTouched() {
 }
 
 void dosersPageTouched() {
-  static uint32_t prevPrimeTouchTime = 0;
   int16_t startPosition = display::doserPageScrollPos * 178;
   for (uint8_t n = display::doserPageScrollPos; n < display::doserPageScrollPos + 4; n++) {
     if (n == 0) {
@@ -2438,7 +2437,7 @@ void dosersPageTouched() {
         device::settingsAdjusted = true;
       }
       else if (display::touch_x >= (130 - startPosition) && display::touch_x <= (250 - startPosition) && display::touch_y >= 420 && display::touch_y <= 470) { // doser 1 prime
-        if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+        if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
           prime(1, pin::doserOne, user::doserOneSpeed);
         else if (millis() - device::primeTouchTime >= 1500UL)
           prime(1, pin::doserOne, 0);
@@ -2468,7 +2467,7 @@ void dosersPageTouched() {
         device::settingsAdjusted = true;
       }
       else if (display::touch_x >= (303 - startPosition) && display::touch_x <= (423 - startPosition) && display::touch_y >= 420 && display::touch_y <= 470) { // doser 2 prime       
-        if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+        if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
           prime(2, pin::doserTwo, user::doserTwoSpeed);
         else if (millis() - device::primeTouchTime >= 1500UL)
           prime(2, pin::doserTwo, 0);
@@ -2498,7 +2497,7 @@ void dosersPageTouched() {
         device::settingsAdjusted = true;
       }
       else if (display::touch_x >= (483 - startPosition) && display::touch_x <= (603 - startPosition) && display::touch_y >= 420 && display::touch_y <= 470) { // doser 3 prime
-        if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+        if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
           prime(3, pin::doserThree, user::doserThreeSpeed);
         else if (millis() - device::primeTouchTime >= 1500UL)
           prime(3, pin::doserThree, 0);
@@ -2528,7 +2527,7 @@ void dosersPageTouched() {
         device::settingsAdjusted = true;
       }
       else if (display::touch_x >= (660 - startPosition) && display::touch_x <= (780 - startPosition) && display::touch_y >= 420 && display::touch_y <= 470) { // doser 4 prime
-        if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+        if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
           prime(4, pin::doserFour, user::doserFourSpeed);
         else if (millis() - device::primeTouchTime >= 1500UL)
           prime(4, pin::doserFour, 0);
@@ -2558,7 +2557,7 @@ void dosersPageTouched() {
         device::settingsAdjusted = true;
       }
       else if (display::touch_x >= (838 - startPosition) && display::touch_x <= (958 - startPosition) && display::touch_y >= 420 && display::touch_y <= 470) { // doser 5 prime
-        if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+        if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
           prime(5, pin::doserFive, user::doserFiveSpeed);
         else if (millis() - device::primeTouchTime >= 1500UL)
           prime(5, pin::doserFive, 0);
@@ -2588,7 +2587,7 @@ void dosersPageTouched() {
         device::settingsAdjusted = true;
       }
       else if (display::touch_x >= (1016 - startPosition) && display::touch_x <= (1136 - startPosition) && display::touch_y >= 420 && display::touch_y <= 470) { // doser 6 prime
-        if (!device::doserIsPriming[n] && millis() - device::primeTouchTime >= 1500UL)
+        if (!bitRead(device::doserIsPriming, n) && millis() - device::primeTouchTime >= 1500UL)
           prime(6, pin::doserSix, user::doserSixSpeed);
         else if (millis() - device::primeTouchTime >= 1500UL)
           prime(6, pin::doserSix, 0);
@@ -3141,7 +3140,7 @@ void keyboardTouched(char* a_charPtr, const int16_t a_arrayLen) {
       if (display::touch_x >= keyboardColumn && display::touch_x <= keyboardColumn + 50 && display::touch_y >= keyboardRow - 60 && display::touch_y <= keyboardRow - 2) {
         //Serial.print(F("Touched special char: ")); Serial.println(device::specialSymbols[i]);
         beep();  
-        addCharToStr(a_charPtr, a_arrayLen, device::specialSymbols[i]);
+        addCharToStr(a_charPtr, a_arrayLen, pgm_read_byte_near(device::specialSymbols + i));
         break;
       }
       keyboardColumn += 60;

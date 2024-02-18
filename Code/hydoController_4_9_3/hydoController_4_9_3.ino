@@ -1,5 +1,5 @@
 /*
-  Version V4.9.2 Updated on the 17th Feb 2024
+  Version V4.9.3 Updated on the 18th Feb 2024
 */
 // TO DO: add user setup guide for new device / reset
 // add back in esp8266 wifi
@@ -80,9 +80,9 @@ enum fanModes {
 };
 
 namespace display {
+uint32_t lastButtonTouch = millis();
 uint16_t touch_x, touch_y = 0;
 uint16_t lastTouchX = 0, lastTouchY = 0;
-uint8_t dosingDialogTimer = 10;
 uint8_t page = 0, previousPage = 0;
 uint8_t homePage = 0;
 bool showTdsGraph = true;
@@ -144,7 +144,9 @@ bool refreshCalander;
 uint16_t debounceTime = 200; // in millis
 uint32_t lastTouchMillis = 0;
 uint32_t touchStartMillis = 0; // time button has been held downconst char*
+//uint32_t lastDialogTouchTime = 0;
 uint32_t infoDialogDisplayTime = 0;
+
 const uint16_t RA8875_SEABLUE      = 0x1C1F;
 const uint16_t RA8875_DARKGREY     = 0x8C51;
 const uint16_t RA8875_LIGHTGREY    = 0xE71C;
@@ -290,26 +292,6 @@ const char* const notificationsArray[] PROGMEM = {
   waterOnNotification,
   waterOffNotification
 };
-// User guide messages
-const char initalSetup[]             PROGMEM = "Please ensure all the sensors and dosing pumps are connected, and 1.413 and 12.88 mS/cm EC calibration solution, and 4.0 and 7.0 PH calibration solution";
-const char ecConversionSetup[]       PROGMEM = "Set the EC to TDS conversion";
-const char sizeConversionSetup[]     PROGMEM = "Set the CM or inches conversion";
-const char tempConversionSetup[]     PROGMEM = "Set the temperature conversion";
-const char setRtcGuide[]             PROGMEM = "Set the date and time for the RTC";
-// const char* initalSetupGuide           PROGMEM = "";
-// const char* initalSetupGuide           PROGMEM = "";
-// const char* initalSetupGuide           PROGMEM = "";
-// const char* initalSetupGuide           PROGMEM = "";
-// const char* initalSetupGuide           PROGMEM = "";
-// const char* initalSetupGuide           PROGMEM = "";
-// const char* initalSetupGuide           PROGMEM = "";
-// const char* initalSetupGuide           PROGMEM = "";
-// const char* initalSetupGuide           PROGMEM = "";
-// const char* initalSetupGuide           PROGMEM = "";
-const char* const setupMessageArray[] PROGMEM = {
-  initalSetup,
-  sizeConversionSetup
-};
 const uint8_t maxLogs = 50;
 const uint8_t maxCharsPerLog = 13; // 31 Jan 13:45
 uint8_t logTypeArray[maxLogs];
@@ -319,10 +301,11 @@ uint8_t infoPos = 0;
 }
 
 namespace device {
+uint32_t prevMillis = millis();
+bool globalDebug = true; 
 float currentDoserMls = 0;
 uint16_t profileEEPROMSize = 0;
 uint16_t systemEEPROMSize = 0;
-bool globalDebug = true;
 const char* versionNumber = "4.9.3";
 bool relayOffState = HIGH;
 bool disableVL53L0X = false;
@@ -335,8 +318,10 @@ uint8_t currentDoserNum = 0;
 // bool currentlyDraining;
 uint8_t dosingTimerHourCounter = 0;
 uint32_t primeTouchTime = 0;
-bool doserIsPriming[6] {0,0,0,0,0,0};
-uint8_t previousDosingMinute = 0, previousDosingHour = 0;
+uint8_t doserIsPriming = 0;
+//bool doserIsPriming[6] {0,0,0,0,0,0};
+uint8_t previousDosingMinute = 0;
+uint8_t previousDosingHour = 0;
 uint32_t slideShowpreviousMillis = millis();
 uint32_t sensorPreviousMillis = 0;
 uint8_t continueDosing = 0;
@@ -350,13 +335,14 @@ bool lightOn = false;
 int16_t intputPosition = 0;
 enum charTypes {LOWER, UPPER, SPECIAL};
 charTypes charType = LOWER;
-const char specialSymbols[11]{ '!', '@', '#', '&', '$', '%', '?', '/', '-', '~', '*' };
+const char specialSymbols[11] PROGMEM = { '!', '@', '#', '&', '$', '%', '?', '/', '-', '~', '*' };
 bool refreshKeys = false;
 uint8_t profileInputNumber = 0;
 uint8_t userProfile = 0;
 int16_t lastIntputPosition = 0;
 bool lockSaveButtons = false, updateKeyboardInput = false;
 uint32_t keyBoardClosedTime = millis();
+uint32_t lastCalTouch = millis();
 float minPh = 0;
 float maxPh = 0;
 float minCo2 = 0;
@@ -517,20 +503,20 @@ uint16_t manualCo2GasDuration = 30;
 bool disableCo2Control = true;
 float targetMinPh = 6.0;
 float targetMaxPh = 6.5;
-float targetMinEc = 1.60;
+float targetMinEc = 1.50;
 float targetMaxEc = 1.70;
 float targetMinWaterTemp = 20.0;
 float targetMaxWaterTemp = 27.0;
 float targetMinWaterTempF = 73.4;
 float targetMaxWaterTempF = 77.0;
-float targetMinWaterHeight = 10.1;
-float targetMaxWaterHeight = 32.2;
-float targetMinWaterHeightInches = 10.1;
-float targetMaxWaterHeightInches = 32.2;
-float waterTankLength = 50; 
-float waterTankWidth = 50; 
-float waterTankLengthInches = 20;
-float waterTankWidthInches = 20;
+uint16_t targetMinWaterHeight = 4;
+uint16_t targetMaxWaterHeight = 12;
+uint16_t targetMinWaterHeightInches = 10;
+uint16_t targetMaxWaterHeightInches = 32;
+uint16_t waterTankLength = 50; 
+uint16_t waterTankWidth = 50; 
+uint16_t waterTankLengthInches = 20;
+uint16_t waterTankWidthInches = 20;
 uint8_t doserOneSpeed = 255;
 uint8_t doserTwoSpeed = 255;
 uint8_t doserThreeSpeed = 255;
@@ -558,7 +544,7 @@ bool convertToTds = false;
 uint16_t tdsErrorMargin = 50;
 float ecErrorMargin = 0.5;
 float phErrorMargin = 0.5;
-float co2ErrorMargin = 100;
+uint16_t co2ErrorMargin = 100;
 float waterTempErrorMargin = 1.0;
 float waterTempErrorMarginF = 1.0;
 float waterHeightErrorMargin = 5;
@@ -613,13 +599,12 @@ float humidity = 0;
 float waterLevel = 0;
 float waterVolumeLtrs = 0;
 float emptyWaterTankDepth = 0;
-uint32_t hcsrDuration = 0;
 float tdsKvalueLow = 1.21;
 float tdsKvalueHigh = 1.05;
 float phDownSolution = 4.0;
 float phUpSolution = 11.0;
-float ecSolution = 1.0;
-uint16_t tdsSolution = 640;
+float ecSolution = 1.5;
+uint16_t tdsSolution = 960;
 const float phCalSolutionPart1 = 7.0;
 const float phCalSolutionPart2 = 4.0;
 const float tdsCalSolutionPart1 = 1413; // uS
@@ -630,9 +615,9 @@ uint32_t co2GasTime = 0;
 float temp_etapeZeroVolumeResistance = 0;
 float etapeZeroVolumeResistance = 1877.79; // 2104.56  resistance value (in ohms) when no liquid is present.
 float etapeMaxVolumeResistance = 271.4; // 288.71 resistance value (in ohms) when liquid is at max line.
-const float etapeCalibrationCm = 31.00; // maximum mesurement in centimeters on etap 12" version
+const uint8_t etapeCalibrationCm = 31; // maximum mesurement in centimeters on etap 12" version
 const float etapeOffset = 2.5; // Lowest value read on etape in Centimeters, datasheet says 2.5 but i get 2.5
-const uint8_t co2Request[] {0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};
+const uint8_t co2Request[] PROGMEM = {0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};
 uint8_t sensorArrayPos = 0;
 const uint8_t maxSensorArrayVals = 24;
 uint16_t phArray[maxSensorArrayVals]; // compressed floats * 100
@@ -658,7 +643,6 @@ enum airStates{ IS_FALLING, IS_RISING, IS_SAME};
 namespace wifi {
 bool wifiEnabled = false;
 uint32_t connectionTime = 0;
-uint32_t wifiPreviousMillis = 0;
 bool remotlyLoadUserProfile = false;
 bool remotlySaveUserProfile = false;
 char ssid[16] = "HydroController";
@@ -683,7 +667,7 @@ GravityTDS gravityTds;
 void(*reset)(void) = 0; // Reset function
 
 void setup() {
- Serial.begin(115200); // debugging
+  Serial.begin(115200); // debugging
   Serial1.begin(115200); // esp8266-01
   Serial2.begin(9600); // co2 sensor
   pinMode(pin::hcsrEcho, INPUT);
@@ -714,8 +698,7 @@ void setup() {
   digitalWrite(pin::co2Solenoid, device::relayOffState);
   digitalWrite(pin::auxRelayOnePin, device::relayOffState);
   digitalWrite(pin::auxRelayTwoPin, device::relayOffState);
-  
-  Wire.begin();
+  //
   initializeDevice();
 }
 
@@ -725,5 +708,5 @@ void loop() {
   drawPages();
   envriomentalControl();
   displayWarnings();
-  //esp8266DataHandler();
+  esp8266DataHandler();
 }

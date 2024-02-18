@@ -892,16 +892,16 @@ void dosersPage() {
       }
     }
   }
-  static bool prevDoserIsPriming[6]{};
+  static uint8_t prevDoserIsPriming = 0;
   int16_t startPosition = display::doserPageScrollPos * 178;
   if (display::doserPageScrollPos == 0) { // DOSER 1
     static uint8_t previousDoserOneMode;
     static int16_t doserOneMlsPosition, previousDoserOneMls;
     drawDoser(100 - startPosition, 90, 1, user::doserOneMills, previousDoserOneMls, doserOneMlsPosition, 0, 0);
     drawEcPhButton(149 - startPosition, 255, user::doserOneMode, previousDoserOneMode, true);
-    if (display::refreshPage || device::doserIsPriming[0] != prevDoserIsPriming[0]) {
-      device::doserIsPriming[0] ? stopButton(136 - startPosition, 443) : primeButton(136 - startPosition, 443);
-      prevDoserIsPriming[0] = device::doserIsPriming[0];
+    if (display::refreshPage || bitRead(device::doserIsPriming, 0) != bitRead(prevDoserIsPriming, 0)) {
+      bitRead(device::doserIsPriming, 0) ? stopButton(136 - startPosition, 443) : primeButton(136 - startPosition, 443);
+      bitWrite(prevDoserIsPriming, 0, bitRead(device::doserIsPriming, 0));
     }
   }
   if (display::doserPageScrollPos <= 1) { // DOSER 2
@@ -909,9 +909,9 @@ void dosersPage() {
     static int16_t doserTwoMlsPosition, previousDoserTwoMls;
     drawDoser(278 - startPosition, 90, 2, user::doserTwoMills, previousDoserTwoMls, doserTwoMlsPosition, 0, 0);
     drawEcPhButton(327 - startPosition, 255, user::doserTwoMode, previousDoserTwoMode, true);
-    if (display::refreshPage || device::doserIsPriming[1] != prevDoserIsPriming[1]) {
-      device::doserIsPriming[1] ? stopButton(314 - startPosition, 443) : primeButton(314 - startPosition, 443);
-      prevDoserIsPriming[1] = device::doserIsPriming[1];
+    if (display::refreshPage || bitRead(device::doserIsPriming, 1) != bitRead(prevDoserIsPriming, 1)) {
+      bitRead(device::doserIsPriming, 1) ? stopButton(314 - startPosition, 443) : primeButton(314 - startPosition, 443);
+      bitWrite(prevDoserIsPriming, 1, bitRead(device::doserIsPriming, 1));
     }
   }
   if (display::doserPageScrollPos <= 2) { // DOSER 3
@@ -919,9 +919,9 @@ void dosersPage() {
     static int16_t doserThreeMlsPosition, previousDoserThreeMls;
     drawDoser(456 - startPosition, 90, 3, user::doserThreeMills, previousDoserThreeMls, doserThreeMlsPosition, 0, 0);
     drawEcPhButton(505 - startPosition, 255, user::doserThreeMode, previousDoserThreeMode, true);
-    if (display::refreshPage || device::doserIsPriming[2] != prevDoserIsPriming[2]) {
-      device::doserIsPriming[2] ? stopButton(492 - startPosition, 443) : primeButton(492 - startPosition, 443);
-      prevDoserIsPriming[2] = device::doserIsPriming[2];
+    if (display::refreshPage || bitRead(device::doserIsPriming, 2) != bitRead(prevDoserIsPriming, 2)) {
+      bitRead(device::doserIsPriming, 2) ? stopButton(492 - startPosition, 443) : primeButton(492 - startPosition, 443);
+      bitWrite(prevDoserIsPriming, 2, bitRead(device::doserIsPriming, 2));
     }
   }
   if (display::doserPageScrollPos <= 2) { // DOSER 4
@@ -929,9 +929,9 @@ void dosersPage() {
     static int16_t doserFourMlsPosition, previousDoserFourMls;
     drawDoser(634 - startPosition, 90, 4, user::doserFourMills, previousDoserFourMls, doserFourMlsPosition, 0, 0);
     drawEcPhButton(683 - startPosition, 255, user::doserFourMode, previousDoserFourMode, true);
-    if (display::refreshPage || device::doserIsPriming[3] != prevDoserIsPriming[3]) {
-      device::doserIsPriming[3] ? stopButton(670 - startPosition, 443) : primeButton(670 - startPosition, 443);
-      prevDoserIsPriming[3] = device::doserIsPriming[3];
+    if (display::refreshPage || bitRead(device::doserIsPriming, 3) != bitRead(prevDoserIsPriming, 3)) {
+      bitRead(device::doserIsPriming, 3) ? stopButton(670 - startPosition, 443) : primeButton(670 - startPosition, 443);
+      bitWrite(prevDoserIsPriming, 3, bitRead(device::doserIsPriming, 3));
     }
   }
   if (display::doserPageScrollPos >= 1) { // DOSER 5
@@ -939,9 +939,9 @@ void dosersPage() {
     static int16_t doserFiveMlsPosition, previousDoserFiveMls;
     drawDoser(812 - startPosition, 90, 5, user::doserFiveMills, previousDoserFiveMls, doserFiveMlsPosition, 0, 0);
     drawEcPhButton(861 - startPosition, 255, user::doserFiveMode, previousDoserFiveMode, true);
-    if (display::refreshPage || device::doserIsPriming[4] != prevDoserIsPriming[4]) {
-      device::doserIsPriming[4] ? stopButton(848 - startPosition, 443) : primeButton(848 - startPosition, 443);
-      prevDoserIsPriming[4] = device::doserIsPriming[4];
+    if (display::refreshPage || bitRead(device::doserIsPriming, 4) != bitRead(prevDoserIsPriming, 4)) {
+      bitRead(device::doserIsPriming, 4) ? stopButton(848 - startPosition, 443) : primeButton(848 - startPosition, 443);
+      bitWrite(prevDoserIsPriming, 4, bitRead(device::doserIsPriming, 4));
     }
   }
   if (display::doserPageScrollPos >= 2) { // DOSER 6
@@ -949,9 +949,9 @@ void dosersPage() {
     static int16_t doserSixMlsPosition, previousDoserSixMls;
     drawDoser(990 - startPosition, 90, 6, user::doserSixMills, previousDoserSixMls, doserSixMlsPosition, 0, 0);
     drawEcPhButton(1039 - startPosition, 255, user::doserSixMode, previousDoserSixMode, true);
-    if (display::refreshPage || device::doserIsPriming[5] != prevDoserIsPriming[5]) {
-      device::doserIsPriming[5] ? stopButton(1026 - startPosition, 443) : primeButton(1026 - startPosition, 443);
-      prevDoserIsPriming[5] = device::doserIsPriming[5];
+    if (display::refreshPage || bitRead(device::doserIsPriming, 5) != bitRead(prevDoserIsPriming, 5)) {
+      bitRead(device::doserIsPriming, 5) ? stopButton(1026 - startPosition, 443) : primeButton(1026 - startPosition, 443);
+      bitWrite(prevDoserIsPriming, 5, bitRead(device::doserIsPriming, 5));
     }
   }
 }
@@ -1841,54 +1841,54 @@ void drawSettingsPageFour() {
     if (display::calDoserPageScrollPos < user::numberOfDosers - 4) {
       tft.fillTriangle(779, 200, 799, 240, 779, 280, RA8875_BLUE);
     }
-    static bool prevDoserIsPriming[6]{};
+    static uint8_t prevDoserIsPriming = 0;
     int16_t startPosition = display::calDoserPageScrollPos * 178;
     if (display::calDoserPageScrollPos == 0) { // DOSER 1
       static int16_t doserOnSpeedPosition, previousDoserOneSpeed;
       drawDoser(100 - startPosition, 90, 1, user::doserOneSpeed, previousDoserOneSpeed, doserOnSpeedPosition, 1, -45);
-      if (display::refreshPage || device::doserIsPriming[0] != prevDoserIsPriming[0]) {
-        device::doserIsPriming[0] ? stopButton(136 - startPosition, 308) : primeButton(136 - startPosition, 308);
-        prevDoserIsPriming[0] = device::doserIsPriming[0];
+      if (display::refreshPage || bitRead(device::doserIsPriming, 0) != bitRead(prevDoserIsPriming, 0)) {
+        bitRead(device::doserIsPriming, 0) ? stopButton(136 - startPosition, 308) : primeButton(136 - startPosition, 308);
+        bitWrite(prevDoserIsPriming, 0, bitRead(device::doserIsPriming, 0));
       }
     }
     if (display::calDoserPageScrollPos <= 1) { // DOSER 2
       static int16_t doserTwoSpeedPosition, previousDoserTwoSpeed;
       drawDoser(278 - startPosition, 90, 2, user::doserTwoSpeed, previousDoserTwoSpeed, doserTwoSpeedPosition, 1, -45);
-      if (display::refreshPage || device::doserIsPriming[1] != prevDoserIsPriming[1]) {
-        device::doserIsPriming[1] ? stopButton(314 - startPosition, 308) : primeButton(314 - startPosition, 308);
-        prevDoserIsPriming[0] = device::doserIsPriming[0];
+      if (display::refreshPage || bitRead(device::doserIsPriming, 1) != bitRead(prevDoserIsPriming, 1)) {
+        bitRead(device::doserIsPriming, 1) ? stopButton(314 - startPosition, 308) : primeButton(314 - startPosition, 308);
+        bitWrite(prevDoserIsPriming, 1, bitRead(device::doserIsPriming, 1));
       }
     }
     if (display::calDoserPageScrollPos <= 2) { // DOSER 3
       static int16_t doserThreeSpeedPosition, previousDoserThreeSpeed;
       drawDoser(456 - startPosition, 90, 3, user::doserThreeSpeed, previousDoserThreeSpeed, doserThreeSpeedPosition, 1, -45);
-      if (display::refreshPage || device::doserIsPriming[2] != prevDoserIsPriming[2]) {
-        device::doserIsPriming[2] ? stopButton(492 - startPosition, 308) : primeButton(492 - startPosition, 308);
-        prevDoserIsPriming[0] = device::doserIsPriming[0];
+      if (display::refreshPage || bitRead(device::doserIsPriming, 2) != bitRead(prevDoserIsPriming, 2)) {
+        bitRead(device::doserIsPriming, 2) ? stopButton(492 - startPosition, 308) : primeButton(492 - startPosition, 308);
+        bitWrite(prevDoserIsPriming, 2, bitRead(device::doserIsPriming, 2));
       }
     }
     if (display::calDoserPageScrollPos <= 2) { // DOSER 4
       static int16_t doserFourSpeedPosition, previousDoserFourSpeed;
       drawDoser(634 - startPosition, 90, 4, user::doserFourSpeed, previousDoserFourSpeed, doserFourSpeedPosition, 1, -45);
-      if (display::refreshPage || device::doserIsPriming[3] != prevDoserIsPriming[3]) {      
-        device::doserIsPriming[3] ? stopButton(670 - startPosition, 308) : primeButton(670 - startPosition, 308);
-        prevDoserIsPriming[0] = device::doserIsPriming[0];
+      if (display::refreshPage || bitRead(device::doserIsPriming, 3) != bitRead(prevDoserIsPriming, 3)) {   
+        bitRead(device::doserIsPriming, 3) ? stopButton(670 - startPosition, 308) : primeButton(670 - startPosition, 308);
+        bitWrite(prevDoserIsPriming, 3, bitRead(device::doserIsPriming, 3));
       }
     }
     if (display::calDoserPageScrollPos >= 1) { // DOSER 5
       static int16_t doserFiveSpeedPosition, previousDoserFiveSpeed;
       drawDoser(812 - startPosition, 90, 5, user::doserFiveSpeed, previousDoserFiveSpeed, doserFiveSpeedPosition, 1, -45);
-      if (display::refreshPage || device::doserIsPriming[4] != prevDoserIsPriming[4]) {      
-        device::doserIsPriming[4] ? stopButton(848 - startPosition, 308) : primeButton(848 - startPosition, 308);
-        prevDoserIsPriming[0] = device::doserIsPriming[0];
+      if (display::refreshPage || bitRead(device::doserIsPriming, 4) != bitRead(prevDoserIsPriming, 4)) {   
+        bitRead(device::doserIsPriming, 4) ? stopButton(848 - startPosition, 308) : primeButton(848 - startPosition, 308);
+        bitWrite(prevDoserIsPriming, 4, bitRead(device::doserIsPriming, 4));
       }
     }
     if (display::calDoserPageScrollPos == 2) { // DOSER 6
       static int16_t doserSixSpeedPosition, previousDoserSixSpeed;
       drawDoser(990 - startPosition, 90, 6, user::doserSixSpeed, previousDoserSixSpeed, doserSixSpeedPosition, 1, -45);
-      if (display::refreshPage || device::doserIsPriming[5] != prevDoserIsPriming[5]) {      
-        device::doserIsPriming[5] ? stopButton(1026 - startPosition, 443) : primeButton(1026 - startPosition, 443);
-        prevDoserIsPriming[0] = device::doserIsPriming[0];
+      if (display::refreshPage || bitRead(device::doserIsPriming, 5) != bitRead(prevDoserIsPriming, 5)) {    
+        bitRead(device::doserIsPriming, 5) ? stopButton(1026 - startPosition, 443) : primeButton(1026 - startPosition, 443);
+        bitWrite(prevDoserIsPriming, 5, bitRead(device::doserIsPriming, 5));
       }
     }
     // buttons
