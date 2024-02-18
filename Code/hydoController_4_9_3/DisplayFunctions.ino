@@ -672,7 +672,7 @@ void abortMessage(const char *a_text, const char* a_str, const float& a_value, c
     else if (c == '@' && a_mls != -1){
       if (a_update)
         tft.fillRect(startX - 9, mlsY + 5, 588, 36, RA8875_WHITE);
-      tft.print(a_mls, 2);   
+      tft.print(a_mls);   
       mlsY = tft.getFontY();
       a_update = false;
     }
