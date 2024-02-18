@@ -642,13 +642,16 @@ void continueMessage(const char* a_text, const float& a_num, const uint8_t a_pre
 }
 
 // Show an abort message with the string stored in the Program memory / Flash, and a float and int16_t which can be excluded if -1
-void abortMessage(const char *a_text, const char* a_str, const float& a_value, const int16_t& a_doserNum, const uint8_t& a_precison) {
+void abortMessage(const char *a_text, const char* a_str, const float& a_value, const int16_t& a_doserNum, const float& a_mls, const uint8_t& a_precison, bool a_update) {
   uint16_t startX = 166, startY = 166;
-  //Frame
-  tft.fillRoundRect(startX - 20, startY, 600, 250, 5, RA8875_WHITE);
-  tft.drawRoundRect(startX - 21, startY - 1, 602, 252, 5, RA8875_BLACK);
-  // Buttons
-  cancelButton(startX + 200, startY + 200); // x was 178
+  static uint16_t mlsX = 0, mlsY = 0;
+  if (!a_update) {
+    //Frame
+    tft.fillRoundRect(startX - 20, startY, 600, 250, 5, RA8875_WHITE);
+    tft.drawRoundRect(startX - 21, startY - 1, 602, 252, 5, RA8875_BLACK);
+    // Buttons
+    cancelButton(startX + 200, startY + 200); // x was 178
+  }
   // Draw text
   tft.setFont(&akashi_36px_Regular);
   tft.setFontScale(1);
@@ -660,13 +663,20 @@ void abortMessage(const char *a_text, const char* a_str, const float& a_value, c
       startY += 38;
       tft.setCursor(startX - 8, startY);
     }
-    else if (c == '*')
+    else if (c == '*' && !a_update)
       tft.print(a_str);
-    else if (c == '$' && a_value != -1)
+    else if (c == '$' && a_value != -1 && !a_update)
       tft.print(a_value, a_precison);
-    else if (c == '#' && a_doserNum != -1)
+    else if (c == '#' && a_doserNum != -1 && !a_update)
       tft.print(a_doserNum);
-    else
+    else if (c == '@' && a_mls != -1){
+      if (a_update)
+        tft.fillRect(startX - 9, mlsY + 5, 588, 36, RA8875_WHITE);
+      tft.print(a_mls, 2);   
+      mlsY = tft.getFontY();
+      a_update = false;
+    }
+    else if (!a_update)
       tft.print(c);
   }
 }

@@ -49,7 +49,7 @@ void waterLevelControl() {
       if (device::globalDebug)
         Serial.println(F("About to show the drain abort dialog, and start draining"));
       const float waterTarget = user::convertToInches ? user::targetMinWaterHeight / 2.5 : user::targetMinWaterHeight;
-      abortMessage(message::cancelDraining, user::convertToInches ? "\"" : "cm", waterTarget, -1, 1);
+      abortMessage(message::cancelDraining, user::convertToInches ? "\"" : "cm", waterTarget, -1, -1, 1, false);
     }
 
     // Start draining the water from the tank
@@ -129,7 +129,7 @@ void waterLevelControl() {
       if (device::globalDebug)
         Serial.println(F("About to show refill abort dialog, and refill tank"));
       const float waterTarget = user::convertToInches ? user::targetMaxWaterHeightInches : user::targetMaxWaterHeight;
-      abortMessage(message::cancelRefilling, user::convertToInches ? "\"" : "cm", waterTarget, -1, 1);
+      abortMessage(message::cancelRefilling, user::convertToInches ? "\"" : "cm", waterTarget, -1, -1, 1, false);
       saveLogMessage(2);
 
       lastTouch = millis() + 5000UL;
@@ -198,17 +198,17 @@ bool refillTank(const uint32_t& a_lastTouch, uint32_t& a_previousMillis, int16_t
   // run dosers
   if (lockPump) {
     if (enabledDosers[0] && user::doserOneMode != device::DOSER_OFF)
-      enabledDosers[0] = runDoser(1, pin::doserOne, user::doserOneSpeed, user::refillDoserOneMills, previousDoserMillis);
+      enabledDosers[0] = runDoser(1, pin::doserOne, user::doserOneSpeed, user::refillDoserOneMills);
     else if (enabledDosers[1] && user::doserTwoMode != device::DOSER_OFF)
-      enabledDosers[1] = runDoser(2, pin::doserTwo, user::doserTwoSpeed, user::refillDoserTwoMills, previousDoserMillis);
+      enabledDosers[1] = runDoser(2, pin::doserTwo, user::doserTwoSpeed, user::refillDoserTwoMills);
     else if (enabledDosers[2] && user::doserThreeMode != device::DOSER_OFF)
-      enabledDosers[2] = runDoser(3, pin::doserThree, user::doserThreeSpeed, user::refillDoserThreeMills, previousDoserMillis);
+      enabledDosers[2] = runDoser(3, pin::doserThree, user::doserThreeSpeed, user::refillDoserThreeMills);
     else if (enabledDosers[3] && user::doserFourMode != device::DOSER_OFF)
-      enabledDosers[3] = runDoser(4, pin::doserFour, user::doserFourSpeed, user::refillDoserFourMills, previousDoserMillis);
+      enabledDosers[3] = runDoser(4, pin::doserFour, user::doserFourSpeed, user::refillDoserFourMills);
     else if (enabledDosers[4] && user::doserFiveMode != device::DOSER_OFF)
-      enabledDosers[4] = runDoser(5, pin::doserFive, user::doserFiveSpeed, user::refillDoserFiveMills, previousDoserMillis);
+      enabledDosers[4] = runDoser(5, pin::doserFive, user::doserFiveSpeed, user::refillDoserFiveMills);
     else if (enabledDosers[5] && user::doserSixMode != device::DOSER_OFF)
-      enabledDosers[5] = runDoser(6, pin::doserSix, user::doserSixSpeed, user::refillDoserSixMills, previousDoserMillis);
+      enabledDosers[5] = runDoser(6, pin::doserSix, user::doserSixSpeed, user::refillDoserSixMills);
     else {
       if (device::globalDebug)
         Serial.println(F("Dosing is complete"));
@@ -629,9 +629,9 @@ void waterEcPhControl() {
   static adjustmentModes adjustmentMode = UNADJUSTED;
   //static adjustmentModes lastAdjustmentMode = UNADJUSTED;
   // Every hour increment the dosing hour counter
-  if (device::previousDosingHour != rtc.hour() && rtc.minute() >= device::previousDosingMinute) {
+  if (device::previousDosingHour != rtc.minute() && rtc.minute() >= device::previousDosingMinute) { // WAS rtc.hour() && rtc.minute() CHANGED JUST FOR TESTING
     device::dosingTimerHourCounter++;
-    device::previousDosingHour = rtc.hour();
+    device::previousDosingHour = rtc.minute(); // WAS rtc.hour, CHANGED JUST FOR TESTING
     if (device::globalDebug) {
       Serial.print(F("Dosing Timer Hour Counter: ")); Serial.println(device::dosingTimerHourCounter);
     }
@@ -922,27 +922,32 @@ float percentOutOfRange(const float & a_setPoint, const float & a_val) {
 
 void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent, const int16_t a_dosingMode, uint32_t a_lastTouch) {
   uint8_t previousDoserNum = 0;
-  device::currentDoserNum = 0;
+  device::currentDoserNum = 1;
+  device::currentDoserMls = 0;
+  bool updateMlsText = false;
+  static float prevCurrentDoserMls = -1;
   const char* str[3] = {"PH", "EC", "TDS"};
-  uint32_t previousDoserMillis = millis();
+  
   while (device::currentlyDosing) { // timing is critical we must use a while loop
     // show continue dialog
-    if (device::currentDoserNum != previousDoserNum) {
-      abortMessage(message::cancelDosing, str[a_dosingMode], a_percent, device::currentDoserNum, 2);
+    if (device::currentDoserNum != previousDoserNum || prevCurrentDoserMls != device::currentDoserMls) {
+      abortMessage(message::cancelDosing, str[a_dosingMode], a_percent, device::currentDoserNum, device::currentDoserMls, 2, updateMlsText);
       previousDoserNum = device::currentDoserNum;
+      prevCurrentDoserMls = device::currentDoserMls;
+      updateMlsText = true;
     }
     if (a_enabledDosers[0])
-      a_enabledDosers[0] = runDoser(1, pin::doserOne, user::doserOneSpeed, a_dosingMls[0], previousDoserMillis);
+      a_enabledDosers[0] = runDoser(1, pin::doserOne, user::doserOneSpeed, a_dosingMls[0]);
     else if (a_enabledDosers[1])
-      a_enabledDosers[1] = runDoser(2, pin::doserTwo, user::doserTwoSpeed, a_dosingMls[1], previousDoserMillis);
+      a_enabledDosers[1] = runDoser(2, pin::doserTwo, user::doserTwoSpeed, a_dosingMls[1]);
     else if (a_enabledDosers[2])
-      a_enabledDosers[2] = runDoser(3, pin::doserThree, user::doserThreeSpeed, a_dosingMls[2], previousDoserMillis);
+      a_enabledDosers[2] = runDoser(3, pin::doserThree, user::doserThreeSpeed, a_dosingMls[2]);
     else if (a_enabledDosers[3])
-      a_enabledDosers[3] = runDoser(4, pin::doserFour, user::doserFourSpeed, a_dosingMls[3], previousDoserMillis);
+      a_enabledDosers[3] = runDoser(4, pin::doserFour, user::doserFourSpeed, a_dosingMls[3]);
     else if (a_enabledDosers[4])
-      a_enabledDosers[4] = runDoser(5, pin::doserFive, user::doserFiveSpeed, a_dosingMls[4], previousDoserMillis);
+      a_enabledDosers[4] = runDoser(5, pin::doserFive, user::doserFiveSpeed, a_dosingMls[4]);
     else if (a_enabledDosers[5])
-      a_enabledDosers[5] = runDoser(6, pin::doserSix, user::doserSixSpeed, a_dosingMls[5], previousDoserMillis);
+      a_enabledDosers[5] = runDoser(6, pin::doserSix, user::doserSixSpeed, a_dosingMls[5]);
     else if (device::currentlyDosing) {
       if (device::globalDebug)
         Serial.println(F("Dosing complete"));
@@ -963,27 +968,36 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
         }
       }
     }
+    cyclicTimers();
   }
 }
 
 // Run a given doser for a_mls * 1000 on a_doserPin at a_doserSpeed
-bool runDoser(const uint8_t& a_doserNum, const uint8_t& a_doserPin, const int16_t& a_doserSpeed, const float& a_mls, uint32_t& a_previousDoserMillis) {
-  static uint32_t debugPreviousMillis = 0;
-  if (millis() - a_previousDoserMillis <= 1000UL * a_mls) {
-    if (device::globalDebug && a_previousDoserMillis != debugPreviousMillis) {
+bool runDoser(const uint8_t& a_doserNum, const uint8_t& a_doserPin, const int16_t& a_doserSpeed, const float& a_mls) {
+  static uint8_t previousDoserNum = 255;
+  static uint32_t previousDoserMillis = millis(); 
+
+  if (previousDoserNum != a_doserNum) {
+    if (device::globalDebug) {
       Serial.print(F("Starting doser: ")); Serial.print(a_doserNum); Serial.print(F(", pumping ")); Serial.print(a_mls, 2); Serial.println(F("mls"));
-      debugPreviousMillis = a_previousDoserMillis;
     }
+    device::currentDoserMls = a_mls;
+    previousDoserNum = a_doserNum;
     analogWrite(a_doserPin, a_doserSpeed);
     device::currentDoserNum = a_doserNum;
   }
-  else {
+
+  if (millis() - previousDoserMillis >= 1000UL) {
+    device::currentDoserMls--;
+    previousDoserMillis = millis();
+  }
+
+  if (device::currentDoserMls == 0) {
     if (device::globalDebug) {
       Serial.print(F("Stopping doser: ")); Serial.println(a_doserNum);
-      Serial.print(F("Doser run time: ")); Serial.println(millis() - a_previousDoserMillis);
     }
     analogWrite(a_doserPin, 0);
-    a_previousDoserMillis = millis();
+    previousDoserNum = 255;  
     return false;
   }
   return true;

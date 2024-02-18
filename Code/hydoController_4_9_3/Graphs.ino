@@ -25,12 +25,6 @@ void drawGraph (
     }
   }
 
-  if (device::globalDebug) {  
-    // Serial.print(F("compressed: ")); Serial.println(a_compressed[0]); 
-    // Serial.print(F("minArrayVal: ")); Serial.println(minArrayVal, 2);
-    // Serial.print(F("minArrayVal: ")); Serial.println(minArrayVal, 2);
-  }
-
   int16_t maxGraphArrayValues = sensor::maxSensorArrayVals;
   bool redrawGraph = device::newGraphData;
   static float graphXstartPosition = a_xStartPos;

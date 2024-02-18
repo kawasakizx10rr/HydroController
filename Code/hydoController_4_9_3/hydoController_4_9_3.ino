@@ -172,7 +172,7 @@ const char drainingAlert[]              PROGMEM = "Alert the system is about\nto
 const char cancelDraining[]             PROGMEM = "The system is currently\ndraining the water reservoir\nto the minimum target $*\nPress cancel to quit draining\nat any time.";
 const char refillingAlert[]             PROGMEM = "Alert the system is about\nto start refilling the water\nreservoir.\nStarting in $ seconds\nDo you want to continue?";
 const char cancelRefilling[]            PROGMEM = "The system is currently\nfilling the water reservoir to\nthe maximum target $*\nPress cancel to quit refilling\nat any time.";
-const char cancelDosing[]               PROGMEM = "Dosing currently in progress\n* out of range by $%\nCurrently running doser #\nPress cancel to quit dosing\nat any time.";
+const char cancelDosing[]               PROGMEM = "Dosing currently in progress\n* out of range by $%\nCurrently running doser #\n@ mls remaing to pump\nPress cancel to quit dosing.";
 const char calibrateCo2[]               PROGMEM = "Please make sure the Co2\nhas been a constant 400ppm\nfor at least an hour before\nstarting the calibration\nDo you want to continue?";
 const char calibratingCo2[]             PROGMEM = "Please wait 10 seconds\nwhile the Co2 sensor is\ncalibrating. And do not\ninterfere with the Co2 while\nthe sensor is calibrating.";
 const char co2Alert[]                   PROGMEM = "Alert the system is about\nto start pumping Co2. Please\nmake sure that no one is\ninside! Starting in $ seconds\nDo you want to continue?";
@@ -319,6 +319,7 @@ uint8_t infoPos = 0;
 }
 
 namespace device {
+float currentDoserMls = 0;
 uint16_t profileEEPROMSize = 0;
 uint16_t systemEEPROMSize = 0;
 bool globalDebug = true;
