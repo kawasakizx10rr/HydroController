@@ -4,38 +4,40 @@ void esp8266DataHandler() {
   uint8_t value = 0, cmdsRecived = 0, charCnt = 0;
   char buffer[16] {0};
   uint32_t timeout = millis() + 100UL;
-  while (Serial1.available() > 0 && millis() < timeout) {
-    char c = Serial1.read();
-    // reset local variables
-    if (c == '!') {
-      memset(buffer, 0 , 16);
-      getData = false;
-      value = 0;
-      cmdsRecived = 0;
-      charCnt = 0;
-      readData = true;
-    }
-    // value to be stored
-    else if (c == ',' && readData) {
-      if (cmdsRecived == 0) {
-        getData = atoi(buffer);
+  if (wifi::wifiEnabled) {
+    while (Serial1.available() > 0 && millis() < timeout) {
+      char c = Serial1.read();
+      // reset local variables
+      if (c == '!') {
+        memset(buffer, 0 , 16);
+        getData = false;
+        value = 0;
+        cmdsRecived = 0;
+        charCnt = 0;
+        readData = true;
       }
-      else if (cmdsRecived == 1) {
-        value = atoi(buffer);
+      // value to be stored
+      else if (c == ',' && readData) {
+        if (cmdsRecived == 0) {
+          getData = atoi(buffer);
+        }
+        else if (cmdsRecived == 1) {
+          value = atoi(buffer);
+        }
+        else if (cmdsRecived == 2) {
+          if (getData)
+            setValues(value, buffer);
+          else
+            getValues(value, atoi(buffer));
+        }
+        memset(buffer, 0 , 16);
+        cmdsRecived++;
+        charCnt = 0;
       }
-      else if (cmdsRecived == 2) {
-        if (getData)
-          setValues(value, buffer);
-        else
-          getValues(value, atoi(buffer));
+      // add serial data to buffer
+      else if (c >= 32 && c <= 126 && charCnt < 16 && readData) { // 'space' to '~'
+        buffer[charCnt++] = c;
       }
-      memset(buffer, 0 , 16);
-      cmdsRecived++;
-      charCnt = 0;
-    }
-    // add serial data to buffer
-    else if (c >= 32 && c <= 126 && charCnt < 16 && readData) { // 'space' to '~'
-      buffer[charCnt++] = c;
     }
   }
 }

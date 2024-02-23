@@ -172,7 +172,8 @@ void initializeDevice() {
   }
 
   // // Load the Co2 sensor
-  Serial2.write(sensor::co2Request, 9);
+  for(uint8_t i; i < 9; i++)
+    Serial2.write(pgm_read_byte_near(sensor::co2Request + i));
   delay(50);
   Serial2.flush();
 
@@ -202,13 +203,14 @@ void initializeDevice() {
   device::fanTwoSpeed = user::targetMinFanTwoSpeed;
   sendToSlave('Z', device::fanOneSpeed);
   sendToSlave('X', device::fanTwoSpeed);
-
   // If the LED is disabled send cmd to Slave
-  if (user::disableLED)
-    sendToSlave('L', 1);
+  sendToSlave('L', user::disableLED);
   // If the sound is disabled send cmd to Slave
-  if (user::disableBeeper)
-    sendToSlave('B', 1);
+  sendToSlave('B', user::disableBeeper);
+
+  // Turn on the ESP8266-01
+  if (wifi::wifiEnabled)
+    digitalWrite(pin::espTransistor, HIGH);
     
   // save log message, system started
   saveLogMessage(0);
@@ -231,6 +233,11 @@ void initializeDevice() {
   //user::phDosingMode == user::PRECISE; // INCREMENTAL
   //sensor::ph = 5.4;
   //adjustWaterPh();
+  
+  //device::currentlyDosing = true;
+  //float dosingMls[6] {10, 11, 12, 13, 14, 15};
+  //bool enabledDosers[6] {true, true, true, true, true, true};
+  //runDosers(enabledDosers, dosingMls, 35.67, 0, millis());
 }
 
 // Send a switchcase and command to the 328P via i2c

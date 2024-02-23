@@ -1192,6 +1192,7 @@ void settingsOnePageTouched() {
         static uint32_t previousWifiOnOffTime = millis();
         if (millis() >= previousWifiOnOffTime + 1000UL) {
           wifi::wifiEnabled = !wifi::wifiEnabled;
+          digitalWrite(pin::espTransistor, wifi::wifiEnabled);
           Serial.print(F("Wifi AP ")); Serial.println(wifi::wifiEnabled  ? F("enabled") : F("disabled"));
           beep();
           previousWifiOnOffTime = millis();

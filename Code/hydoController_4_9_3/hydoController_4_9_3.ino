@@ -143,6 +143,7 @@ int16_t cursourPosition = 0;
 bool refreshCalander;
 uint16_t debounceTime = 200; // in millis
 uint32_t lastTouchMillis = 0;
+
 uint32_t touchStartMillis = 0; // time button has been held downconst char*
 //uint32_t lastDialogTouchTime = 0;
 uint32_t infoDialogDisplayTime = 0;
