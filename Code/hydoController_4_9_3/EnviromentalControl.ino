@@ -699,11 +699,20 @@ void adjustWaterEc() {
         enabledDosers[4] = true;
       if (user::numberOfDosers >= 6 && (user::doserSixMode == device::DOSER_EC || user::doserSixMode == device::DOSER_EC_OP))
         enabledDosers[5] = true;
+      //
+      if (device::globalDebug)
+        Serial.print(F("Enabled dosers = "));
       int16_t numEnabledDosers = 0;
-      for (int16_t i = 0; i < 6; i++) {
-        if (enabledDosers[i] && currentDoserModes[i] == device::DOSER_EC)
+      for (uint8_t i = 0; i < 6; i++) {
+        if (enabledDosers[i]) {
+          if (device::globalDebug) {
+            Serial.print(i); Serial.print(F(" "));
+          }
           numEnabledDosers++;
+        }
       }
+      if (device::globalDebug)
+        Serial.println();
       //    
       saveLogMessage(9);
       //
@@ -776,11 +785,20 @@ void adjustWaterTds() {
         enabledDosers[4] = true;
       if (user::numberOfDosers >= 6 && (user::doserSixMode == device::DOSER_EC || user::doserSixMode == device::DOSER_EC_OP))
         enabledDosers[5] = true;
-      uint8_t numEnabledDosers = 0;
+      //
+      if (device::globalDebug) 
+        Serial.print(F("Enabled dosers = "));
+      int16_t numEnabledDosers = 0;
       for (uint8_t i = 0; i < 6; i++) {
-        if (enabledDosers[i] && currentDoserModes[i] == device::DOSER_EC)
+        if (enabledDosers[i]) {
+          if (device::globalDebug) {
+            Serial.print(i); Serial.print(F(" "));
+          }
           numEnabledDosers++;
+        }
       }
+      if (device::globalDebug)
+        Serial.println();
       //    
       saveLogMessage(9);
       //
@@ -850,37 +868,45 @@ void adjustWaterPh() {
       if (sensor::ph < user::targetMinPh) {
         if (user::doserOneMode == device::DOSER_PH_UP) 
           enabledDosers[0] = true;
-        else if (user::doserTwoMode == device::DOSER_PH_UP) 
+        if (user::doserTwoMode == device::DOSER_PH_UP) 
           enabledDosers[1] = true;
-        else if (user::doserThreeMode == device::DOSER_PH_UP) 
+        if (user::doserThreeMode == device::DOSER_PH_UP) 
           enabledDosers[2] = true;
-        else if (user::doserFourMode == device::DOSER_PH_UP) 
+        if (user::doserFourMode == device::DOSER_PH_UP) 
           enabledDosers[3] = true;
-        else if (user::numberOfDosers >= 5 && user::doserFiveMode == device::DOSER_PH_UP) 
+        if (user::numberOfDosers >= 5 && user::doserFiveMode == device::DOSER_PH_UP) 
           enabledDosers[4] = true;
-        else if (user::numberOfDosers >= 6 && user::doserSixMode == device::DOSER_PH_UP) 
+        if (user::numberOfDosers >= 6 && user::doserSixMode == device::DOSER_PH_UP) 
           enabledDosers[5] = true;
       }
       // Adjust PH down
       else if (sensor::ph > user::targetMinPh) {
         if (user::doserOneMode == device::DOSER_PH_DOWN) 
           enabledDosers[0] = true;
-        else if (user::doserTwoMode == device::DOSER_PH_DOWN) 
+        if (user::doserTwoMode == device::DOSER_PH_DOWN) 
           enabledDosers[1] = true;
-        else if (user::doserThreeMode == device::DOSER_PH_DOWN) 
+        if (user::doserThreeMode == device::DOSER_PH_DOWN) 
           enabledDosers[2] = true;
-        else if (user::doserFourMode == device::DOSER_PH_DOWN) 
+        if (user::doserFourMode == device::DOSER_PH_DOWN) 
           enabledDosers[3] = true;
-        else if (user::numberOfDosers >= 5 && user::doserFiveMode == device::DOSER_PH_DOWN) 
+        if (user::numberOfDosers >= 5 && user::doserFiveMode == device::DOSER_PH_DOWN) 
           enabledDosers[4] = true;
-        else if (user::numberOfDosers >= 6 && user::doserSixMode == device::DOSER_PH_DOWN) 
+        if (user::numberOfDosers >= 6 && user::doserSixMode == device::DOSER_PH_DOWN) 
           enabledDosers[5] = true;
       }   
+      if (device::globalDebug)
+         Serial.print(F("Enabled dosers = "));
       int16_t numEnabledDosers = 0;
       for (uint8_t i = 0; i < 6; i++) {
-        if (enabledDosers[i])
+        if (enabledDosers[i]) {
+          if (device::globalDebug) {
+            Serial.print(i); Serial.print(F(" "));
+          }
           numEnabledDosers++;
+        }
       }
+      if (device::globalDebug)
+        Serial.println();
       sensor::ph < user::targetMinPh ? saveLogMessage(8) : saveLogMessage(7);
       if (user::phDosingMode == user::PRECISE) {
         if (device::globalDebug) {
@@ -916,15 +942,15 @@ void adjustWaterPh() {
         Serial.println(F("PH dosing mode set to incremental"));
         if (enabledDosers[0]) 
           dosingMls[0] = user::doserOneMills;
-        else if (enabledDosers[1]) 
+        if (enabledDosers[1]) 
           dosingMls[1] = user::doserTwoMills;
-        else if (enabledDosers[2]) 
+        if (enabledDosers[2]) 
           dosingMls[2] = user::doserThreeMills;
-        else if (enabledDosers[3]) 
+        if (enabledDosers[3]) 
           dosingMls[3] = user::doserFourMills;
-        else if (enabledDosers[4]) 
+        if (enabledDosers[4]) 
           dosingMls[4] = user::doserFiveMills;
-        else if (enabledDosers[5]) 
+        if (enabledDosers[5]) 
           dosingMls[5] = user::doserSixMills; 
       }
       // Run the dosing pumps   

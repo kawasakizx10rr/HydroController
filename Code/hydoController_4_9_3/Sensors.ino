@@ -38,8 +38,7 @@ void readSensors() {
     //Serial.print(F("LDR: ")); Serial.println(sensor::ldr);
     // CO2 ===============================================================================
     device::prevMillis = millis() + 50UL;
-    for(uint8_t i; i < 9; i++)
-      Serial2.write(pgm_read_byte_near(sensor::co2Request + i));
+    Serial2.write(sensor::co2Request, 9);
     uint8_t buffer[8] {0, 0, 0, 0, 0, 0, 0, 0};
     uint8_t bufferPosition = 0;
     while (millis() - device::prevMillis < 50UL && Serial2.available() > 0) {

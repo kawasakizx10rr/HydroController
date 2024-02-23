@@ -618,7 +618,7 @@ float etapeZeroVolumeResistance = 1877.79; // 2104.56  resistance value (in ohms
 float etapeMaxVolumeResistance = 271.4; // 288.71 resistance value (in ohms) when liquid is at max line.
 const uint8_t etapeCalibrationCm = 31; // maximum mesurement in centimeters on etap 12" version
 const float etapeOffset = 2.5; // Lowest value read on etape in Centimeters, datasheet says 2.5 but i get 2.5
-const uint8_t co2Request[] PROGMEM = {0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};
+const uint8_t co2Request[] = {0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79};
 uint8_t sensorArrayPos = 0;
 const uint8_t maxSensorArrayVals = 24;
 uint16_t phArray[maxSensorArrayVals]; // compressed floats * 100

@@ -172,8 +172,7 @@ void initializeDevice() {
   }
 
   // // Load the Co2 sensor
-  for(uint8_t i; i < 9; i++)
-    Serial2.write(pgm_read_byte_near(sensor::co2Request + i));
+  Serial2.write(sensor::co2Request, 9);
   delay(50);
   Serial2.flush();
 
@@ -230,9 +229,9 @@ void initializeDevice() {
   //adjustWaterEc();
   //sensor::tds = 10;
   //adjustWaterTds();
-  //user::phDosingMode == user::PRECISE; // INCREMENTAL
-  //sensor::ph = 5.4;
-  //adjustWaterPh();
+  // user::phDosingMode = user::INCREMENTAL; 
+  // sensor::ph = 5.4;
+  // adjustWaterPh();
   
   //device::currentlyDosing = true;
   //float dosingMls[6] {10, 11, 12, 13, 14, 15};
