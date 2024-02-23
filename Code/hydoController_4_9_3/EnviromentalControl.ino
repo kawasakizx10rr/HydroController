@@ -932,9 +932,8 @@ void adjustWaterPh() {
           dosingAmount = (sensor::ph - user::targetMaxPh) * sensor::waterVolumeLtrs / sensor::phUpSolution;
           float mlsPerDoser = (float)dosingAmount / numEnabledDosers;
           for (uint8_t i = 0; i < 6; i++) {
-            if (enabledDosers[i]) {
-              dosingAmount += dosingMls[i] = mlsPerDoser;
-            }
+            if (enabledDosers[i])
+              dosingMls[i] = mlsPerDoser;
           }
           if (device::globalDebug) {
             Serial.print(F("Calculated ")); Serial.print(dosingAmount, 2); Serial.print(F(" mls of PH down solution, divided by ")); Serial.print(numEnabledDosers); Serial.print(F(" PH down dosers = ")); Serial.println(mlsPerDoser, 2);
@@ -944,17 +943,17 @@ void adjustWaterPh() {
       else {
         Serial.println(F("PH dosing mode set to incremental"));
         if (enabledDosers[0]) 
-          dosingMls[0] = user::doserOneMills;
+          dosingAmount += dosingMls[0] = user::doserOneMills;
         if (enabledDosers[1]) 
-          dosingMls[1] = user::doserTwoMills;
+          dosingAmount += dosingMls[1] = user::doserTwoMills;
         if (enabledDosers[2]) 
-          dosingMls[2] = user::doserThreeMills;
+          dosingAmount += dosingMls[2] = user::doserThreeMills;
         if (enabledDosers[3]) 
-          dosingMls[3] = user::doserFourMills;
+          dosingAmount += dosingMls[3] = user::doserFourMills;
         if (enabledDosers[4]) 
-          dosingMls[4] = user::doserFiveMills;
+          dosingAmount += dosingMls[4] = user::doserFiveMills;
         if (enabledDosers[5]) 
-          dosingMls[5] = user::doserSixMills; 
+          dosingAmount += dosingMls[5] = user::doserSixMills; 
       }
       // Run the dosing pumps   
       if (dosingAmount > 0) {
