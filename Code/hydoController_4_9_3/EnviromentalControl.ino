@@ -706,7 +706,7 @@ void adjustWaterEc() {
       for (uint8_t i = 0; i < 6; i++) {
         if (enabledDosers[i]) {
           if (device::globalDebug) {
-            Serial.print(i); Serial.print(F(" "));
+            Serial.print(i+1); Serial.print(F(" "));
           }
           numEnabledDosers++;
         }
@@ -793,7 +793,7 @@ void adjustWaterTds() {
       for (uint8_t i = 0; i < 6; i++) {
         if (enabledDosers[i]) {
           if (device::globalDebug) {
-            Serial.print(i); Serial.print(F(" "));
+            Serial.print(i+1); Serial.print(F(" "));
           }
           numEnabledDosers++;
         }
@@ -902,7 +902,7 @@ void adjustWaterPh() {
       for (uint8_t i = 0; i < 6; i++) {
         if (enabledDosers[i]) {
           if (device::globalDebug) {
-            Serial.print(i); Serial.print(F(" "));
+            Serial.print(i+1); Serial.print(F(" "));
           }
           numEnabledDosers++;
         }
