@@ -739,8 +739,9 @@ void adjustWaterEc() {
         if (device::globalDebug)
           Serial.println(F("EC/TDS dosing mode set to incremental"));
         for (int16_t i = 0; i < 6; i++) {
-          if (enabledDosers[i])
-            dosingMls[i] = currentDoserMls[i];
+          if (enabledDosers[i]) {
+            dosingAmount += dosingMls[i] = currentDoserMls[i];
+          }
         }
       }
       // Run the dosing pumps   
@@ -825,8 +826,9 @@ void adjustWaterTds() {
         if (device::globalDebug)
           Serial.println(F("EC/TDS dosing mode set to incremental"));
         for (uint8_t i = 0; i < 6; i++) {
-          if (enabledDosers[i])
-            dosingMls[i] = currentDoserMls[i];
+          if (enabledDosers[i]) {
+            dosingAmount += dosingMls[i] = currentDoserMls[i];
+          }
         }
       }
       // Run the dosing pumps   
@@ -918,8 +920,9 @@ void adjustWaterPh() {
           dosingAmount = (user::targetMinPh - sensor::ph) * sensor::waterVolumeLtrs / sensor::phDownSolution;
           float mlsPerDoser = (float)dosingAmount / numEnabledDosers;
           for (uint8_t i = 0; i < 6; i++) {
-            if (enabledDosers[i])
-              dosingMls[i] = mlsPerDoser;
+            if (enabledDosers[i]) {
+              dosingAmount += dosingMls[i] = currentDoserMls[i];
+            }
           }
           if (device::globalDebug) {
             Serial.print(F("Calculated ")); Serial.print(dosingAmount, 2); Serial.print(F(" mls of PH up solution, divided by ")); Serial.print(numEnabledDosers); Serial.print(F(" PH up dosers = ")); Serial.println(mlsPerDoser, 2);
@@ -930,8 +933,9 @@ void adjustWaterPh() {
           dosingAmount = (sensor::ph - user::targetMaxPh) * sensor::waterVolumeLtrs / sensor::phUpSolution;
           float mlsPerDoser = (float)dosingAmount / numEnabledDosers;
           for (uint8_t i = 0; i < 6; i++) {
-            if (enabledDosers[i])
-              dosingMls[i] = mlsPerDoser;
+            if (enabledDosers[i]) {
+              dosingAmount += dosingMls[i] = currentDoserMls[i];
+            }
           }
           if (device::globalDebug) {
             Serial.print(F("Calculated ")); Serial.print(dosingAmount, 2); Serial.print(F(" mls of PH down solution, divided by ")); Serial.print(numEnabledDosers); Serial.print(F(" PH down dosers = ")); Serial.println(mlsPerDoser, 2);
