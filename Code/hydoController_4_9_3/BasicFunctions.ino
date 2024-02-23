@@ -229,9 +229,9 @@ void initializeDevice() {
   //adjustWaterEc();
   //sensor::tds = 10;
   //adjustWaterTds();
-  user::phDosingMode = user::INCREMENTAL; 
-  sensor::ph = 5.4;
-  adjustWaterPh();
+  // user::phDosingMode = user::INCREMENTAL; 
+  // sensor::ph = 5.4;
+  // adjustWaterPh();
   
   //device::currentlyDosing = true;
   //float dosingMls[6] {10, 11, 12, 13, 14, 15};
