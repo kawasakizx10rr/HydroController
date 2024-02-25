@@ -36,12 +36,13 @@ void readSensors() {
     // LDR ===============================================================================
     sensor::ldr = analogRead(pin::ldr);
     //Serial.print(F("LDR: ")); Serial.println(sensor::ldr);
-    // CO2 ===============================================================================
-    device::prevMillis = millis() + 50UL;
+    // CO2 ===============================================================================  
+    Serial2.flush();
     Serial2.write(sensor::co2Request, 9);
     uint8_t buffer[8] {0, 0, 0, 0, 0, 0, 0, 0};
     uint8_t bufferPosition = 0;
-    while (millis() - device::prevMillis < 50UL && Serial2.available() > 0) {
+    device::prevMillis = millis();
+    while (millis() - device::prevMillis <= 50UL && Serial2.available() > 0) {
       char c = Serial2.read();
       if (bufferPosition < 8)
         buffer[bufferPosition++] = c;
@@ -50,23 +51,23 @@ void readSensors() {
     if (buffer[0] == 255 && buffer[5] == 0 && buffer[7] == 0)
       sensorValue = (256 * (int16_t)buffer[2]) + (int16_t)buffer[3];
     if (sensorValue <= 0) {
-      // if (device::globalDebug) {
-      //   Serial.print(F("Error reading Co2 sensor buffer: "));
-      //   for (const uint8_t& val : buffer) {
-      //     Serial.print(val);
-      //   }
-      //   Serial.println();
-      // }
+      if (device::globalDebug) {
+        Serial.print(F("Error reading Co2 sensor buffer: "));
+        for (const uint8_t& val : buffer) {
+          Serial.print(val);
+        }
+        Serial.println();
+      }
       sensor::co2 = 0;
     }
     else if (sensorValue < 300) {
-      // if (device::globalDebug)
-      //   Serial.println(F("Co2 sensor currently preheating..."));
+       if (device::globalDebug)
+         Serial.println(F("Co2 sensor currently preheating..."));
       sensor::co2 = 0;
     }
     else {
       sensor::co2 = sensorValue;
-      //Serial.print(F("co2: ")); Serial.printn(sensor::co2);
+      //Serial.print(F("co2: ")); Serial.println(sensor::co2);
     }
     if (sensor::co2 < 0)
       sensor::co2 = 0;
