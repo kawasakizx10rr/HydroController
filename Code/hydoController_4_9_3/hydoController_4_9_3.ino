@@ -26,6 +26,7 @@
 // Include font files
 #include "Fonts/Aerial_22.h"
 #include "Fonts/Akashi_36.h"
+
 #include "Fonts/Hallfetica_42_Nums.h"
 #include "Fonts/MyriadPro_32.h"
 #include "Icons.h"

@@ -17,6 +17,7 @@ void readSensors() {
     else if (sensor::waterLevel > 999)
       sensor::waterLevel = 999;
     // calculate the water volume
+    Serial.print(F("Water level: ")); Serial.println(sensor::waterLevel);
     sensor::waterVolumeLtrs = (sensor::waterLevel * user::waterTankLength * user::waterTankWidth) / 1000.0; // mls to ltrs
     // AIR TEMP AND HUMIDITY============================================================
 #ifdef USING_HDC1080
@@ -140,10 +141,14 @@ float getWaterHeight() {
   }
   else if (user::heightSensor == user::VL53L0X) {
     VL53L0X_RangingMeasurementData_t measure;
-    lox.rangingTest(&measure, device::globalDebug); // pass in 'true' to get debug data printout! 
+    lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout! 
     if (measure.RangeStatus != 4) {  // phase failures have incorrect data
-      waterLevel = measure.RangeMilliMeter * 10.0; // in cm
+      waterLevel = measure.RangeMilliMeter / 10.0; // in cm
+      //Serial.print("waterLevel (cm): "); Serial.println(waterLevel);
     }   
+    else {
+      //Serial.println("VL53L0X out of range ");
+    }
   }
   else if (user::heightSensor == user::SR04) {
     digitalWrite(pin::hcsrTrigger, LOW);

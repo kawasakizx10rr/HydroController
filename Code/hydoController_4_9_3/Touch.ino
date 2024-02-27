@@ -401,40 +401,44 @@ void sliders() {
   }
 }
 
-
 int16_t sliderXTouch() {
-  static int16_t scrollLeftCount = 0, scrollRightCount = 0;
+  static int16_t scrollLeftCount = 0, scrollRightCount = 0, lastScrollX = 0;
   int16_t returnVal = 0;
-  //if (display::currentTouch > display::lastTouch) {
-    if ((int16_t)display::touch_x - (int16_t)display::lastTouchX >= 35) {
+  if ((int16_t)display::touch_x > (lastScrollX + 50)) {
+    //if ((int16_t)display::touch_x - (int16_t)display::lastTouchX >= 35) {
       scrollRightCount++;
-      //Serial.print(F("slide R ")); Serial.println(scrollRightCount);
-      scrollLeftCount = 0;
-      display::lastTouchX = display::touch_x;
-    }
-    else if ((int16_t)display::touch_x - (int16_t)display::lastTouchX <= -35) {
+      Serial.print(F("touch_x ")); Serial.println(display::touch_x);
+      Serial.print(F("slide R ")); Serial.println(scrollRightCount);
+      if (scrollRightCount >= 2)
+        scrollLeftCount = 0;
+      lastScrollX = display::touch_x;
+    //}
+  }
+  else if ((int16_t)display::touch_x < (lastScrollX - 50)) {
+    //else if ((int16_t)display::touch_x - (int16_t)display::lastTouchX <= -35) {    
       scrollLeftCount++;
-      //Serial.print(F("slide L ")); Serial.println(scrollLeftCount);
-      scrollRightCount = 0;
-      display::lastTouchX = display::touch_x;
-    }
-  //}
+      Serial.print(F("touch_x ")); Serial.println(display::touch_x);
+      Serial.print(F("slide L ")); Serial.println(scrollLeftCount);
+      if (scrollLeftCount >= 2)
+        scrollRightCount = 0;
+      lastScrollX = display::touch_x;
+   // }
+  }
   if (scrollRightCount >= 8) {
     returnVal = 1;
-    scrollRightCount = 0;
     //display::lastTouchX = 0;
   }
   else if (scrollLeftCount >= 8) {
     returnVal = -1;
-    scrollLeftCount = 0;
     //display::lastTouchX = tft.width();
   }
-  //if (returnVal != 0) {
-  //  Serial.print(F("slide x touch ")); Serial.println(returnVal);
-  //}
+  if (returnVal != 0) {
+    scrollLeftCount = 0;
+    scrollRightCount = 0;
+    Serial.print(F("slide x touch ")); Serial.println(returnVal);
+  }
   return returnVal;
 }
-
 
 int16_t sliderYTouch() {
   static int16_t scrollDownCount = 0, scrollUpCount = 0;
