@@ -4,6 +4,7 @@
 // TO DO: add user setup guide for new device / reset
 // add back in esp8266 wifi
 // device::settingsAdjusted = true;
+// water height as float
 
 //#define USING_HDC1080 // comment this line to use a dht22
 
@@ -358,8 +359,8 @@ uint16_t calMaxX = TOUCSRCAL_XHIGH;
 uint16_t calMaxY = TOUCSRCAL_YHIGH;
 float minPh = 0;
 float maxPh = 0;
-float minCo2 = 0;
-float maxCo2 = 0;
+uint16_t minCo2 = 0;
+uint16_t maxCo2 = 0;
 float minEc = 0;
 float maxEc = 0;
 float minWaterTemp = 0;
