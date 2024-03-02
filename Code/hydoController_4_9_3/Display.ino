@@ -817,7 +817,7 @@ void waterPage() {
     }
     static bool previousdisableDrainAndRefill;
     if (display::refreshPage || user::disableDrainAndRefill != previousdisableDrainAndRefill) {
-      drawRadioButton(565, 320, user::disableDrainAndRefill);
+      drawRadioButton(565, 320, user::disableDrainAndRefill, false);
       previousdisableDrainAndRefill = user::disableDrainAndRefill;
     }
   }
@@ -959,85 +959,33 @@ void dosersPage() {
 // =============================================================================================================================================================================================
 void timerPage() {
   if (display::refreshPage)
-    drawSlideIcons(110, 112, display::timerPagePageScrollPos, 3);
+    drawSlideIcons(110, 112, display::timerPagePageScrollPos, 4);
   if (display::timerPagePageScrollPos == 0) {
     if (display::refreshPage) {
       tft.setFont(&akashi_36px_Regular);
       tft.setFontScale(1);
       tft.setTextColor(RA8875_BLACK, user::backgroundColor);
       tft.print(300, 116, F("Light settings"));
-      tft.print(110, 166, F("Light on"));
-      tft.print(335, 166, F("Light off"));
-      tft.print(550, 166, F("On/Auto/Off"));
-      drawUpDownButtons(164, 366, 243, 366, RA8875_BLUE);
-      drawUpDownButtons(374, 366, 457, 366, RA8875_BLUE);
+      tft.print(185, 166, F("Light on"));
+      tft.print(565, 166, F("Light off"));
+      drawUpDownButtons(210, 400, 310, 400, RA8875_BLUE);
+      drawUpDownButtons(580, 400, 680, 400, RA8875_BLUE);
       infoButton(770, 120);
-    }
-    // LIGHT ON TIME
-    static uint8_t previousOnTime;
-    if (display::refreshPage || previousOnTime != user::lightOnTimeHour + user::lightOnTimeMin) {
-      tft.setFont(&HallfeticaLargenum_42px_Regular);
       tft.setTextColor(RA8875_BLACK, user::backgroundColor);
-      tft.setFontScale(1);
-      tft.fillRect(105, 238, 200, 50, user::backgroundColor);
-      tft.setCursor(110, 240);
-      if (user::lightOnTimeHour < 10)
-        tft.print(0);
-      tft.print(user::lightOnTimeHour);
-      tft.setFont(&akashi_36px_Regular);
-      tft.setFontScale(1);
-      tft.print(190, 240, F(":"));
-      tft.setFont(&HallfeticaLargenum_42px_Regular);
-      tft.setFontScale(1);
-      tft.setCursor(210, 240);
-      if (user::lightOnTimeMin < 10)
-        tft.print(0);
-      tft.print(user::lightOnTimeMin);
-      previousOnTime = user::lightOnTimeHour + user::lightOnTimeMin;
     }
-    // LIGHT OFF TIME
-    static uint8_t previousOffTime;
-    if (display::refreshPage || previousOffTime != user::lightOffTimeHour + user::lightOffTimeMin) {
-      tft.setFont(&HallfeticaLargenum_42px_Regular);
-      tft.setFontScale(1);
-      tft.fillRect(325, 238, 200, 50, user::backgroundColor);
-      tft.setCursor(330, 240);
-      if (user::lightOffTimeHour < 10)
-        tft.print(0);
-      tft.print(user::lightOffTimeHour);
-      tft.setFont(&akashi_36px_Regular);
-      tft.setFontScale(1);
-      tft.print(410, 240, F(":"));
-      tft.setFont(&HallfeticaLargenum_42px_Regular);
-      tft.setFontScale(1);
-      tft.setCursor(430, 240);
-      if (user::lightOffTimeMin < 10)
-        tft.print(0);
-      tft.print(user::lightOffTimeMin);
-      previousOffTime = user::lightOffTimeHour + user::lightOffTimeMin;
+    if (user::lightMode == 0) {
+      static int16_t textStartX = 0, textEndX =0;
+      static int16_t previousLightOnDuration;
+      drawCyclicTimer(textStartX, textEndX, 280, 260, user::lightOnDuration, previousLightOnDuration);  
+      static int16_t textStartX2 = 0, textEndX2 =0;
+      static int16_t previousLightOffDuration;
+      drawCyclicTimer(textStartX2, textEndX2, 650, 260, user::lightOffDuration, previousLightOffDuration); 
     }
-    // Light mode 3-state radio button
-    static uint8_t previousLightMode;
-    if (display::refreshPage || user::lightMode != previousLightMode) {
-      tft.fillRoundRect(568, 238, 184, 44, 5, RA8875_BLACK);
-      if (user::lightMode == 0) { // auto
-        tft.fillRoundRect(570, 240, 60, 40, 5, display::RA8875_DARKGREY);
-        tft.fillRoundRect(630, 240, 60, 40, 5, RA8875_GREEN);
-        tft.fillRoundRect(690, 240, 60, 40, 5, display::RA8875_DARKGREY);
-      }
-      else if (user::lightMode == 1) { // on
-        tft.fillRoundRect(570, 240, 60, 40, 5, RA8875_GREEN);
-        tft.fillRoundRect(630, 240, 60, 40, 5, display::RA8875_DARKGREY);
-        tft.fillRoundRect(690, 240, 60, 40, 5, display::RA8875_DARKGREY);
-        tft.drawLine(690, 240, 690, 280, RA8875_BLACK);
-      }
-      else { // off
-        tft.fillRoundRect(570, 240, 60, 40, 5, display::RA8875_DARKGREY);
-        tft.fillRoundRect(630, 240, 60, 40, 5, display::RA8875_DARKGREY);
-        tft.fillRoundRect(690, 240, 60, 40, 5, RA8875_RED);
-        tft.drawLine(630, 240, 630, 280, RA8875_BLACK);
-      }
-      previousLightMode = user::lightMode;
+    else {
+      static uint8_t previousOnTime;
+      drawTimer(180, 260, previousOnTime, user::lightOnTimeHour, user::lightOnTimeMin);
+      static uint8_t previousOffTime;
+      drawTimer(560, 260, previousOffTime, user::lightOffTimeHour, user::lightOffTimeMin);
     }
   }
   // AUX RELAY 1 CYCLIC TIMER
@@ -1046,193 +994,100 @@ void timerPage() {
       tft.setFont(&akashi_36px_Regular);
       tft.setFontScale(1);
       tft.setTextColor(RA8875_BLACK, user::backgroundColor);
-      tft.print(220, 116, F("Aux relay 1 cyclic timer"));
-      tft.print(230, 166, F("Interval"));
-      tft.print(510, 166, F("On/Auto/Off"));
-      drawUpDownButtons(260, 366, 360, 366, RA8875_BLUE);
+      tft.print(260, 116, F("Aux relay 1 settings"));
+      tft.print(185, 166, F("Timer on"));
+      tft.print(565, 166, F("Timer off"));
+      drawUpDownButtons(210, 400, 310, 400, RA8875_BLUE);
+      drawUpDownButtons(580, 400, 680, 400, RA8875_BLUE);
       infoButton(770, 120);
       tft.setTextColor(RA8875_BLACK, user::backgroundColor);
     }
-
-    static int16_t textStartX = 0, textEndX =0;
-    static int16_t previousAuxRelayOneTimer;
-    if (display::refreshPage || previousAuxRelayOneTimer != user::auxRelayOneTimer) {
-      tft.setFont(&HallfeticaLargenum_42px_Regular);
-      tft.setFontScale(1);
-      tft.fillRect(textStartX, 239, textEndX - textStartX, 50, user::backgroundColor);
-      if (user::auxRelayOneTimer < 60) {    
-        int16_t stringWidth = tft.getStringWidth(user::auxRelayOneTimer);
-        tft.setFont(&akashi_36px_Regular);
-        stringWidth += tft.getStringWidth(" mins");
-        textStartX = 310 - (stringWidth / 2);
-        tft.setFont(&HallfeticaLargenum_42px_Regular);
-        
-        tft.setCursor(textStartX, 240);
-        tft.print(user::auxRelayOneTimer);
-        tft.setFont(&akashi_36px_Regular);
-        tft.setCursor(tft.getFontX(), 250);
-        tft.print(F(" mins"));
-      }
-      else {        
-        if (user::auxRelayOneTimer % 60 == 0) {
-          int16_t stringWidth = tft.getStringWidth(user::auxRelayOneTimer);
-          tft.setFont(&akashi_36px_Regular);
-          stringWidth += tft.getStringWidth(" hr");
-          textStartX = 310 - (stringWidth / 2);
-
-          tft.setCursor(textStartX, 240);
-          tft.setFont(&HallfeticaLargenum_42px_Regular);
-          tft.print(user::auxRelayOneTimer);
-          tft.setFont(&akashi_36px_Regular);
-          tft.setCursor(tft.getFontX(), 250);
-          tft.print(F(" hr"));
-        }         
-        else {
-          int16_t stringWidth = tft.getStringWidth((int16_t)(user::auxRelayOneTimer / 60));
-          tft.setFont(&akashi_36px_Regular);
-          stringWidth += (int16_t)(user::auxRelayOneTimer / 60) > 1 ? tft.getStringWidth(" hrs ") : tft.getStringWidth(" hr ");
-          tft.setFont(&HallfeticaLargenum_42px_Regular);
-          stringWidth += tft.getStringWidth(user::auxRelayOneTimer % 60);
-          tft.setFont(&akashi_36px_Regular);
-          stringWidth += tft.getStringWidth(" mins");  
-          textStartX = 310 - (stringWidth / 2);
-
-          tft.setCursor(textStartX, 240);
-          tft.setFont(&HallfeticaLargenum_42px_Regular);
-          tft.print((int16_t)(user::auxRelayOneTimer / 60));
-          tft.setFont(&akashi_36px_Regular);
-          tft.setCursor(tft.getFontX(), 250);
-          (int16_t)(user::auxRelayOneTimer / 60) > 1 ? tft.print(F(" hrs ")) : tft.print(F(" hr "));
-          tft.setFont(&HallfeticaLargenum_42px_Regular);
-          tft.setCursor(tft.getFontX(), 240);
-          tft.print(user::auxRelayOneTimer % 60);
-          tft.setFont(&akashi_36px_Regular);
-          tft.setCursor(tft.getFontX(), 250);
-          tft.print(F(" mins"));    
-        }
-      }
-      textEndX = tft.getFontX();
-      previousAuxRelayOneTimer = user::auxRelayOneTimer;
-    }     
-
-    // Light mode 3-state radio button
-    static uint8_t previousAuxRelayOneMode;
-    if (display::refreshPage || user::auxRelayOneMode != previousAuxRelayOneMode) {
-      tft.fillRoundRect(528, 238, 184, 44, 5, RA8875_BLACK);
-      if (user::auxRelayOneMode == 0) { // auto
-        tft.fillRect(530, 240, 60, 40, display::RA8875_DARKGREY);
-        tft.fillRoundRect(590, 240, 60, 40, 5, RA8875_GREEN);
-        tft.fillRect(650, 240, 60, 40, display::RA8875_DARKGREY);
-      }
-      else if (user::auxRelayOneMode == 1) { // on
-        tft.fillRoundRect(530, 240, 60, 40, 5, RA8875_GREEN);
-        tft.fillRect(590, 240, 60, 40, display::RA8875_DARKGREY);
-        tft.fillRect(650, 240, 60, 40, display::RA8875_DARKGREY);
-      }
-      else { // off
-        tft.fillRect(530, 240, 60, 40, display::RA8875_DARKGREY);
-        tft.fillRect(590, 240, 60, 40, display::RA8875_DARKGREY);
-        tft.fillRoundRect(650, 240, 60, 40, 5, RA8875_RED);
-      }
-      previousAuxRelayOneMode = user::auxRelayOneMode;
-    }   
+    if (user::auxRelayOneMode == 0) {
+      static int16_t textStartX = 0, textEndX =0;
+      static int16_t previousOnDuration;
+      drawCyclicTimer(textStartX, textEndX, 280, 260, user::auxRelayOneOnDuration, previousOnDuration);  
+      static int16_t textStartX2 = 0, textEndX2 =0;
+      static int16_t previousOffDuration;
+      drawCyclicTimer(textStartX2, textEndX2, 650, 260, user::auxRelayOneOffDuration, previousOffDuration); 
+    }
+    else {
+      static uint8_t previousOnTime;
+      drawTimer(180, 260, previousOnTime, user::auxRelayOneOnTimeHour, user::auxRelayOneOnTimeMin);
+      static uint8_t previousOffTime;
+      drawTimer(560, 260, previousOffTime, user::auxRelayOneOffTimeHour, user::auxRelayOneOffTimeMin);
+    }
   }
   // AUX RELAY 2 CYCLIC TIMER
-  else {
+  else if (display::timerPagePageScrollPos == 2) {
     if (display::refreshPage) {
       tft.setFont(&akashi_36px_Regular);
       tft.setFontScale(1);
       tft.setTextColor(RA8875_BLACK, user::backgroundColor);
-      tft.print(220, 116, F("Aux relay 2 cyclic timer"));
-      tft.print(230, 166, F("Interval"));
-      tft.print(510, 166, F("On/Auto/Off"));
-      drawUpDownButtons(260, 366, 360, 366, RA8875_BLUE);
+      tft.print(260, 116, F("Aux relay 2 settings"));
+      tft.print(185, 166, F("Timer on"));
+      tft.print(565, 166, F("Timer off"));
+      drawUpDownButtons(210, 400, 310, 400, RA8875_BLUE);
+      drawUpDownButtons(580, 400, 680, 400, RA8875_BLUE);
       infoButton(770, 120);
       tft.setTextColor(RA8875_BLACK, user::backgroundColor);
     }
-
-    static int16_t textStartX = 0, textEndX =0;
-    static int16_t previousAuxRelayTwoTimer;
-    if (display::refreshPage || previousAuxRelayTwoTimer != user::auxRelayTwoTimer) {
-      tft.setFont(&HallfeticaLargenum_42px_Regular);
+    if (user::auxRelayTwoMode == 0) {
+      static int16_t textStartX = 0, textEndX =0;
+      static int16_t previousOnDuration;
+      drawCyclicTimer(textStartX, textEndX, 280, 260, user::auxRelayTwoOnDuration, previousOnDuration);  
+      static int16_t textStartX2 = 0, textEndX2 =0;
+      static int16_t previousOffDuration;
+      drawCyclicTimer(textStartX2, textEndX2, 650, 260, user::auxRelayTwoOffDuration, previousOffDuration); 
+    }
+    else {
+      static uint8_t previousOnTime;
+      drawTimer(180, 260, previousOnTime, user::auxRelayTwoOnTimeHour, user::auxRelayTwoOnTimeMin);
+      static uint8_t previousOffTime;
+      drawTimer(560, 260, previousOffTime, user::auxRelayTwoOffTimeHour, user::auxRelayTwoOffTimeMin);
+    }
+  }
+  // Timer settings
+  else {
+    if (display::refreshPage) {   
+      tft.setFont(&akashi_36px_Regular);
       tft.setFontScale(1);
-      tft.fillRect(textStartX, 239, textEndX - textStartX, 50, user::backgroundColor);
-      if (user::auxRelayTwoTimer < 60) {    
-        int16_t stringWidth = tft.getStringWidth(user::auxRelayTwoTimer);
-        tft.setFont(&akashi_36px_Regular);
-        stringWidth += tft.getStringWidth(" mins");
-        textStartX = 310 - (stringWidth / 2);
-        tft.setFont(&HallfeticaLargenum_42px_Regular);
-        
-        tft.setCursor(textStartX, 240);
-        tft.print(user::auxRelayTwoTimer);
-        tft.setFont(&akashi_36px_Regular);
-        tft.setCursor(tft.getFontX(), 250);
-        tft.print(F(" mins"));
-      }
-      else {        
-        if (user::auxRelayTwoTimer % 60 == 0) {
-          int16_t stringWidth = tft.getStringWidth(user::auxRelayTwoTimer);
-          tft.setFont(&akashi_36px_Regular);
-          stringWidth += tft.getStringWidth(" hr");
-          textStartX = 310 - (stringWidth / 2);
-
-          tft.setCursor(textStartX, 240);
-          tft.setFont(&HallfeticaLargenum_42px_Regular);
-          tft.print(user::auxRelayTwoTimer);
-          tft.setFont(&akashi_36px_Regular);
-          tft.setCursor(tft.getFontX(), 250);
-          tft.print(F(" hr"));
-        }         
-        else {
-          int16_t stringWidth = tft.getStringWidth((int16_t)(user::auxRelayTwoTimer / 60));
-          tft.setFont(&akashi_36px_Regular);
-          stringWidth += (int16_t)(user::auxRelayTwoTimer / 60) > 1 ? tft.getStringWidth(" hrs ") : tft.getStringWidth(" hr ");
-          tft.setFont(&HallfeticaLargenum_42px_Regular);
-          stringWidth += tft.getStringWidth(user::auxRelayTwoTimer % 60);
-          tft.setFont(&akashi_36px_Regular);
-          stringWidth += tft.getStringWidth(" mins");  
-          textStartX = 310 - (stringWidth / 2);
-
-          tft.setCursor(textStartX, 240);
-          tft.setFont(&HallfeticaLargenum_42px_Regular);
-          tft.print((int16_t)(user::auxRelayTwoTimer / 60));
-          tft.setFont(&akashi_36px_Regular);
-          tft.setCursor(tft.getFontX(), 250);
-          (int16_t)(user::auxRelayTwoTimer / 60) > 1 ? tft.print(F(" hrs ")) : tft.print(F(" hr "));
-          tft.setFont(&HallfeticaLargenum_42px_Regular);
-          tft.setCursor(tft.getFontX(), 240);
-          tft.print(user::auxRelayTwoTimer % 60);
-          tft.setFont(&akashi_36px_Regular);
-          tft.setCursor(tft.getFontX(), 250);
-          tft.print(F(" mins"));    
-        }
-      }
-      textEndX = tft.getFontX();
-      previousAuxRelayTwoTimer = user::auxRelayTwoTimer;
-    }     
-
+      tft.setTextColor(RA8875_BLACK, user::backgroundColor);
+      tft.print(320, 116, F("Timer settings"));
+      tft.print(120, 180, F("Light On/Auto/Off"));
+      tft.print(120, 230, F("Aux 1 On/Auto/Off"));
+      tft.print(120, 280, F("Aux 2 On/Auto/Off"));
+      tft.print(120, 330, F("Light Cyclic/Timer"));
+      tft.print(120, 380, F("Aux 1 Cyclic/Timer"));
+      tft.print(120, 430, F("Aux 2 Cyclic/Timer"));
+      infoButton(770, 120);
+    }
     // Light mode 3-state radio button
-    static uint8_t previousAuxRelayTwoMode;
-    if (display::refreshPage || user::auxRelayTwoMode != previousAuxRelayTwoMode) {
-      tft.fillRoundRect(528, 238, 184, 44, 5, RA8875_BLACK);
-      if (user::auxRelayTwoMode == 0) { // auto
-        tft.fillRect(530, 240, 60, 40, display::RA8875_DARKGREY);
-        tft.fillRoundRect(590, 240, 60, 40, 5, RA8875_GREEN);
-        tft.fillRect(650, 240, 60, 40, display::RA8875_DARKGREY);
-      }
-      else if (user::auxRelayTwoMode == 1) { // on
-        tft.fillRoundRect(530, 240, 60, 40, 5, RA8875_GREEN);
-        tft.fillRect(590, 240, 60, 40, display::RA8875_DARKGREY);
-        tft.fillRect(650, 240, 60, 40, display::RA8875_DARKGREY);
-      }
-      else { // off
-        tft.fillRect(530, 240, 60, 40, display::RA8875_DARKGREY);
-        tft.fillRect(590, 240, 60, 40, display::RA8875_DARKGREY);
-        tft.fillRoundRect(650, 240, 60, 40, 5, RA8875_RED);
-      }
-      previousAuxRelayTwoMode = user::auxRelayTwoMode;
-    }   
+    static uint8_t previousLightState;
+    drawTriStateButton(600, 180, user::lightState, previousLightState);
+    // Light mode 3-state radio button
+    static uint8_t previousRelayOneState;
+    drawTriStateButton(600, 230, user::auxRelayOneState, previousRelayOneState);
+    // Light mode 3-state radio button
+    static uint8_t previousRelayTwoState;
+    drawTriStateButton(600, 280, user::auxRelayTwoState, previousRelayTwoState);
+    //
+    static uint8_t prevLightMode = 0;
+    if (display::refreshPage || user::lightMode != prevLightMode) {   
+      drawRadioButton(620, 330, user::lightMode, true);
+      prevLightMode = user::lightMode;
+    }
+    //
+    static uint8_t prevRelayOneMode = 0;
+    if (display::refreshPage || user::auxRelayOneMode != prevRelayOneMode) {   
+      drawRadioButton(620, 380, user::auxRelayOneMode, true);
+      prevRelayOneMode = user::auxRelayOneMode;
+    }
+    //
+    static uint8_t prevRelayTwoMode = 0;
+    if (display::refreshPage || user::auxRelayTwoMode != prevRelayTwoMode) {   
+      drawRadioButton(620, 430, user::auxRelayTwoMode, true);
+      prevRelayTwoMode = user::auxRelayTwoMode;
+    }
   }
 }
 // =============================================================================================================================================================================================
@@ -1315,22 +1170,22 @@ void fansPage() {
     // FAN MODES
     static bool previousFansControlTemperature;
     if (display::refreshPage || user::fansControlTemperature != previousFansControlTemperature) {
-      drawRadioButton(640, 180, user::fansControlTemperature);
+      drawRadioButton(640, 180, user::fansControlTemperature, false);
       previousFansControlTemperature = user::fansControlTemperature;
     }
     static bool previousFansControlHumidity;
     if (display::refreshPage || user::fansControlHumidity != previousFansControlHumidity) {
-      drawRadioButton(640, 230, user::fansControlHumidity);
+      drawRadioButton(640, 230, user::fansControlHumidity, false);
       previousFansControlHumidity = user::fansControlHumidity;
     }
     static bool previousFanOneFixedSpeed;
     if (display::refreshPage || user::fanOneFixedSpeed != previousFanOneFixedSpeed) {
-      drawRadioButton(640, 280, user::fanOneFixedSpeed);
+      drawRadioButton(640, 280, user::fanOneFixedSpeed, false);
       previousFanOneFixedSpeed = user::fanOneFixedSpeed;
     }
     static bool previousFanTwoFixedSpeed;
     if (display::refreshPage || user::fanTwoFixedSpeed != previousFanTwoFixedSpeed) {
-      drawRadioButton(640, 330, user::fanTwoFixedSpeed);
+      drawRadioButton(640, 330, user::fanTwoFixedSpeed, false);
       previousFanTwoFixedSpeed = user::fanTwoFixedSpeed;
     }
   }
@@ -1918,6 +1773,132 @@ void drawSettingsPageFour() {
         continueMessage(message::calibratePh, sensor::phCalSolutionPart2, 1, true, true, false);
     }
   }
+  else if (display::showTouchCalibration) {
+    const uint8_t maxTouches = 200;
+    uint8_t touchCounts = 0;
+    uint8_t prevTouchCalibrationPos = 0;
+    uint16_t _calMinX = tft.getCalMinX();
+    uint16_t _calMaxX = tft.getCalMaxX();
+    uint16_t _calMinY = tft.getCalMinY();
+    uint16_t _calMaxY = tft.getCalMaxY();
+    uint16_t prevCalMinX = 0, prevCalMaxX = 0;
+    uint16_t prevCalMinY = 0, prevCalMaxY = 0;
+
+    tft.setFont(&akashi_36px_Regular);
+    tft.setFontScale(1);
+    tft.setTextColor(RA8875_BLACK, user::backgroundColor);
+
+    while (display::showTouchCalibration) {
+      if (display::showTouchCalibration != prevTouchCalibrationPos) { // display::refreshPage || 
+        Serial.print(F("show touch int ")); Serial.println(display::showTouchCalibration); 
+        if (display::showTouchCalibration == 2) {
+          device::calMinX = display::touch_x;
+          device::calMinY = display::touch_y;
+        }
+        else if (display::showTouchCalibration == 3) {
+          device::calMaxX = display::touch_x;
+          device::calMaxY = display::touch_y;
+        }
+        if (display::showTouchCalibration < 3) {
+          tft.fillWindow(user::backgroundColor);
+          tft.print(80, 200, F("Please stop pressing the display!"));
+          delay(5000);    
+          display::touch_x = 0;
+          display::touch_y = 0; 
+          touchCounts = 0;       
+        } 
+        tft.clearTouchInt();
+        tft.fillWindow(user::backgroundColor);       
+      }
+      if (display::showTouchCalibration == 1) {
+        Serial.println(F("top left"));
+        tft.print(100, 200, F("Please press keep pressing"));
+        tft.print(100, 250, F("the dot in the top left corner"));
+        tft.fillCircle(5, 5, 5, RA8875_RED);
+      }
+      else if (display::showTouchCalibration == 2) {
+        Serial.println(F("bottom right"));
+        tft.print(100, 200, F("Please press keep pressing"));
+        tft.print(100, 250, F("the dot in the bottom right corner"));
+        tft.fillCircle(tft.width() - 5, tft.height() - 5, 5, RA8875_RED);
+      }
+      else if (display::showTouchCalibration == 3) {
+        if (display::showTouchCalibration != prevTouchCalibrationPos) {
+          Serial.println(F("showing touch p4"));
+          tft.print(120, 180, F("Draw on the screen to fine"));
+          tft.print(120, 215, F("tune the touch accuracy"));
+          cancelButton(274, 366);
+          continueButton(449, 366);
+          tft.setTouchCalibration(device::calMinX, device::calMinY, device::calMaxX, device::calMaxY);
+        } 
+        if (tft.touched()) {
+          tft.touchReadPixel(&display::touch_x, &display::touch_y, 10);
+          tft.fillCircle(display::touch_x, display::touch_y, 2, RA8875_WHITE);
+          // Cancel
+          if (display::touch_x >= 270 && display::touch_x <= 420 && display::touch_y >= 360 && display::touch_y <= 400) {
+            Serial.println(F("pressed touch cancel"));
+            beep();
+            // reset touch back to the old settings
+            device::calMinX = _calMinX;
+            device::calMinY = _calMinY;
+            device::calMaxX = _calMaxX;
+            device::calMaxY = _calMaxY;
+            tft.setTouchCalibration(device::calMinX, device::calMinY, device::calMaxX, device::calMaxY);
+            display::showTouchCalibration = 0;
+            tft.fillWindow(user::backgroundColor);
+            display::refreshPage = true;
+            frame();
+            OuterMenuIcons();
+            drawSettingsPageFour();
+            return;
+          }
+          // Continue
+          else if (display::touch_x >= 445 && display::touch_x <= 640 && display::touch_y >= 360 && display::touch_y <= 400) {
+            Serial.println(F("pressed touch continue"));
+            beep();
+            display::showTouchCalibration = 0;
+            tft.fillWindow(user::backgroundColor);
+            device::settingsAdjusted = true;
+            display::refreshPage = true;
+            frame();
+            OuterMenuIcons();
+            drawSettingsPageFour();
+            return;        
+          }
+        }
+      }     
+
+      prevTouchCalibrationPos = display::showTouchCalibration;
+
+      if (display::showTouchCalibration < 3) {
+        while (touchCounts < maxTouches) {
+          if (tft.touched()) {
+            delay(10);
+            uint16_t touchX = 0, touchY = 0;
+            tft.readTouchADC(&touchX, &touchY);//we using 10bit adc data here
+            if (display::showTouchCalibration == 1) {
+              if (touchX < display::touch_x || display::touch_x == 0) 
+                display::touch_x = touchX;
+              if (touchY < display::touch_y || display::touch_y == 0) 
+                display::touch_y = touchY;
+            }
+            else {
+              if (touchX > display::touch_x || display::touch_x == 0) 
+                display::touch_x = touchX;
+              if (touchY > display::touch_y || display::touch_y == 0) 
+                display::touch_y = touchY;
+            }
+            touchCounts++;
+          }
+        }
+        display::showTouchCalibration++;
+        Serial.print(F("cal touch x: "));  Serial.println(display::touch_x); 
+        Serial.print(F("cal touch y: "));  Serial.println(display::touch_y); 
+      }
+
+      updateRelayTimers(); 
+    }
+  }
   else {
     if (display::refreshPage) {
       tft.setFont(&akashi_36px_Regular);
@@ -1935,11 +1916,13 @@ void drawSettingsPageFour() {
       tft.print(110, 270, F("Calibrate Co2"));
       tft.print(110, 320, F("Calibrate PH"));
       tft.print(110, 370, F("Calibrate dosers"));
+      tft.print(110, 420, F("Calibrate touch"));
       drawMiniConfirmButton(712, 170);
       drawMiniConfirmButton(712, 220);
       drawMiniConfirmButton(712, 270);
       drawMiniConfirmButton(712, 320);
       drawMiniConfirmButton(712, 370);
+      drawMiniConfirmButton(712, 420);
     }
   }
 }

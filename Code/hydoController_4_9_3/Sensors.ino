@@ -17,7 +17,6 @@ void readSensors() {
     else if (sensor::waterLevel > 999)
       sensor::waterLevel = 999;
     // calculate the water volume
-    Serial.print(F("Water level: ")); Serial.println(sensor::waterLevel);
     sensor::waterVolumeLtrs = (sensor::waterLevel * user::waterTankLength * user::waterTankWidth) / 1000.0; // mls to ltrs
     // AIR TEMP AND HUMIDITY============================================================
 #ifdef USING_HDC1080
@@ -133,6 +132,8 @@ void calibrateCo2() {
 float getWaterHeight() {
   float waterLevel = 0;
   if (user::heightSensor == user::ETAPE) {
+    //if (device::globalDebug)
+      //Serial.print(F("ETAPE"));
     float resistance = readResistance(pin::etapeSensor, 560);
     waterLevel = resistanceToCM(resistance, sensor::etapeZeroVolumeResistance, sensor::etapeMaxVolumeResistance, sensor::etapeCalibrationCm);
     waterLevel += sensor::etapeOffset;
@@ -140,6 +141,8 @@ float getWaterHeight() {
       waterLevel = sensor::etapeCalibrationCm;
   }
   else if (user::heightSensor == user::VL53L0X) {
+    //if (device::globalDebug)
+      //Serial.print(F("VL53L0X"));
     VL53L0X_RangingMeasurementData_t measure;
     lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout! 
     if (measure.RangeStatus != 4) {  // phase failures have incorrect data
@@ -151,6 +154,8 @@ float getWaterHeight() {
     }
   }
   else if (user::heightSensor == user::SR04) {
+    //if (device::globalDebug)
+      //Serial.print(F("SR04"));
     digitalWrite(pin::hcsrTrigger, LOW);
     delayMicroseconds(5); //5
     digitalWrite(pin::hcsrTrigger, HIGH);
@@ -158,6 +163,9 @@ float getWaterHeight() {
     digitalWrite(pin::hcsrTrigger, LOW);
     float hcsrDuration = pulseIn(pin::hcsrEcho, HIGH);
     waterLevel = (hcsrDuration / 2) / 29.1; // in cm
+  }
+  if (device::globalDebug) {
+    //Serial.print(F(" water level: ")); Serial.println(sensor::waterLevel);
   }
   return waterLevel;
 }

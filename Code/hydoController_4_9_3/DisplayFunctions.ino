@@ -34,7 +34,7 @@ void launchCo2Notification(uint8_t& a_continueCo2Control, uint8_t& a_previousDat
         beep();
       }
     }
-    updateCyclicTimers(); 
+    updateRelayTimers(); 
   }
 }
 
@@ -99,7 +99,7 @@ void launchDrainNotification(uint8_t& a_continueDraining, bool& a_startDraining)
         display::refreshPage = true;
       }
     }
-    updateCyclicTimers();
+    updateRelayTimers();
   }
 }
 
@@ -140,7 +140,7 @@ void launchRefillNotification(bool& a_startRefilling, uint8_t& a_continueRefilli
           beep();
         }
       }
-      updateCyclicTimers(); 
+      updateRelayTimers(); 
     }
   }
 }
@@ -158,7 +158,7 @@ void launchDosingNotification(const float& a_sensorPercent, const uint8_t& a_dos
       dosingDialogTimer--;
       continuePreviousMillis = millis();
     }
-    updateCyclicTimers();
+    updateRelayTimers();
   }
   a_lastTouch = millis() + 5000UL;
 }
@@ -397,14 +397,14 @@ void drawEcConversionButton(const int16_t& a_x, const int16_t& a_y) {
 }
 
 // Draw a radio button, based on bool state
-void drawRadioButton(const int16_t& a_x, const int16_t& a_y, const bool& option) {
+void drawRadioButton(const int16_t& a_x, const int16_t& a_y, const bool& option, const bool a_bothGreen) {
   tft.fillRoundRect(a_x - 2, a_y - 2, 154, 44, 5, RA8875_BLACK);
   if (option) {
     tft.fillRoundRect(a_x, a_y, 75, 40, 5, display::RA8875_DARKGREY);
     tft.fillRoundRect(a_x + 75, a_y, 75, 40, 5, RA8875_GREEN);
   }
   else {
-    tft.fillRoundRect(a_x, a_y, 75, 40, 5, RA8875_RED);
+    tft.fillRoundRect(a_x, a_y, 75, 40, 5, a_bothGreen ? RA8875_GREEN : RA8875_RED);
     tft.fillRoundRect(a_x + 75, a_y, 75, 40, 5, display::RA8875_DARKGREY);
   }
 }
@@ -603,12 +603,12 @@ void continueMessage(const char* a_text, const float& a_num, const uint8_t a_pre
 
 // Show an abort message with the string stored in the Program memory / Flash, and a float and int16_t which can be excluded if -1
 void abortMessage(const char *a_text, const char* a_str, const float& a_value, const int16_t& a_doserNum, const float& a_mls, const uint8_t& a_precison, bool a_update) {
-  uint16_t startX = 166, startY = 166;
+  uint16_t startX = 156, startY = 166;
   static uint16_t mlsY = 0;
   if (!a_update) {
     //Frame
-    tft.fillRoundRect(startX - 20, startY, 600, 250, 5, RA8875_WHITE);
-    tft.drawRoundRect(startX - 21, startY - 1, 602, 252, 5, RA8875_BLACK);
+    tft.fillRoundRect(startX - 20, startY, 620, 250, 5, RA8875_WHITE);
+    tft.drawRoundRect(startX - 21, startY - 1, 622, 252, 5, RA8875_BLACK);
     // Buttons
     cancelButton(startX + 200, startY + 200); // x was 178
   }
@@ -1184,6 +1184,82 @@ void drawSlideIcons(int16_t a_x, const int16_t& a_y, const uint8_t& a_page, cons
     else
       tft.fillCircle(a_x, a_y, 10, display::RA8875_DARKGREY);
     a_x += 30;
+  }
+}
+
+void drawCyclicTimer(int16_t& a_textStartX, int16_t& a_textEndX, const int16_t a_textCenterX, const uint16_t a_startY, const int16_t a_timer, int16_t& a_previousTimer) {
+  if (display::refreshPage || a_previousTimer != a_timer) {
+    tft.setFont(&HallfeticaLargenum_42px_Regular);
+    tft.setFontScale(1);
+    tft.fillRect(a_textStartX, a_startY-1, a_textEndX - a_textStartX, 50, user::backgroundColor);
+    int16_t stringWidth = tft.getStringWidth((int16_t)(a_timer / 60));
+    tft.setFont(&akashi_36px_Regular);
+    stringWidth += (int16_t)(a_timer / 60) > 1 ? tft.getStringWidth(" hrs ") : tft.getStringWidth(" hr ");
+    tft.setFont(&HallfeticaLargenum_42px_Regular);
+    stringWidth += tft.getStringWidth(a_timer % 60);
+    tft.setFont(&akashi_36px_Regular);
+    stringWidth += tft.getStringWidth(" mins");  
+    a_textStartX = a_textCenterX - (stringWidth / 2);
+    tft.setCursor(a_textStartX, a_startY);
+    tft.setFont(&HallfeticaLargenum_42px_Regular);
+    tft.print((int16_t)(a_timer / 60));
+    tft.setFont(&akashi_36px_Regular);
+    tft.setCursor(tft.getFontX()+4, a_startY+10);
+    tft.print(F("hrs "));
+    tft.setFont(&HallfeticaLargenum_42px_Regular);
+    tft.setCursor(tft.getFontX(), a_startY);
+    tft.print(a_timer % 60);
+    tft.setFont(&akashi_36px_Regular);
+    tft.setCursor(tft.getFontX()+4, a_startY+10);
+    tft.print(F("mins"));    
+    a_textEndX = tft.getFontX();
+    a_previousTimer = a_timer;
+  }   
+}
+
+void drawTimer(const uint16_t a_x, const uint16_t a_y, uint8_t& a_previousOnTime, uint8_t a_hour, uint8_t a_min) {
+  if (display::refreshPage || a_previousOnTime != a_hour + a_min) {
+    tft.setFont(&HallfeticaLargenum_42px_Regular);
+    tft.setTextColor(RA8875_BLACK, user::backgroundColor);
+    tft.setFontScale(1);
+    tft.fillRect(a_x-5, a_y-2, 200, 50, user::backgroundColor);
+    tft.setCursor(a_x, a_y);
+    if (a_hour < 10)
+      tft.print(0);
+    tft.print(a_hour);
+    tft.setFont(&akashi_36px_Regular);
+    tft.setFontScale(1);
+    tft.print(F(":"));
+    tft.setFont(&HallfeticaLargenum_42px_Regular);
+    tft.setFontScale(1);
+    if (a_min < 10)
+      tft.print(0);
+    tft.print(a_min);
+    a_previousOnTime = a_hour + a_min;
+  }
+}
+
+void drawTriStateButton(const uint16_t a_x, const uint16_t a_y, const uint8_t& a_value, uint8_t& a_previousValue) {
+  if (display::refreshPage || a_value != a_previousValue) {
+    tft.fillRoundRect(a_x-2, a_y-2, 184, 44, 5, RA8875_BLACK);
+    if (a_value == 0) { // auto
+      tft.fillRoundRect(a_x, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+      tft.fillRoundRect(a_x+60, a_y, 60, 40, 5, RA8875_GREEN);
+      tft.fillRoundRect(a_x+120, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+    }
+    else if (a_value == 1) { // on
+      tft.fillRoundRect(a_x, a_y, 60, 40, 5, RA8875_GREEN);
+      tft.fillRoundRect(a_x+60, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+      tft.fillRoundRect(a_x+120, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+      tft.drawLine(a_x+120, a_y, a_x+120, a_y+40, RA8875_BLACK);
+    }
+    else { // off
+      tft.fillRoundRect(a_x, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+      tft.fillRoundRect(a_x+60, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+      tft.fillRoundRect(a_x+120, a_y, 60, 40, 5, RA8875_RED);
+      tft.drawLine(a_x+60, a_y, a_x+60, a_y+40, RA8875_BLACK);
+    }
+    a_previousValue = a_value;
   }
 }
 

@@ -3,7 +3,7 @@
 */
 // TO DO: add user setup guide for new device / reset
 // add back in esp8266 wifi
-// waterEcPhControl has been adjusted for testing, must be reverted prior to release
+// device::settingsAdjusted = true;
 
 //#define USING_HDC1080 // comment this line to use a dht22
 
@@ -66,8 +66,8 @@ const uint8_t inletPump = 24;
 const uint8_t outletPump = 25;
 const uint8_t light = 26;
 const uint8_t waterHeater = 27;
-const uint8_t auxRelayOnePin = 28;
-const uint8_t auxRelayTwoPin = 29;
+const uint8_t auxRelayOne = 28;
+const uint8_t auxRelayTwo = 29;
 // transistors
 const uint8_t phTransistor = 36;
 const uint8_t tdsTransistor = 37;
@@ -84,6 +84,7 @@ namespace display {
 uint32_t lastButtonTouch = millis();
 uint16_t touch_x, touch_y = 0;
 uint16_t lastTouchX = 0, lastTouchY = 0;
+int16_t scrollLeftCount = 0, scrollRightCount = 0, lastScrollX = 0;
 uint8_t page = 0, previousPage = 0;
 uint8_t homePage = 0;
 bool showTdsGraph = true;
@@ -112,6 +113,7 @@ bool showEcTdsValue = false;
 bool showPhDownUpValue = false;
 bool showSr04HeightCalibration = false;
 uint8_t showEtapeCalibration = 0;
+uint8_t showTouchCalibration = 0; ////////////////
 bool showDoserCalibration = false;
 bool showTdsCalibration = false;
 bool showCo2Calibration = false;
@@ -308,7 +310,7 @@ bool globalDebug = true;
 float currentDoserMls = 0;
 uint16_t profileEEPROMSize = 0;
 uint16_t systemEEPROMSize = 0;
-const char* versionNumber = "4.9.3";
+const char* versionNumber = "4.9.5";
 bool relayOffState = HIGH;
 bool disableVL53L0X = false;
 const uint8_t unoAddress = 9;
@@ -331,9 +333,14 @@ uint8_t phCalStage = 0;
 bool newGraphData = false;
 bool ecWaitTillNextCall = false;
 bool phWaitTillNextCall = false;
-uint8_t lightSwitchedOnHour = 0;
-uint8_t lightSwitchedOnMin = 0;
+int16_t lightDuration = -1;
 bool lightOn = false;
+//uint8_t auxRelayOneSwitchedOnOffDay = 0;
+int16_t auxRelayOneDuration = -1;
+bool auxRelayOneOn = false;
+//uint8_t auxRelayTwoSwitchedOnOffDay = 0;
+int16_t auxRelayTwoDuration = -1;
+bool auxRelayTwoOn = false;
 int16_t intputPosition = 0;
 enum charTypes {LOWER, UPPER, SPECIAL};
 charTypes charType = LOWER;
@@ -345,6 +352,10 @@ int16_t lastIntputPosition = 0;
 bool lockSaveButtons = false, updateKeyboardInput = false;
 uint32_t keyBoardClosedTime = millis();
 uint32_t lastCalTouch = millis();
+uint16_t calMinX = TOUCSRCAL_XLOW;
+uint16_t calMinY = TOUCSRCAL_YLOW;
+uint16_t calMaxX = TOUCSRCAL_XHIGH;
+uint16_t calMaxY = TOUCSRCAL_YHIGH;
 float minPh = 0;
 float maxPh = 0;
 float minCo2 = 0;
@@ -357,14 +368,6 @@ float minWaterLevel = 0;
 float maxWaterLevel = 0;
 uint16_t minTds = 0;
 uint16_t maxTds = 0;
-uint8_t auxRelayOneSwitchedOnDay = 0;
-uint8_t auxRelayOneSwitchedOnHour = 0;
-uint8_t auxRelayOneSwitchedOnMin = 0;
-bool auxRelayOneOn = false;
-uint8_t auxRelayTwoSwitchedOnDay = 0;
-uint8_t auxRelayTwoSwitchedOnHour = 0;
-uint8_t auxRelayTwoSwitchedOnMin = 0;
-bool auxRelayTwoOn = false;
 float minAirTemp = 0;
 float maxAirTemp = 0;
 float minHumidity = 0;
@@ -441,6 +444,11 @@ enum controlOptions {
   SPEED_MIN,
   SPEED_MAX
 };
+enum timerStatus {
+  AUTO_TIMER,
+  CONST_ON,
+  CONST_OFF
+};
 }
 
 namespace user {
@@ -449,15 +457,34 @@ char profileTwoName[16]   = "Profile_2";
 char profileThreeName[16] = "Profile_3";
 char profileFourName[16]  = "Profile_4";
 char profileFiveName[16]  = "Profile_5";
+
 uint8_t lightOnTimeHour = 23;
 uint8_t lightOnTimeMin = 0;
 uint8_t lightOffTimeHour = 22;
 uint8_t lightOffTimeMin = 30;
-uint8_t lightMode = 1;
-uint16_t auxRelayOneTimer = 2; // in mins
-uint16_t auxRelayTwoTimer = 2; // in mins
-uint8_t auxRelayOneMode = 0;
-uint8_t auxRelayTwoMode = 0;
+uint8_t lightState = device::AUTO_TIMER;
+uint8_t lightMode = 1; // 0 cyclic, 1 timer
+int16_t lightOffDuration = 60;
+int16_t lightOnDuration = 60;
+
+uint8_t auxRelayOneOnTimeHour = 23;
+uint8_t auxRelayOneOnTimeMin = 0;
+uint8_t auxRelayOneOffTimeHour = 22;
+uint8_t auxRelayOneOffTimeMin = 30;
+uint8_t auxRelayOneState = device::AUTO_TIMER;
+uint8_t auxRelayOneMode = 0; // 0 cyclic, 1 timer
+int16_t auxRelayOneOnDuration = 60;
+int16_t auxRelayOneOffDuration = 60;
+
+uint8_t auxRelayTwoOnTimeHour = 23;
+uint8_t auxRelayTwoOnTimeMin = 0;
+uint8_t auxRelayTwoOffTimeHour = 22;
+uint8_t auxRelayTwoOffTimeMin = 30;
+uint8_t auxRelayTwoState = device::AUTO_TIMER;
+uint8_t auxRelayTwoMode = 0; // 0 cyclic, 1 timer
+int16_t auxRelayTwoOnDuration = 60;
+int16_t auxRelayTwoOffDuration = 60;
+
 uint8_t targetMinFanOneSpeed = 25;
 uint8_t targetMaxFanOneSpeed = 100;
 uint8_t targetMinFanTwoSpeed = 50;
@@ -565,7 +592,7 @@ bool disableHumidityWarnings = true;
 //bool disableAllWarnings = false;
 bool disableLED = false;
 bool disableBeeper = false;
-bool disableDrainAndRefill = true;
+bool disableDrainAndRefill = false; ///////////////
 bool clearWifiDetails = false;
 bool resetSettings = false;
 uint8_t rtcDayOfWeek = 0;
@@ -686,8 +713,8 @@ void setup() {
   pinMode(pin::outletPump, OUTPUT);
   pinMode(pin::airHeater, OUTPUT);
   pinMode(pin::co2Solenoid, OUTPUT);
-  pinMode(pin::auxRelayOnePin, OUTPUT);
-  pinMode(pin::auxRelayTwoPin, OUTPUT);
+  pinMode(pin::auxRelayOne, OUTPUT);
+  pinMode(pin::auxRelayTwo, OUTPUT);
   pinMode(pin::tdsTransistor, OUTPUT);
   pinMode(pin::phTransistor, OUTPUT);
   pinMode(pin::espTransistor, OUTPUT);
@@ -698,8 +725,8 @@ void setup() {
   digitalWrite(pin::outletPump, device::relayOffState);
   digitalWrite(pin::airHeater, device::relayOffState);
   digitalWrite(pin::co2Solenoid, device::relayOffState);
-  digitalWrite(pin::auxRelayOnePin, device::relayOffState);
-  digitalWrite(pin::auxRelayTwoPin, device::relayOffState);
+  digitalWrite(pin::auxRelayOne, device::relayOffState);
+  digitalWrite(pin::auxRelayTwo, device::relayOffState);
   //
   initializeDevice();
 }

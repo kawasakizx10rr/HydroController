@@ -366,7 +366,7 @@ void getValues(const uint8_t a_page, const uint8_t a_slide) {
     Serial1.print(user::lightOnTimeHour);
     Serial1.print(user::lightOffTimeMin);
     Serial1.print(user::lightOffTimeHour);
-    Serial1.print(user::lightMode);
+    Serial1.print(user::lightState);
   }
   // Page 11 (Fans page)
   else if (a_page == 11) { // small amount of data so no need to segment based on slider
@@ -747,9 +747,9 @@ void setValues(const uint8_t a_cmd, const char* a_val) {
   else if (a_cmd ==69) {
     user::lightOffTimeHour = atoi(a_val);
   }
-  // lightMode
+  // LightState
   else if (a_cmd ==70) {
-    user::lightMode = atoi(a_val);
+    user::lightState = atoi(a_val);
   }
   // ============== FANS PAGE ==============
   // targetMinFanOneSpeed

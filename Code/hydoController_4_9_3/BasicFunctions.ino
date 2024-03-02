@@ -122,52 +122,30 @@ void initializeDevice() {
 
   rtc.refresh();
   // If light is set to auto mode check timer
-  if (user::lightMode == 0 && restartLightingTimer()) {
-    digitalWrite(pin::light, !device::relayOffState);
-    device::lightOn = true;
-    device::lightSwitchedOnHour = rtc.hour();
-    device::lightSwitchedOnMin = rtc.minute();
-    if (device::globalDebug)
-      Serial.println(F("Auto started light on boot"));
-  }
-
-  // If aux relay 1 is set to auto mode check timer
-  if (user::auxRelayOneMode == 0) {
-    digitalWrite(pin::auxRelayOnePin, !device::relayOffState);
-    device::auxRelayOneOn = true;
-    device::auxRelayOneSwitchedOnDay = rtc.day();
-    if (rtc.minute() < 59) {
-      device::auxRelayOneSwitchedOnMin = rtc.minute() + 1;
-      device::auxRelayOneSwitchedOnHour = rtc.hour();
-    }
-    else {
-      device::auxRelayOneSwitchedOnMin = 0;
-      rtc.hour() < 23 ? device::auxRelayOneSwitchedOnHour = rtc.hour()+1 : device::auxRelayOneSwitchedOnHour = 0;
-    }
-    if (device::globalDebug) {
-      Serial.print(F("auxRelayOneSwitchedOnMin: ")); Serial.println(device::auxRelayOneSwitchedOnMin);
-      Serial.print(F("auxRelayOneSwitchedOnHour: ")); Serial.println(device::auxRelayOneSwitchedOnHour);
-      Serial.println(F("Aux relay 1 auto started light on boot"));
+  if (user::lightState == device::AUTO_TIMER) {
+    if (user::lightMode == 0 || (user::lightMode == 1 && restartTimer(user::lightOnTimeMin, user::lightOnTimeHour, user::lightOffTimeMin, user::lightOffTimeHour))) {
+      digitalWrite(pin::light, !device::relayOffState);
+      device::lightOn = true;
+      if (device::globalDebug)
+        Serial.println(F("Auto started light on boot"));
     }
   }
-
-  // If aux relay 2 is set to auto mode check timer
-  if (user::auxRelayTwoMode == 0) {
-    digitalWrite(pin::auxRelayTwoPin, !device::relayOffState);
-    device::auxRelayTwoOn = true;
-    device::auxRelayTwoSwitchedOnDay = rtc.day();
-    if (rtc.minute() < 59) {
-      device::auxRelayTwoSwitchedOnMin = rtc.minute() + 1;
-      device::auxRelayTwoSwitchedOnHour = rtc.hour();
+  // If aux 1 relay is set to auto mode check timer
+  if (user::auxRelayOneState == device::AUTO_TIMER) {
+    if (user::auxRelayOneMode == 0 || (user::auxRelayOneMode == 1 && restartTimer(user::auxRelayOneOnTimeMin, user::auxRelayOneOnTimeHour, user::auxRelayOneOffTimeMin, user::auxRelayOneOffTimeHour))) {
+      digitalWrite(pin::auxRelayOne, !device::relayOffState);
+      device::auxRelayOneOn = true;
+      if (device::globalDebug)
+        Serial.println(F("Auto started aux 1 relay on boot"));
     }
-    else {
-      device::auxRelayTwoSwitchedOnMin = 0;
-      rtc.hour() < 23 ? device::auxRelayTwoSwitchedOnHour = rtc.hour()+1 : device::auxRelayTwoSwitchedOnHour = 0;
-    }
-    if (device::globalDebug) {
-      Serial.print(F("auxRelayTwoSwitchedOnMin: ")); Serial.println(device::auxRelayTwoSwitchedOnMin);
-      Serial.print(F("auxRelayTwoSwitchedOnHour: ")); Serial.println(device::auxRelayTwoSwitchedOnHour);
-      Serial.println(F("Aux relay 2 auto started light on boot"));
+  }
+  // If light is set to auto mode check timer
+  if (user::auxRelayTwoState == device::AUTO_TIMER) {
+    if (user::auxRelayTwoMode == 0 || (user::auxRelayTwoMode == 1 && restartTimer(user::auxRelayTwoOnTimeMin, user::auxRelayTwoOnTimeHour, user::auxRelayTwoOffTimeMin, user::auxRelayTwoOffTimeHour))) {
+      digitalWrite(pin::auxRelayTwo, !device::relayOffState);
+      device::auxRelayTwoOn = true;
+      if (device::globalDebug)
+        Serial.println(F("Auto started aux 2 relay on boot"));
     }
   }
 
@@ -220,6 +198,7 @@ void initializeDevice() {
   tft.setFont(&akashi_36px_Regular);
   drawPages();
   tft.setTextColor(RA8875_WHITE, user::backgroundColor);
+  tft.setTouchCalibration(device::calMinX, device::calMinY, device::calMaxX, device::calMaxY);
   display::lastTouchX = tft.width();
 
   // JUST FOR TESTING

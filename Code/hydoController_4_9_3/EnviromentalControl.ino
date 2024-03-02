@@ -5,8 +5,7 @@ void envriomentalControl() {
     rtc.refresh();
     previousMillis = millis();
   }
-  lightingControl();
-  cyclicTimers();
+  relayTimers();
   waterLevelControl();
   waterTemperatureControl();
   co2Control();
@@ -98,7 +97,7 @@ void waterLevelControl() {
           }
         }
       }
-      updateCyclicTimers(); 
+      updateRelayTimers(); 
     }
 
     // refill tank when water is low at any date or time
@@ -130,13 +129,14 @@ void waterLevelControl() {
       device::prevMillis = millis();
       while (startRefilling && continueRefilling != device::CANCEL) {
         if (!refillTank(device::prevMillis, previousWaterLevel)) {
-          startRefilling = false;
-          clearPage();
-          display::refreshPage = true;
+          break;
         }
-
+        updateRelayTimers(); 
       }
+      clearPage();
+      display::refreshPage = true;
     }
+
   }
 }
 
@@ -151,10 +151,11 @@ bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel) {
   if (waterLevel < waterTarget && startRefilling) {
     // turn on the inlet water pump
     digitalWrite(pin::inletPump, !device::relayOffState);
-    // timer checking water level is still decresing else bail after 1 minute * drainTimeout
+    // timer checking water level is still incresing else bail after 1 minute * drainTimeout
     if (millis() - a_previousMillis >= 60000UL * user::drainTimeout) {
-      if (device::globalDebug)
-        Serial.println(F("Failed to pump in any further water, quiting refill process and starting dosing"));
+      if (device::globalDebug) {
+        Serial.println(F("Water level unchanged for ")); ( 60000UL * user::drainTimeout); Serial.println(F(" minutes, quiting refill process and starting dosing"));
+      }
       digitalWrite(pin::inletPump, device::relayOffState);
       startRefilling = false;
     }
@@ -168,7 +169,7 @@ bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel) {
 
   // get current water height
   sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
-  if (sensor::waterLevel < a_previousWaterLevel) {
+  if (sensor::waterLevel > a_previousWaterLevel) {
     a_previousWaterLevel = sensor::waterLevel;
     a_previousMillis = millis();
   }
@@ -256,67 +257,142 @@ void waterTemperatureControl() {
 }
 
 // Control the external lighting
-void lightingControl() {
-  using namespace user;
-  static uint8_t prviousLightMode = 3;
-  if (lightMode == 0) { // timer mode
-    if (lightOnTimeHour == rtc.hour() && lightOnTimeMin == rtc.minute() && !device::lightOn) {
-      digitalWrite(pin::light, !device::relayOffState);
-      if (device::globalDebug)
-        Serial.println(F("Light on"));
-      device::lightOn = true;
-      device::lightSwitchedOnHour = rtc.hour();
-      device::lightSwitchedOnMin = rtc.minute();
-      saveLogMessage(4);
+void relayTimers() {
+  if (user::lightState == device::AUTO_TIMER) { 
+    if (user::lightMode == 0) {
+        static uint8_t prevMinute = 69;
+        if (rtc.minute() != prevMinute) {
+          device::lightDuration++;
+          if (device::globalDebug) {
+            Serial.print(F("Light ")); Serial.print(device::lightOn ? F("on") : F("off")); Serial.print(F(" duration (mins): ")); Serial.println(device::lightDuration);
+          }
+          prevMinute = rtc.minute();
+        }       
+        if (device::lightOn && device::lightDuration >= user::lightOnDuration) {
+          if (device::globalDebug)
+            Serial.println(F("Light on"));
+          digitalWrite(pin::light, device::relayOffState);
+          device::lightDuration = 0;
+          device::lightOn = false;
+        }
+        else if (!device::lightOn && device::lightDuration >= user::lightOffDuration) {
+          if (device::globalDebug)
+            Serial.println(F("Light off"));
+          digitalWrite(pin::light, !device::relayOffState);
+          device::lightDuration = 0;
+          device::lightOn = true;
+        }
     }
-    else if (lightOffTimeHour == rtc.hour() && lightOffTimeMin == rtc.minute() && device::lightOn) {
-      digitalWrite(pin::light, device::relayOffState);
-      if (device::globalDebug)
-        Serial.println(F("Light off"));
-      device::lightOn = false;
-      saveLogMessage(5);
+    else {
+      if (user::lightOnTimeHour == rtc.hour() && user::lightOnTimeMin == rtc.minute() && !device::lightOn) {
+        digitalWrite(pin::light, !device::relayOffState);
+        if (device::globalDebug)
+          Serial.println(F("Light on"));
+        device::lightOn = true;
+        saveLogMessage(4);
+      }
+      else if (user::lightOffTimeHour == rtc.hour() && user::lightOffTimeMin == rtc.minute() && device::lightOn) {
+        digitalWrite(pin::light, device::relayOffState);
+        if (device::globalDebug)
+          Serial.println(F("Light off"));
+        device::lightOn = false;
+        saveLogMessage(5);
+      }
     }
   }
-  else if (lightMode == 1 && lightMode != prviousLightMode) { // constant on
-    digitalWrite(pin::light, !device::relayOffState);
-    if (device::globalDebug)
-      Serial.println(F("Light const on"));
-    device::lightOn = true;
-    device::lightSwitchedOnHour = rtc.hour();
-    device::lightSwitchedOnMin = rtc.minute();
+  // ========================================================================================================
+  if (user::auxRelayOneState == device::AUTO_TIMER) { 
+    if (user::auxRelayOneMode == 0) {
+        static uint8_t prevMinute = 69;
+        if (rtc.minute() != prevMinute) {
+          device::auxRelayOneDuration++;
+          if (device::globalDebug) {
+            Serial.print(F("Aux relay 1 ")); Serial.print(device::auxRelayOneOn ? F("on") : F("off")); Serial.print(F(" duration (mins): ")); Serial.println(device::auxRelayOneDuration);
+          }
+          prevMinute = rtc.minute();
+        }        
+        if (device::auxRelayOneOn && device::auxRelayOneDuration >= user::auxRelayOneOnDuration) {
+          if (device::globalDebug)
+            Serial.println(F("Aux relay 1 on"));
+          digitalWrite(pin::auxRelayOne, device::relayOffState);
+          device::auxRelayOneDuration = 0;
+          device::auxRelayOneOn = false;
+        }
+        else if (!device::auxRelayOneOn && device::auxRelayOneDuration >= user::auxRelayOneOffDuration) {
+          if (device::globalDebug)
+            Serial.println(F("Aux relay 1 off"));
+          digitalWrite(pin::auxRelayOne, !device::relayOffState);
+          device::auxRelayOneDuration = 0;
+          device::auxRelayOneOn = true;
+        }
+    }
+    else {
+      if (user::auxRelayOneOnTimeHour == rtc.hour() && user::auxRelayOneOnTimeMin == rtc.minute() && !device::auxRelayOneOn) {
+        digitalWrite(pin::auxRelayOne, !device::relayOffState);
+        if (device::globalDebug)
+          Serial.println(F("Aux relay 1 on"));
+        device::auxRelayOneOn = true;
+        saveLogMessage(4);
+      }
+      else if (user::auxRelayOneOffTimeHour == rtc.hour() && user::auxRelayOneOffTimeMin == rtc.minute() && device::auxRelayOneOn) {
+        digitalWrite(pin::auxRelayOne, device::relayOffState);
+        if (device::globalDebug)
+          Serial.println(F("Aux relay 1 off"));
+        device::auxRelayOneOn = false;
+        saveLogMessage(5);
+      }
+    }
   }
-  else if (lightMode == 2 && lightMode != prviousLightMode) { // constant off
-    if (device::globalDebug)
-      Serial.println(F("Light const off"));
-    digitalWrite(pin::light, device::relayOffState);
-    device::lightOn = false;
-  }
-  prviousLightMode = lightMode;
-  // Log any occourance of the light turning off when it should be on "once per day"
-  static int16_t previousLightOnDay = 0;
-  if (device::lightOn && previousLightOnDay != rtc.day()) {
-    if (device::lightSwitchedOnMin <= 57 && rtc.minute() >= device::lightSwitchedOnMin + 2) {
-      if (sensor::ldr < 1000)
-        saveLogMessage(6);
+  // ========================================================================================================
+  if (user::auxRelayTwoState == device::AUTO_TIMER) { 
+    if (user::auxRelayTwoMode == 0) {
+        static uint8_t prevMinute = 69;
+        if (rtc.minute() != prevMinute) {
+          device::auxRelayTwoDuration++;
+          if (device::globalDebug) {
+            Serial.print(F("Aux relay 2 ")); Serial.print(device::auxRelayTwoOn ? F("on") : F("off")); Serial.print(F(" duration (mins): ")); Serial.println(device::auxRelayTwoDuration);
+          }
+          prevMinute = rtc.minute();
+        }       
+        if (device::auxRelayTwoOn && device::auxRelayTwoDuration >= user::auxRelayTwoOnDuration) {
+          if (device::globalDebug)
+            Serial.println(F("Aux relay 2 on"));
+          digitalWrite(pin::auxRelayTwo, device::relayOffState);
+          device::auxRelayTwoDuration = 0;
+          device::auxRelayTwoOn = false;
+        }
+        else if (!device::auxRelayTwoOn && device::auxRelayTwoDuration >= user::auxRelayTwoOffDuration) {
+          if (device::globalDebug)
+            Serial.println(F("Aux relay 2 off"));
+          digitalWrite(pin::auxRelayTwo, !device::relayOffState);
+          device::auxRelayTwoDuration = 0;
+          device::auxRelayTwoOn = true;
+        }
     }
-    else if (device::lightSwitchedOnMin == 58 && rtc.minute() == 0)  {
-      if (sensor::ldr < 1000)
-        saveLogMessage(6);
+    else {
+      if (user::auxRelayTwoOnTimeHour == rtc.hour() && user::auxRelayTwoOnTimeMin == rtc.minute() && !device::auxRelayTwoOn) {
+        digitalWrite(pin::auxRelayTwo, !device::relayOffState);
+        if (device::globalDebug)
+          Serial.println(F("Aux relay 2 on"));
+        device::auxRelayTwoOn = true;
+        saveLogMessage(4);
+      }
+      else if (user::auxRelayTwoOffTimeHour == rtc.hour() && user::auxRelayTwoOffTimeMin == rtc.minute() && device::auxRelayTwoOn) {
+        digitalWrite(pin::auxRelayTwo, device::relayOffState);
+        if (device::globalDebug)
+          Serial.println(F("Aux relay 2 off"));
+        device::auxRelayTwoOn = false;
+        saveLogMessage(5);
+      }
     }
-    else if (device::lightSwitchedOnMin > 58 && rtc.minute() >= 2)  {
-      if (sensor::ldr < 1000)
-        saveLogMessage(6);
-    }
-    previousLightOnDay = rtc.day();
   }
 }
 
 // Check if the current time is in between the users start and end time
-bool restartLightingTimer() {
-  using namespace user;
-  int16_t startMinutesSinceMidnight = lightOnTimeMin + 60 * lightOnTimeHour;
-  int16_t endMinutesSinceMidnight = lightOnTimeHour + 60 * lightOffTimeHour;
-  int16_t currentMinutesSinceMidnight = rtc.minute() + 60 * rtc.hour();
+bool restartTimer(const uint8_t a_onTimeMin, const uint8_t a_onTimeHour, const uint8_t a_offTimeMin, const uint8_t a_offTimeHour) {
+  uint16_t startMinutesSinceMidnight = a_onTimeMin + (60 * a_onTimeHour);
+  uint16_t endMinutesSinceMidnight = a_offTimeMin + (60 * a_offTimeHour);
+  uint16_t currentMinutesSinceMidnight = rtc.minute() + (60 * rtc.hour());
   if (startMinutesSinceMidnight < endMinutesSinceMidnight) {
     return ((currentMinutesSinceMidnight >= startMinutesSinceMidnight) && (currentMinutesSinceMidnight < endMinutesSinceMidnight));
   }
@@ -326,80 +402,13 @@ bool restartLightingTimer() {
 }
 
 // called in while loops
-void updateCyclicTimers() {
+void updateRelayTimers() {
   static uint32_t previousMillis = millis();
   if (millis() - previousMillis >= 1000UL) {
     rtc.refresh();
-    cyclicTimers();
+    relayTimers();
     previousMillis = millis();
   }  
-}
-
-void cyclicTimers() {
-  // Aux relay 1
-  if (user::auxRelayOneMode == 0) {
-    int16_t offHour = device::auxRelayOneSwitchedOnHour + (int16_t)(user::auxRelayOneTimer / 60);
-    int16_t offMin =  device::auxRelayOneSwitchedOnMin + user::auxRelayOneTimer % 60;
-    if (offMin >= 60) {
-      offHour++;
-      offMin -= 60;
-    }
-    if (offHour >= 24 && rtc.day() != device::auxRelayOneSwitchedOnDay) {
-      offHour -= 24;
-      if (rtc.minute() == offMin && rtc.hour() == offHour) {
-        device::auxRelayOneOn = !device::auxRelayOneOn;
-        device::auxRelayOneSwitchedOnHour = rtc.hour();
-        device::auxRelayOneSwitchedOnMin = rtc.minute();
-        digitalWrite(pin::auxRelayOnePin, device::auxRelayOneOn);
-        if (device::globalDebug) {
-          Serial.print(F("Aux relay 1 turned ")); device::auxRelayOneOn != device::relayOffState ? Serial.println(F("on")) : Serial.println(F("off"));
-        }         
-      }
-    }
-    else {
-      if (rtc.minute() == offMin && rtc.hour() == offHour) {
-        device::auxRelayOneOn = !device::auxRelayOneOn;
-        device::auxRelayOneSwitchedOnHour = rtc.hour();
-        device::auxRelayOneSwitchedOnMin = rtc.minute();
-        digitalWrite(pin::auxRelayOnePin, device::auxRelayOneOn);
-        if (device::globalDebug) {
-          Serial.print(F("Aux relay 1 turned ")); device::auxRelayOneOn != device::relayOffState ? Serial.println(F("on")) : Serial.println(F("off"));
-        }
-      }
-    }
-  }
-  // If aux relay 2 is set to auto mode check timer
-  if (user::auxRelayTwoMode == 0) {
-    int16_t offHour = device::auxRelayTwoSwitchedOnHour + (int16_t)(user::auxRelayTwoTimer / 60);
-    int16_t offMin =  device::auxRelayTwoSwitchedOnMin + user::auxRelayTwoTimer % 60;
-    if (offMin >= 60) {
-      offHour++;
-      offMin -= 60;
-    }
-    if (offHour >= 24 && rtc.day() != device::auxRelayTwoSwitchedOnDay) {
-      offHour -= 24;
-      if (rtc.minute() == offMin && rtc.hour() == offHour) {
-        device::auxRelayTwoOn = !device::auxRelayTwoOn;
-        device::auxRelayTwoSwitchedOnHour = rtc.hour();
-        device::auxRelayTwoSwitchedOnMin = rtc.minute();
-        digitalWrite(pin::auxRelayTwoPin, device::auxRelayTwoOn);
-        if (device::globalDebug) {
-          Serial.print(F("Aux relay 2 turned ")); device::auxRelayTwoOn ? Serial.println(F("on")) : Serial.println(F("off"));
-        }         
-      }
-    }
-    else {
-      if (rtc.minute() == offMin && rtc.hour() == offHour) {
-        device::auxRelayTwoOn = !device::auxRelayTwoOn;
-        device::auxRelayTwoSwitchedOnHour = rtc.hour();
-        device::auxRelayTwoSwitchedOnMin = rtc.minute();
-        digitalWrite(pin::auxRelayTwoPin, device::auxRelayTwoOn);
-        if (device::globalDebug) {
-          Serial.print(F("Aux relay 2 turned ")); device::auxRelayTwoOn ? Serial.println(F("on")) : Serial.println(F("off"));
-        }
-      }
-    }
-  }
 }
 
 // controls the enviroments co2 levels
@@ -456,7 +465,7 @@ void co2Control() {
         }
         device::prevMillis = millis();
       }
-      updateCyclicTimers();
+      updateRelayTimers();
     }
     digitalWrite(pin::co2Solenoid, device::relayOffState);
   }
@@ -1027,7 +1036,7 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
         }
       }
     }
-    updateCyclicTimers();
+    updateRelayTimers();
   }
 }
 
