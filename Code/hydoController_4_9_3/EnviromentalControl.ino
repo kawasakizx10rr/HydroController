@@ -127,9 +127,10 @@ void waterLevelControl() {
       previousWaterLevel = sensor::waterLevel;
       display::lastTouchMillis = millis();
       device::prevMillis = millis();
-      bool startRefilling = true;
-      bool runRefillDosers = false;
-      while (refillTank(device::prevMillis, previousWaterLevel, startRefilling, runRefillDosers)) {
+      while (startRefilling && continueRefilling != device::CANCEL) {
+        if (!refillTank(device::prevMillis, previousWaterLevel)) {
+          break;
+        }
         updateRelayTimers(); 
       }
       clearPage();
@@ -140,18 +141,14 @@ void waterLevelControl() {
 }
 
 // Refill the tanks water and run doers all available dosers
-bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bool& a_startRefilling, bool& a_runRefillDosers) {
+bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel) {
+  static bool startRefilling = true;
+  static bool lockPump = false;
   static bool enabledDosers[6] {false, false, false, false, false, false};
-  sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
   const float waterLevel = user::convertToInches ? convertToInches(sensor::waterLevel) : sensor::waterLevel;
   const uint16_t waterTarget = user::convertToInches ? user::targetMaxWaterHeightInches : user::targetMaxWaterHeight;
 
-  if (waterLevel > a_previousWaterLevel) {
-    a_previousWaterLevel = waterLevel;
-    a_previousMillis = millis();
-  }
-  
-  if (waterLevel < waterTarget && a_startRefilling) {
+  if (waterLevel < waterTarget && startRefilling) {
     // turn on the inlet water pump
     digitalWrite(pin::inletPump, !device::relayOffState);
     // timer checking water level is still incresing else bail after 1 minute * drainTimeout
@@ -160,25 +157,32 @@ bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bool&
         Serial.println(F("Water level unchanged for ")); ( 60000UL * user::drainTimeout); Serial.println(F(" minutes, quiting refill process and starting dosing"));
       }
       digitalWrite(pin::inletPump, device::relayOffState);
-      a_startRefilling = false;
+      startRefilling = false;
     }
     else if (waterLevel >= waterTarget) {
       if (device::globalDebug)
         Serial.println(F("Finished pumping in water, quiting refill process and starting dosing"));
       digitalWrite(pin::inletPump, device::relayOffState);
-      a_startRefilling = false;
+      startRefilling = false;
     }
   }
-  else if (!a_startRefilling && !a_runRefillDosers) {
+
+  // get current water height
+  sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
+  if (sensor::waterLevel > a_previousWaterLevel) {
+    a_previousWaterLevel = sensor::waterLevel;
+    a_previousMillis = millis();
+  }
+  else if (!startRefilling && !lockPump) {
     if (device::globalDebug)
       Serial.println(F("Refilling complete, starting dosing"));
     for (uint8_t i = 0; i < user::numberOfDosers; i++)
       enabledDosers[i] = true;
-    a_runRefillDosers = true;
+    lockPump = true;
   }
 
   // run dosers
-  if (a_runRefillDosers) {
+  if (lockPump) {
     if (enabledDosers[0] && user::doserOneMode != device::DOSER_OFF)
       enabledDosers[0] = runDoser(1, pin::doserOne, user::doserOneSpeed, user::refillDoserOneMills);
     else if (enabledDosers[1] && user::doserTwoMode != device::DOSER_OFF)
@@ -206,14 +210,14 @@ bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bool&
     tft.touchReadPixel(&display::touch_x, &display::touch_y);
     if (millis() - display::lastTouchMillis >= 3000UL) {
       if (display::touch_x >= startX + 200 && display::touch_x <= startX + 400 && display::touch_y >= startY + 200 && display::touch_y <= startY + 250) { // Cancel
-        digitalWrite(pin::inletPump, device::relayOffState);
-        Serial.println(F("Water refill and or dosing aborted"));
+        // digitalWrite(pin::inletPump, device::relayOffState);
+        // Serial.println(F("Water refill and or dosing aborted"));
         digitalWrite(pin::doserOne, LOW);
         digitalWrite(pin::doserTwo, LOW);
         digitalWrite(pin::doserThree, LOW);
-        digitalWrite(pin::doserFour, LOW);
-        digitalWrite(pin::doserFive, LOW);
-        digitalWrite(pin::doserSix, LOW);
+        digitalWrite( pin::doserFour, LOW);
+        digitalWrite( pin::doserFive, LOW);
+        digitalWrite( pin::doserSix, LOW);
         beep();
         return false;
       }

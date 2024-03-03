@@ -4,7 +4,6 @@
 // TO DO: add user setup guide for new device / reset
 // add back in esp8266 wifi
 // device::settingsAdjusted = true;
-// water height as float
 
 //#define USING_HDC1080 // comment this line to use a dht22
 
@@ -311,7 +310,7 @@ bool globalDebug = true;
 float currentDoserMls = 0;
 uint16_t profileEEPROMSize = 0;
 uint16_t systemEEPROMSize = 0;
-const char* versionNumber = "4.9.3";
+const char* versionNumber = "4.9.5";
 bool relayOffState = HIGH;
 bool disableVL53L0X = false;
 const uint8_t unoAddress = 9;
@@ -359,8 +358,8 @@ uint16_t calMaxX = TOUCSRCAL_XHIGH;
 uint16_t calMaxY = TOUCSRCAL_YHIGH;
 float minPh = 0;
 float maxPh = 0;
-uint16_t minCo2 = 0;
-uint16_t maxCo2 = 0;
+float minCo2 = 0;
+float maxCo2 = 0;
 float minEc = 0;
 float maxEc = 0;
 float minWaterTemp = 0;

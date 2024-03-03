@@ -3,7 +3,7 @@ void touchEvent() {
     tft.touchReadPixel(&display::touch_x, &display::touch_y, 10);
     display::lastTouchMillis = millis();
     if (display::touch_x > 0 && display::touch_y > 0) {     
-      //tft.fillCircle(display::touch_x, display::touch_y, 2, RA8875_WHITE); // for touch debugging
+      //tft.fillCircle(display::touch_x, display::touch_y, 2, RA8875_WHITE); // for touch debugging / calibration check
       sliders();
       static uint32_t previousTouchMillis = 0;
       if (millis() - previousTouchMillis >= display::debounceTime) {       
