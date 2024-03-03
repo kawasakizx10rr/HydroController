@@ -519,6 +519,7 @@ void setValue() {
     } 
     else if (device::globalDebug)
       Serial.println(F("server arg not recognised!"));
+    yield();
     // Send updated value back to the Mega2560
     Serial.print(F("!0,"));
     Serial.print(cmdIndex);
@@ -693,11 +694,11 @@ void getPageData() {
   }
   // Page 3 (Profiles page)
   else if (page == 3) {
-    strcpy(wifi::buffer, user::profileOneName);
-    strcat(wifi::buffer, user::profileTwoName);
-    strcat(wifi::buffer, user::profileThreeName);
-    strcat(wifi::buffer, user::profileFourName);
-    strcat(wifi::buffer, user::profileOneName);
+    strcpy(wifi::buffer, user::profileOneName); strcat(wifi::buffer, ",");
+    strcat(wifi::buffer, user::profileTwoName); strcat(wifi::buffer, ",");
+    strcat(wifi::buffer, user::profileThreeName); strcat(wifi::buffer, ",");
+    strcat(wifi::buffer, user::profileFourName); strcat(wifi::buffer, ",");
+    strcat(wifi::buffer, user::profileOneName); strcat(wifi::buffer, ",");
   }
   // Page 4 (Settings page)
   else if (page == 4) {

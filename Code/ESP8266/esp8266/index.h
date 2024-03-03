@@ -4621,13 +4621,9 @@ function doserPageSlider(inc) {
     if (doserPageScrollPosition < doserPages) doserPageScrollPosition++;
     else doserPageScrollPosition = 0;
   }
-  var currentSlideIcon = "doserSlideIcon" + (doserPageScrollPosition + 1);
-  for (i = 1;i < 4;i++) {
-    var slideIcon = "doserSlideIcon" + i;
-    document.getElementById(slideIcon).style.opacity = "0";
-  }
+  var currentSlideIcon = "doserSlideIcon" + (doserPageScrollPosition + 1);  
   if (doserPages > 0) {
-    for (i = 1;i < doserPages + 2;i++) {
+    for (i = 1; i <= 3; i++) {
       var slideIcon = "doserSlideIcon" + i;
       document.getElementById(slideIcon).src = document.getElementById("slideIcon_blue").src;
       if (slideIcon == currentSlideIcon) {
@@ -4639,12 +4635,12 @@ function doserPageSlider(inc) {
           document.getElementById(slideIcon).style.opacity = "1";
       }
     }
-  }
+  }  
   const doserModesArray = [doserOneMode, doserTwoMode, doserThreeMode, doserFourMode, doserFiveMode, doserSixMode];
   const doserMillsArray = [doserOneMills, doserTwoMills, doserThreeMills, doserFourMills, doserFiveMills, doserSixMills];
   for (i = 0;i < 4;i++) {
-	var index = i + doserPageScrollPosition ;
-    document.getElementById("doser" + (index + 1)).innerHTML = index + 1;
+	var index = i + doserPageScrollPosition;
+    document.getElementById("doser" + (i + 1)).innerHTML = index + 1;
 	//
 	if (doserModesArray[index] == doserModes.DOSER_OFF) {
       document.getElementById("ecButton" + (i + 1)).value = "OFF";
@@ -4667,7 +4663,7 @@ function doserPageSlider(inc) {
       document.getElementById("ecButton" + (i + 1)).style.backgroundColor = "lime";
     }
 	//
-	document.getElementById("doserMls_" + (index + 1)).innerHTML = doserMillsArray[index];
+	document.getElementById("doserMls_" + (i + 1)).innerHTML = doserMillsArray[index];
   } 
 }
 
@@ -5648,7 +5644,7 @@ function getData(pageNumber) {
 		  var cnt = 0;	  
 		  // Page 1 slide 0
 		  if (pageNumber == 1) {
-			if (valLen == 125) {	
+			if (valLen == 29) {	
 				convertToF = (values[cnt++] == "0" ? false : true);	
 				convertToInchs = (values[cnt++] == "0" ? false : true);
 				if (homePageScrollPosition == 0) {		
@@ -5724,11 +5720,11 @@ function getData(pageNumber) {
 				}
 			}
 			else
-				console.log("error expected 125, received " + valLen);
+				console.log("error expected 29, received " + valLen);
 		  }
 		  ///////////////////////////////////////////////////////////////////
 		  else if (pageNumber == 2) {
-			if (valLen == 122) {		
+			if (valLen == 26) {		
 				convertToF = (values[cnt++] == "0" ? false : true);		
 				convertToInchs = (values[cnt++] == "0" ? false : true);
 				if (graphPageScrollPosition == 0) {
@@ -5773,7 +5769,7 @@ function getData(pageNumber) {
 				}
 			}
 			else
-			  console.log("error expected 122, received " + valLen);
+			  console.log("error expected 26, received " + valLen);
 		  }
 		  ///////////////////////////////////////////////////////////////////
 		  else if (pageNumber == 3) {
@@ -5897,7 +5893,7 @@ function getData(pageNumber) {
 		  }
 		  ///////////////////////////////////////////////////////////////////
 		  else if (pageNumber == 9) {
-			if (valLen == 45) {		       
+			if (valLen == 48) {		       
 				convertToInchs = (values[cnt++] == "0" ? false : true);
 				convertToF = (values[cnt++] == "0" ? false : true);
 				targetMinWaterHeight = values[cnt++];
@@ -5919,7 +5915,7 @@ function getData(pageNumber) {
 				refillDoserSixMills = values[cnt++];
 			}
 			else
-			  console.log("waterPage: error expected 45, received " + valLen);
+			  console.log("waterPage: error expected 48, received " + valLen);
 		  }
 		  ///////////////////////////////////////////////////////////////////
 		  else if (pageNumber == 10) {
@@ -5961,7 +5957,7 @@ function getData(pageNumber) {
 		  }
 		  ///////////////////////////////////////////////////////////////////
 		  else if (pageNumber == 12) {
-			if (valLen == 12) {	
+			if (valLen == 13) {	
 				convertToF = (values[cnt++] == "0" ? false : true);		
 				fanOneMinSpeed = values[cnt++];
 				fanOneMaxSpeed = values[cnt++];
@@ -5977,11 +5973,11 @@ function getData(pageNumber) {
 				fanTwoFixedSpeed = (values[cnt++] == "0" ? false : true);
 			}
 			else
-			  console.log("Fans page: error expected 12, received " + valLen);
+			  console.log("Fans page: error expected 13, received " + valLen);
 		  }
 		  ///////////////////////////////////////////////////////////////////
 		  else if (pageNumber == 13) {
-			if (valLen == 36) {	
+			if (valLen == 34) {	
 				convertToInchs = (values[cnt++] == "0" ? false : true);
 				convertToF = (values[cnt++] == "0" ? false : true);
 				
@@ -6026,7 +6022,7 @@ function getData(pageNumber) {
 				humidityTempErrorMargin = values[cnt++];
 			}
 			else
-			  console.log("Warnings page: error expected 36, received " + valLen);
+			  console.log("Warnings page: error expected 34, received " + valLen);
 		  }
 		  connectionTime = new Date().getTime();
       setPage(pageNumber, false);

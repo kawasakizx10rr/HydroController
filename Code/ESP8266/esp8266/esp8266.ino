@@ -16,7 +16,7 @@
 namespace device {
 bool remotlyLoadUserProfile = false;
 bool remotlySaveUserProfile = false;
-bool globalDebug = true; 
+bool globalDebug = false; 
 float currentDoserMls = 0;
 uint16_t profileEEPROMSize = 0;
 uint16_t systemEEPROMSize = 0;

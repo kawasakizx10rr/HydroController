@@ -18,6 +18,7 @@ void receiveSerialData(const uint8_t a_page, const uint8_t a_slide) {
     else if (c == ',' && readData) {
       updateValue(a_page, a_slide, buffer, index);
       memset(buffer, 0 , 16);
+      yield();
       index++;
       charCnt = 0;
     }
