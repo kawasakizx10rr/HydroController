@@ -127,10 +127,9 @@ void waterLevelControl() {
       previousWaterLevel = sensor::waterLevel;
       display::lastTouchMillis = millis();
       device::prevMillis = millis();
-      while (startRefilling && continueRefilling != device::CANCEL) {
-        if (!refillTank(device::prevMillis, previousWaterLevel)) {
-          break;
-        }
+      bool startRefilling = true;
+      bool runRefillDosers = false;
+      while (refillTank(device::prevMillis, previousWaterLevel, startRefilling, runRefillDosers)) {
         updateRelayTimers(); 
       }
       clearPage();
@@ -141,14 +140,18 @@ void waterLevelControl() {
 }
 
 // Refill the tanks water and run doers all available dosers
-bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel) {
-  static bool startRefilling = true;
-  static bool lockPump = false;
+bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bool& a_startRefilling, bool& a_runRefillDosers) {
   static bool enabledDosers[6] {false, false, false, false, false, false};
+  sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
   const float waterLevel = user::convertToInches ? convertToInches(sensor::waterLevel) : sensor::waterLevel;
   const uint16_t waterTarget = user::convertToInches ? user::targetMaxWaterHeightInches : user::targetMaxWaterHeight;
 
-  if (waterLevel < waterTarget && startRefilling) {
+  if (waterLevel > a_previousWaterLevel) {
+    a_previousWaterLevel = waterLevel;
+    a_previousMillis = millis();
+  }
+  
+  if (waterLevel < waterTarget && a_startRefilling) {
     // turn on the inlet water pump
     digitalWrite(pin::inletPump, !device::relayOffState);
     // timer checking water level is still incresing else bail after 1 minute * drainTimeout
@@ -157,32 +160,25 @@ bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel) {
         Serial.println(F("Water level unchanged for ")); ( 60000UL * user::drainTimeout); Serial.println(F(" minutes, quiting refill process and starting dosing"));
       }
       digitalWrite(pin::inletPump, device::relayOffState);
-      startRefilling = false;
+      a_startRefilling = false;
     }
     else if (waterLevel >= waterTarget) {
       if (device::globalDebug)
         Serial.println(F("Finished pumping in water, quiting refill process and starting dosing"));
       digitalWrite(pin::inletPump, device::relayOffState);
-      startRefilling = false;
+      a_startRefilling = false;
     }
   }
-
-  // get current water height
-  sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
-  if (sensor::waterLevel > a_previousWaterLevel) {
-    a_previousWaterLevel = sensor::waterLevel;
-    a_previousMillis = millis();
-  }
-  else if (!startRefilling && !lockPump) {
+  else if (!a_startRefilling && !a_runRefillDosers) {
     if (device::globalDebug)
       Serial.println(F("Refilling complete, starting dosing"));
     for (uint8_t i = 0; i < user::numberOfDosers; i++)
       enabledDosers[i] = true;
-    lockPump = true;
+    a_runRefillDosers = true;
   }
 
   // run dosers
-  if (lockPump) {
+  if (a_runRefillDosers) {
     if (enabledDosers[0] && user::doserOneMode != device::DOSER_OFF)
       enabledDosers[0] = runDoser(1, pin::doserOne, user::doserOneSpeed, user::refillDoserOneMills);
     else if (enabledDosers[1] && user::doserTwoMode != device::DOSER_OFF)
@@ -198,7 +194,7 @@ bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel) {
     else {
       if (device::globalDebug)
         Serial.println(F("Dosing is complete"));
-      lockPump = false;
+      a_runRefillDosers = false;
       device::dosingTimerHourCounter = 0;
       return false;
     }
@@ -210,14 +206,14 @@ bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel) {
     tft.touchReadPixel(&display::touch_x, &display::touch_y);
     if (millis() - display::lastTouchMillis >= 3000UL) {
       if (display::touch_x >= startX + 200 && display::touch_x <= startX + 400 && display::touch_y >= startY + 200 && display::touch_y <= startY + 250) { // Cancel
-        // digitalWrite(pin::inletPump, device::relayOffState);
-        // Serial.println(F("Water refill and or dosing aborted"));
+        digitalWrite(pin::inletPump, device::relayOffState);
+        Serial.println(F("Water refill and or dosing aborted"));
         digitalWrite(pin::doserOne, LOW);
         digitalWrite(pin::doserTwo, LOW);
         digitalWrite(pin::doserThree, LOW);
-        digitalWrite( pin::doserFour, LOW);
-        digitalWrite( pin::doserFive, LOW);
-        digitalWrite( pin::doserSix, LOW);
+        digitalWrite(pin::doserFour, LOW);
+        digitalWrite(pin::doserFive, LOW);
+        digitalWrite(pin::doserSix, LOW);
         beep();
         return false;
       }
