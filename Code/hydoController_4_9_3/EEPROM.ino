@@ -183,21 +183,27 @@ uint16_t getSetProfile(uint16_t a_address, const device::eepromModes a_mode) {
   eepromGetSet(a_address, a_mode, device::maxFanTwoSpeed); 
 
   eepromGetSet(a_address, a_mode, user::lightOnTimeHour);              
-  eepromGetSet(a_address, a_mode, user::lightOnTimeMin);               
+  eepromGetSet(a_address, a_mode, user::lightOnTimeMin); 
+  eepromGetSet(a_address, a_mode, user::lightOffTimeHour);              
+  eepromGetSet(a_address, a_mode, user::lightOffTimeMin);               
   eepromGetSet(a_address, a_mode, user::lightOffDuration);
   eepromGetSet(a_address, a_mode, user::lightOnDuration);          
   eepromGetSet(a_address, a_mode, user::lightState); 
   eepromGetSet(a_address, a_mode, user::lightMode); 
 
   eepromGetSet(a_address, a_mode, user::auxRelayOneOnTimeHour);              
-  eepromGetSet(a_address, a_mode, user::auxRelayOneOnTimeMin);                
+  eepromGetSet(a_address, a_mode, user::auxRelayOneOnTimeMin);   
+  eepromGetSet(a_address, a_mode, user::auxRelayOneOffTimeHour);              
+  eepromGetSet(a_address, a_mode, user::auxRelayOneOffTimeMin);             
   eepromGetSet(a_address, a_mode, user::auxRelayOneOffDuration);
   eepromGetSet(a_address, a_mode, user::auxRelayOneOnDuration);          
   eepromGetSet(a_address, a_mode, user::auxRelayOneState); 
   eepromGetSet(a_address, a_mode, user::auxRelayOneMode); 
 
   eepromGetSet(a_address, a_mode, user::auxRelayTwoOnTimeHour);              
-  eepromGetSet(a_address, a_mode, user::auxRelayTwoOnTimeMin);               
+  eepromGetSet(a_address, a_mode, user::auxRelayTwoOnTimeMin);      
+  eepromGetSet(a_address, a_mode, user::auxRelayTwoOffTimeHour);              
+  eepromGetSet(a_address, a_mode, user::auxRelayTwoOffTimeMin);           
   eepromGetSet(a_address, a_mode, user::auxRelayTwoOffDuration);
   eepromGetSet(a_address, a_mode, user::auxRelayTwoOnDuration);          
   eepromGetSet(a_address, a_mode, user::auxRelayTwoState); 
