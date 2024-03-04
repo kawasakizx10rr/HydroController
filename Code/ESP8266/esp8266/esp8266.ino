@@ -2,9 +2,9 @@
 /*
   The logic for the data communication is as follows
 
-  The webpage calls the JS function getData which uses an XMLHttpRequest to get the required data for the given webpage when loaded, it sends request to the native callback getPageData running on the local server (the ESP8266) with the page number and slide number,
-  the getPageData the calls the native function receiveSerialData which sends the page number and slide number to the Mega2560 via serial, the mega2560 then calls its local function getValues with the page number and slide number, which then sends the required variables 
-  back to the ESP8266 via Serial. The ESP8266 then updates in local copy of the variables and then builds a csv string with the newly updated variables and sends it back to the wepgages JS getData function.
+  When a web page is loaded its calls the JS function getData, which uses an XMLHttpRequest to get the required data, the host sends request to the native callback getPageData running on the local server (the ESP8266) with the page number and slide number,
+  the getPageData calls the native function receiveSerialData which sends the page number and slide number to the Mega2560 via serial, the mega2560 then calls its local function getValues with the page number and slide number, which then sends the required variables 
+  back to the ESP8266 via Serial. The ESP8266 then updates its local copy of the variables and then builds a csv string with the newly updated variables and sends it back to the wepgages JS getData function.
 
   When the user changes a values in the webpage a similar process occours, a JS function named setVal is called with the name of the varible and the value, the varible and value is then sent to the ESP8266 via a XMLHttpRequest to the native callback setValue,
   running on the local server (the ESP8266). The variable name is then converted to an interger index and the index and value is sent to the Mega2560 via Serial which then calls setValues and updates the given variable using a switch statment using the index.
