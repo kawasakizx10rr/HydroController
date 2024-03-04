@@ -71,7 +71,7 @@ void waterLevelControl() {
           sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
         else
           sensor::waterLevel = getWaterHeight();
-        if (sensor::waterLevel >= 0)
+        if (sensor::waterLevel < 0)
           sensor::waterLevel = 0;
         // CHeck if the water level has changed, if so reset the timeout
         if (sensor::waterLevel < previousWaterLevel) {
@@ -161,7 +161,7 @@ uint8_t refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bo
     sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
   else
     sensor::waterLevel = getWaterHeight();
-  if (sensor::waterLevel >= 0)
+  if (sensor::waterLevel < 0)
     sensor::waterLevel = 0;
   // Check to see if the water level is increasing
   if (sensor::waterLevel > a_previousWaterLevel) {
