@@ -58,7 +58,6 @@ void waterLevelControl() {
         digitalWrite(pin::outletPump, !device::relayOffState);
         // timer checking water level is still decresing else bail after 1 minute * drainTimeout
         if (millis() - device::prevMillis >= 60000UL * user::drainTimeout) { // put timer value in settings GUI !
-          digitalWrite(pin::outletPump, device::relayOffState);
           startDraining = false;
           startRefilling = true;
           if (device::globalDebug)
@@ -76,7 +75,6 @@ void waterLevelControl() {
       else {
         if (device::globalDebug)
           Serial.println(F("Draining complete"));
-        digitalWrite(pin::outletPump, device::relayOffState);
         startDraining = false;
         startRefilling = true;
       }
@@ -89,7 +87,6 @@ void waterLevelControl() {
           if (display::touch_x >= startX + 200 && display::touch_x <= startX + 400 && display::touch_y >= startY + 200 && display::touch_y <= startY + 250) { // Cancel
             if (device::globalDebug)
               Serial.println(F("Water drain aborted"));
-            digitalWrite(pin::outletPump, device::relayOffState);
             beep();
             startDraining = false;
             clearPage();
@@ -99,6 +96,7 @@ void waterLevelControl() {
       }
       updateRelayTimers(); 
     }
+    digitalWrite(pin::outletPump, device::relayOffState);
 
     // refill tank when water is low at any date or time
     if (!user::disableDrainAndRefill && !startRefilling) {
@@ -118,6 +116,8 @@ void waterLevelControl() {
 
     // Show a dialog asking the user if they want to abort the refill process while its refilling
     if (startRefilling && continueRefilling != device::CANCEL) {
+      // turn on the inlet water pump
+      digitalWrite(pin::inletPump, !device::relayOffState);
       if (device::globalDebug)
         Serial.println(F("About to show refill abort dialog, and refill tank"));
       const uint16_t waterTarget = user::convertToInches ? user::targetMaxWaterHeightInches : user::targetMaxWaterHeight;
@@ -132,6 +132,7 @@ void waterLevelControl() {
       while (refillTank(device::prevMillis, previousWaterLevel, startRefilling, runRefillDosers)) {
         updateRelayTimers(); 
       }
+      digitalWrite(pin::inletPump, device::relayOffState);
       clearPage();
       display::refreshPage = true;
     }
@@ -152,8 +153,6 @@ bool refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bool&
   }
   
   if (waterLevel < waterTarget && a_startRefilling) {
-    // turn on the inlet water pump
-    digitalWrite(pin::inletPump, !device::relayOffState);
     // timer checking water level is still incresing else bail after 1 minute * drainTimeout
     if (millis() - a_previousMillis >= 60000UL * user::drainTimeout) {
       if (device::globalDebug) {
