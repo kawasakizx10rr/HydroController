@@ -66,7 +66,7 @@ void waterLevelControl() {
           if (device::globalDebug)
             Serial.print(F("Water level unchanged for ")); Serial.print(user::drainTimeout); Serial.println(F(" minutes, turning off the outlet pump"));
         }
-        // Update water height  every 100ms
+        // Update water height every 100ms
         if (millis() - device::sensorPreviousMillis >= 100UL) {
           if (user::heightSensor != user::ETAPE)
             sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
