@@ -620,6 +620,7 @@ void setValue() {
     Serial.print(cmdIndex);
     Serial.print(F(","));
     Serial.print(val);
+    Serial.print(F(","));
   }
   server.send(200, "text/plane", "OK");
 }
@@ -633,6 +634,7 @@ void getPageData() {
   Serial.print(page);
   Serial.print(",");
   Serial.print(slide);
+  Serial.print(F(","));
   receiveSerialData(page, slide);
   // Copy data to a buffer and send to the server
   if (device::globalDebug) {
