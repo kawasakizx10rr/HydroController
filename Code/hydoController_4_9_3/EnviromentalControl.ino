@@ -64,7 +64,7 @@ void waterLevelControl() {
           startDraining = false;
           startRefilling = true;
           if (device::globalDebug)
-            Serial.println(F("Failed to pump any further water out of the tank, quiting drain process"));
+            Serial.print(F("Water level unchanged for ")); Serial.print(user::drainTimeout); Serial.println(F(" minutes, turning off the outlet pump"));
         }
         // Update water height
         if (user::heightSensor != user::ETAPE)
