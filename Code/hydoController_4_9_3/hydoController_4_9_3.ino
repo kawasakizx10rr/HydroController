@@ -609,7 +609,7 @@ enum heightSensors {
   ETAPE,
   VL53L0X
 };
-heightSensors heightSensor = ETAPE;
+heightSensors heightSensor = VL53L0X;
 enum dosingModes {
   PRECISE,
   INCREMENTAL

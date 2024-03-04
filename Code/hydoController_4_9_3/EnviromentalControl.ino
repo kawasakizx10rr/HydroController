@@ -19,7 +19,7 @@ void waterLevelControl() {
   static uint8_t previousDate = 0;
   uint8_t continueRefilling = device::NOT_SET;
   uint8_t continueDraining = device::NOT_SET;
-
+  // wait until the sensors have data
   if (device::sensorsReady) {
     // auto drain and refill tank on set dates and time
     if (!user::disableDrainAndRefill && rtc.day() != previousDate) {
@@ -34,13 +34,11 @@ void waterLevelControl() {
         }
       }
     }
-
     // Show a dialog asking the user if they want to cancel the auto drain process before it starts
     if (startDraining) {
       launchDrainNotification(continueDraining, startDraining);
       display::lastTouchMillis = millis();
     }
-
     // Show a dialog asking the user if they want to abort the drain process while its draining
     if (startDraining && continueDraining != device::CANCEL) {
       if (device::globalDebug)
@@ -48,7 +46,6 @@ void waterLevelControl() {
       const uint16_t waterTarget = user::convertToInches ? user::targetMinWaterHeight / 2.5 : user::targetMinWaterHeight;
       abortMessage(message::cancelDraining, user::convertToInches ? "\"" : "cm", waterTarget, -1, -1, 1, false);
     }
-
     // Start draining the water from the tank
     int16_t previousWaterLevel = sensor::waterLevel;
     device::prevMillis = millis();
@@ -59,9 +56,9 @@ void waterLevelControl() {
         if (!outletPumpIsOn) {
           if (device::globalDebug)
             Serial.println(F("Turning on the outlet pump"));  
+          digitalWrite(pin::outletPump, !device::relayOffState);
           outletPumpIsOn = true;
-        }
-        digitalWrite(pin::outletPump, !device::relayOffState);
+        }      
         // timer checking water level is still decresing else bail after 1 minute * drainTimeout
         if (millis() - device::prevMillis >= 60000UL * user::drainTimeout) { // put timer value in settings GUI !
           startDraining = false;
@@ -69,18 +66,18 @@ void waterLevelControl() {
           if (device::globalDebug)
             Serial.println(F("Failed to pump any further water out of the tank, quiting drain process"));
         }
-
+        // Update water height
         if (user::heightSensor != user::ETAPE)
           sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
         else
           sensor::waterLevel = getWaterHeight();
         if (sensor::waterLevel >= 0)
           sensor::waterLevel = 0;
+        // CHeck if the water level has changed, if so reset the timeout
         if (sensor::waterLevel < previousWaterLevel) {
           previousWaterLevel = sensor::waterLevel;
           device::prevMillis = millis();
-        }
-        
+        }      
       }
       else {
         if (device::globalDebug)
@@ -88,7 +85,6 @@ void waterLevelControl() {
         startDraining = false;
         startRefilling = true;
       }
-
       // cancel button touch event for abort draining dialog
       const uint16_t startX = 166, startY = 166;
       if (tft.touched()) {
@@ -106,6 +102,7 @@ void waterLevelControl() {
       }
       updateRelayTimers(); 
     }
+    // Turn off the outlet pump
     if (outletPumpIsOn) {
       if (device::globalDebug)
         Serial.println(F("Turning off the outlet pump"));  
@@ -124,19 +121,17 @@ void waterLevelControl() {
         previousDelayMillis = millis();
       }
     }
-
     // Show a dialog asking the user if they want to cancel the refill process before it starts
     launchRefillNotification(startRefilling, continueRefilling);
-
-    // Show a dialog asking the user if they want to abort the refill process while its refilling
+    // If the user did not click cancel then start filling the tank
     if (startRefilling && continueRefilling != device::CANCEL) {
-
+      // Show a dialog asking the user if they want to abort the refill process while its refilling
       if (device::globalDebug)
         Serial.println(F("About to show refill abort dialog, and refill tank"));
       const uint16_t waterTarget = user::convertToInches ? user::targetMaxWaterHeightInches : user::targetMaxWaterHeight;
       abortMessage(message::cancelRefilling, user::convertToInches ? "\"" : "cm", waterTarget, -1, -1, 1, false);
       saveLogMessage(2);
-
+      // setup parameters
       previousWaterLevel = sensor::waterLevel;
       display::lastTouchMillis = millis();
       device::prevMillis = millis();
@@ -149,7 +144,7 @@ void waterLevelControl() {
       while (refillTank(device::prevMillis, previousWaterLevel, startRefilling, runRefillDosers, inletPumpIsOn)) {
         updateRelayTimers(); 
       }    
-
+      // Refill complete
       device::dosingTimerHourCounter = 0;
       clearPage();
       display::refreshPage = true;
@@ -161,7 +156,7 @@ void waterLevelControl() {
 uint8_t refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bool& a_startRefilling, bool& a_runRefillDosers, bool& a_inletPumpIsOn) {
   bool rtn = true;
   static bool enabledDosers[6] {false, false, false, false, false, false};
-
+  // Update the water height
   if (user::heightSensor != user::ETAPE)
     sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
   else
@@ -173,7 +168,7 @@ uint8_t refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bo
     a_previousWaterLevel = sensor::waterLevel;
     a_previousMillis = millis();
   }
-
+  // Check if the water height has reached the target or timed out after user::drainTimeout minutes
   if (a_startRefilling) {  
     const float waterLevel = user::convertToInches ? convertToInches(sensor::waterLevel) : sensor::waterLevel;
     const uint16_t waterTarget = user::convertToInches ? user::targetMaxWaterHeightInches : user::targetMaxWaterHeight;
@@ -189,7 +184,7 @@ uint8_t refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bo
     // timer checking water level is still incresing else bail after 1 minute * drainTimeout
     if (millis() - a_previousMillis >= 60000UL * user::drainTimeout) {
       if (device::globalDebug) {
-        Serial.print(F("Water level unchanged for ")); Serial.print(60000UL * user::drainTimeout); Serial.println(F(" minutes, quiting refill process and aborting dosing"));
+        Serial.print(F("Water level unchanged for ")); Serial.print(user::drainTimeout); Serial.println(F(" minutes, quiting refill process and aborting dosing"));
       }
       saveLogMessage(15);
       a_startRefilling = false;
@@ -197,7 +192,6 @@ uint8_t refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bo
       rtn = false;
     }
   }
-
   // touch event - cancel button
   const uint16_t startX = 166, startY = 166;
   if (tft.touched()) {
@@ -219,14 +213,13 @@ uint8_t refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bo
       }
     }
   }
-
+  // Turn off the inlet pump
   if (!a_startRefilling && a_inletPumpIsOn) {
     digitalWrite(pin::inletPump, device::relayOffState);
     if (device::globalDebug)
       Serial.println(F("Turning off the inlet pump"));
     a_inletPumpIsOn = false;
   }
-
   // run dosers
   if (a_runRefillDosers) {
     if (enabledDosers[0] && user::doserOneMode != device::DOSER_OFF)
@@ -248,7 +241,6 @@ uint8_t refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bo
         Serial.println(F("Doising complete"));
     }
   }
-
   return rtn;
 }
 
