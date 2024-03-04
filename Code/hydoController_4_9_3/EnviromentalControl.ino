@@ -69,19 +69,18 @@ void waterLevelControl() {
           if (device::globalDebug)
             Serial.println(F("Failed to pump any further water out of the tank, quiting drain process"));
         }
-        if (device::prevMillis - millis() >= 100UL) {
-          if (user::heightSensor != user::ETAPE)
-            sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
-          else
-            sensor::waterLevel = getWaterHeight();
-          if (sensor::waterLevel >= 0)
-            sensor::waterLevel = 0;
-          if (sensor::waterLevel < previousWaterLevel) {
-            previousWaterLevel = sensor::waterLevel;
-            device::prevMillis = millis();
-          }
+
+        if (user::heightSensor != user::ETAPE)
+          sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
+        else
+          sensor::waterLevel = getWaterHeight();
+        if (sensor::waterLevel >= 0)
+          sensor::waterLevel = 0;
+        if (sensor::waterLevel < previousWaterLevel) {
+          previousWaterLevel = sensor::waterLevel;
           device::prevMillis = millis();
         }
+        
       }
       else {
         if (device::globalDebug)
@@ -162,22 +161,19 @@ void waterLevelControl() {
 uint8_t refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bool& a_startRefilling, bool& a_runRefillDosers, bool& a_inletPumpIsOn) {
   bool rtn = true;
   static bool enabledDosers[6] {false, false, false, false, false, false};
-  
-  if (device::prevMillis - millis() >= 100UL) {
-    if (user::heightSensor != user::ETAPE)
-      sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
-    else
-      sensor::waterLevel = getWaterHeight();
-    if (sensor::waterLevel >= 0)
-      sensor::waterLevel = 0;
-    // Check to see if the water level is increasing
-    if (sensor::waterLevel > a_previousWaterLevel) {
-      a_previousWaterLevel = sensor::waterLevel;
-      a_previousMillis = millis();
-    }
-    device::prevMillis = millis();
+
+  if (user::heightSensor != user::ETAPE)
+    sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
+  else
+    sensor::waterLevel = getWaterHeight();
+  if (sensor::waterLevel >= 0)
+    sensor::waterLevel = 0;
+  // Check to see if the water level is increasing
+  if (sensor::waterLevel > a_previousWaterLevel) {
+    a_previousWaterLevel = sensor::waterLevel;
+    a_previousMillis = millis();
   }
-  
+
   if (a_startRefilling) {  
     const float waterLevel = user::convertToInches ? convertToInches(sensor::waterLevel) : sensor::waterLevel;
     const uint16_t waterTarget = user::convertToInches ? user::targetMaxWaterHeightInches : user::targetMaxWaterHeight;
