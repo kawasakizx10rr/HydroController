@@ -69,16 +69,17 @@ void waterLevelControl() {
           if (device::globalDebug)
             Serial.println(F("Failed to pump any further water out of the tank, quiting drain process"));
         }
-        if (user::heightSensor != user::ETAPE)
-          sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
-        else
-          sensor::waterLevel = getWaterHeight();
-
-        if (sensor::waterLevel >= 0)
-          sensor::waterLevel = 0;
-
-        if (sensor::waterLevel < previousWaterLevel) {
-          previousWaterLevel = sensor::waterLevel;
+        if (device::prevMillis - millis() >= 100UL) {
+          if (user::heightSensor != user::ETAPE)
+            sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
+          else
+            sensor::waterLevel = getWaterHeight();
+          if (sensor::waterLevel >= 0)
+            sensor::waterLevel = 0;
+          if (sensor::waterLevel < previousWaterLevel) {
+            previousWaterLevel = sensor::waterLevel;
+            device::prevMillis = millis();
+          }
           device::prevMillis = millis();
         }
       }
@@ -145,6 +146,7 @@ void waterLevelControl() {
       if (device::globalDebug)
         Serial.println(F("Turning on the inlet pump"));   
       digitalWrite(pin::inletPump, !device::relayOffState);
+      // Refill the tank and run the refill dosers
       while (refillTank(device::prevMillis, previousWaterLevel, startRefilling, runRefillDosers, inletPumpIsOn)) {
         updateRelayTimers(); 
       }    
@@ -160,15 +162,26 @@ void waterLevelControl() {
 uint8_t refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bool& a_startRefilling, bool& a_runRefillDosers, bool& a_inletPumpIsOn) {
   bool rtn = true;
   static bool enabledDosers[6] {false, false, false, false, false, false};
-  if (user::heightSensor != user::ETAPE)
-    sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
-  else
-    sensor::waterLevel = getWaterHeight();
-  float waterLevel = user::convertToInches ? convertToInches(sensor::waterLevel) : sensor::waterLevel; // const
-  const uint16_t waterTarget = user::convertToInches ? user::targetMaxWaterHeightInches : user::targetMaxWaterHeight;
-
-  if (a_startRefilling) {
-    // If its reached the max height then start the dosing pumps 
+  
+  if (device::prevMillis - millis() >= 100UL) {
+    if (user::heightSensor != user::ETAPE)
+      sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
+    else
+      sensor::waterLevel = getWaterHeight();
+    if (sensor::waterLevel >= 0)
+      sensor::waterLevel = 0;
+    // Check to see if the water level is increasing
+    if (sensor::waterLevel > a_previousWaterLevel) {
+      a_previousWaterLevel = sensor::waterLevel;
+      a_previousMillis = millis();
+    }
+    device::prevMillis = millis();
+  }
+  
+  if (a_startRefilling) {  
+    const float waterLevel = user::convertToInches ? convertToInches(sensor::waterLevel) : sensor::waterLevel;
+    const uint16_t waterTarget = user::convertToInches ? user::targetMaxWaterHeightInches : user::targetMaxWaterHeight;
+    // If its reached the max height then stop the inlet pump and start the dosing pumps 
     if (waterLevel >= waterTarget) {
       if (device::globalDebug)
         Serial.println(F("Finished pumping in water, quiting refill process and starting dosing"));
@@ -177,17 +190,12 @@ uint8_t refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bo
       for (uint8_t i = 0; i < user::numberOfDosers; i++)
         enabledDosers[i] = true;
     }
-    // Check to see if the water level is increasing
-    else if (waterLevel > a_previousWaterLevel) {
-      a_previousWaterLevel = waterLevel;
-      a_previousMillis = millis();
-    }
     // timer checking water level is still incresing else bail after 1 minute * drainTimeout
     if (millis() - a_previousMillis >= 60000UL * user::drainTimeout) {
       if (device::globalDebug) {
         Serial.print(F("Water level unchanged for ")); Serial.print(60000UL * user::drainTimeout); Serial.println(F(" minutes, quiting refill process and aborting dosing"));
       }
-      // TO DO : ADD LOG MESSAGE SAYING FAILED TO FILL TANK
+      saveLogMessage(15);
       a_startRefilling = false;
       a_runRefillDosers = false;
       rtn = false;

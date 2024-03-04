@@ -5,6 +5,8 @@
 // add back in esp8266 wifi
 // device::settingsAdjusted = true;
 // water height as float
+// lightErrorNotification
+// co2Notification
 
 //#define USING_HDC1080 // comment this line to use a dht22
 
@@ -280,6 +282,7 @@ const char heaterOnNotification[]       PROGMEM = "Air heater on";      // 11
 const char heaterOffNotification[]      PROGMEM = "Air heater off";     // 12
 const char waterOnNotification[]        PROGMEM = "Water heater on";    // 13
 const char waterOffNotification[]       PROGMEM = "Water heater off";   // 14
+const char refillFailedNotification[]   PROGMEM = "Failed to refill";   // 15
 const char* const notificationsArray[] PROGMEM = {
   bootNotification,
   drainNotification,
@@ -295,7 +298,8 @@ const char* const notificationsArray[] PROGMEM = {
   heaterOnNotification,
   heaterOffNotification,
   waterOnNotification,
-  waterOffNotification
+  waterOffNotification,
+  refillFailedNotification
 };
 const uint8_t maxLogs = 50;
 const uint8_t maxCharsPerLog = 13; // 31 Jan 13:45
