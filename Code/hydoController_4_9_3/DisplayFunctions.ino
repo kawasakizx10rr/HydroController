@@ -5,6 +5,7 @@ void launchCo2Notification(uint8_t& a_continueCo2Control, uint8_t& a_previousDat
   uint32_t continuePreviousMillis = millis();
   tft.backlight(true);
   tft.displayOn(true);
+  display::displayIsOff = false;
   if (device::globalDebug)
     Serial.println(F("About to show co2 cancel timer dialog"));
   saveLogMessage(3);
@@ -69,6 +70,7 @@ void launchDrainNotification(uint8_t& a_continueDraining, bool& a_startDraining)
   uint32_t continuePreviousMillis = millis();
   tft.backlight(true);
   tft.displayOn(true);
+  display::displayIsOff = false;
   if (device::globalDebug)
     Serial.println(F("About to show the drain cancel timer dialog"));
   while (drainingDialogTimer != 0 && a_continueDraining == device::NOT_SET) {
@@ -112,6 +114,7 @@ void launchRefillNotification(bool& a_startRefilling, uint8_t& a_continueRefilli
     uint32_t continuePreviousMillis = millis();
     tft.backlight(true);
     tft.displayOn(true);
+    display::displayIsOff = false;
     if (device::globalDebug)
       Serial.println(F("About to show refill cancel timer dialog"));
     while (refillingDialogTimer != 0 && a_continueRefilling == device::NOT_SET) {
@@ -152,6 +155,7 @@ void launchDosingNotification(const float& a_sensorPercent, const uint8_t& a_dos
   device::continueDosing = device::NOT_SET;
   tft.backlight(true);
   tft.displayOn(true);
+  display::displayIsOff = false;
   while (dosingDialogTimer > 0 && device::continueDosing == device::NOT_SET) {
     displayDosingNotification(dosingDialogTimer, a_sensorPercent, a_dosingMode, refreshDosingNotification);
     if (millis() - continuePreviousMillis >= 1000UL) {

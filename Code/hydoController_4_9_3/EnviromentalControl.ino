@@ -66,18 +66,21 @@ void waterLevelControl() {
           if (device::globalDebug)
             Serial.print(F("Water level unchanged for ")); Serial.print(user::drainTimeout); Serial.println(F(" minutes, turning off the outlet pump"));
         }
-        // Update water height
-        if (user::heightSensor != user::ETAPE)
-          sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
-        else
-          sensor::waterLevel = getWaterHeight();
-        if (sensor::waterLevel < 0)
-          sensor::waterLevel = 0;
-        // CHeck if the water level has changed, if so reset the timeout
-        if (sensor::waterLevel < previousWaterLevel) {
-          previousWaterLevel = sensor::waterLevel;
-          device::prevMillis = millis();
-        }      
+        // Update water height  every 100ms
+        if (millis() - device::sensorPreviousMillis >= 100UL) {
+          if (user::heightSensor != user::ETAPE)
+            sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
+          else
+            sensor::waterLevel = getWaterHeight();
+          if (sensor::waterLevel < 0)
+            sensor::waterLevel = 0;
+          // CHeck if the water level has changed, if so reset the timeout
+          if (sensor::waterLevel < previousWaterLevel) {
+            previousWaterLevel = sensor::waterLevel;
+            device::prevMillis = millis();
+          }      
+          device::sensorPreviousMillis = millis();
+        }
       }
       else {
         if (device::globalDebug)
@@ -156,17 +159,20 @@ void waterLevelControl() {
 uint8_t refillTank(uint32_t& a_previousMillis, int16_t& a_previousWaterLevel, bool& a_startRefilling, bool& a_runRefillDosers, bool& a_inletPumpIsOn) {
   bool rtn = true;
   static bool enabledDosers[6] {false, false, false, false, false, false};
-  // Update the water height
-  if (user::heightSensor != user::ETAPE)
-    sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
-  else
-    sensor::waterLevel = getWaterHeight();
-  if (sensor::waterLevel < 0)
-    sensor::waterLevel = 0;
-  // Check to see if the water level is increasing
-  if (sensor::waterLevel > a_previousWaterLevel) {
-    a_previousWaterLevel = sensor::waterLevel;
-    a_previousMillis = millis();
+  // Update the water height every 100ms
+  if (millis() - device::sensorPreviousMillis >= 100UL) {
+    if (user::heightSensor != user::ETAPE)
+      sensor::waterLevel = sensor::emptyWaterTankDepth - getWaterHeight();
+    else
+      sensor::waterLevel = getWaterHeight();
+    if (sensor::waterLevel < 0)
+      sensor::waterLevel = 0;
+    // Check to see if the water level is increasing
+    if (sensor::waterLevel > a_previousWaterLevel) {
+      a_previousWaterLevel = sensor::waterLevel;
+      a_previousMillis = millis();
+    }
+    device::sensorPreviousMillis = millis();
   }
   // Check if the water height has reached the target or timed out after user::drainTimeout minutes
   if (a_startRefilling) {  
