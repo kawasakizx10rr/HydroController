@@ -1053,40 +1053,41 @@ void timerPage() {
       tft.setFontScale(1);
       tft.setTextColor(RA8875_BLACK, user::backgroundColor);
       tft.print(320, 116, F("Timer settings"));
-      tft.print(120, 180, F("Light On/Auto/Off"));
-      tft.print(120, 230, F("Aux 1 On/Auto/Off"));
-      tft.print(120, 280, F("Aux 2 On/Auto/Off"));
-      tft.print(120, 330, F("Light Cyclic/Timer"));
-      tft.print(120, 380, F("Aux 1 Cyclic/Timer"));
-      tft.print(120, 430, F("Aux 2 Cyclic/Timer"));
+      tft.print(120, 330, F("Light cyclic/24hr timer"));
+      tft.print(120, 380, F("Aux 1 cyclic/24hr timer"));
+      tft.print(120, 430, F("Aux 2 cyclic/24hr timer"));
       infoButton(770, 120);
+      tft.setTextColor(RA8875_BLACK, user::backgroundColor);
     }
-    // Light mode 3-state radio button
-    static uint8_t previousLightState;
-    drawTriStateButton(600, 180, user::lightState, previousLightState);
-    // Light mode 3-state radio button
-    static uint8_t previousRelayOneState;
-    drawTriStateButton(600, 230, user::auxRelayOneState, previousRelayOneState);
-    // Light mode 3-state radio button
-    static uint8_t previousRelayTwoState;
-    drawTriStateButton(600, 280, user::auxRelayTwoState, previousRelayTwoState);
-    //
-    static uint8_t prevLightMode = 0;
-    if (display::refreshPage || user::lightMode != prevLightMode) {   
-      drawRadioButton(620, 330, user::lightMode, true);
+    // Light buttons
+    static uint8_t prevLightMode, previousLightState;    
+    if (display::refreshPage || user::lightState != previousLightState || user::lightMode != prevLightMode) {   
+      tft.fillRect(118, 180, 410, 34, user::backgroundColor);
+      tft.print(120, 180, F("Light on/")); (user::lightMode ?  tft.print(F("cyclic")) : tft.print(F("timer"))); tft.print(F("/off"));
+      drawTriStateButton(600, 180, user::lightState);
+      drawRadioButton(630, 330, user::lightMode, true);
       prevLightMode = user::lightMode;
+      previousLightState = user::lightState;
     }
-    //
-    static uint8_t prevRelayOneMode = 0;
-    if (display::refreshPage || user::auxRelayOneMode != prevRelayOneMode) {   
-      drawRadioButton(620, 380, user::auxRelayOneMode, true);
+    // Aux 1 buttons
+    static uint8_t prevRelayOneMode, previousRelayOneState;
+    if (display::refreshPage || user::auxRelayOneState != previousRelayOneState || user::auxRelayOneMode != prevRelayOneMode) {   
+      tft.fillRect(118, 230, 410, 34, user::backgroundColor);
+      tft.print(120, 230, F("Aux 1 on/")); (user::auxRelayOneMode ?  tft.print(F("cyclic")) : tft.print(F("timer"))); tft.print(F("/off"));
+      drawTriStateButton(600, 230, user::auxRelayOneState);
+      drawRadioButton(630, 380, user::auxRelayOneMode, true);
       prevRelayOneMode = user::auxRelayOneMode;
+      previousRelayOneState = user::auxRelayOneState;
     }
-    //
-    static uint8_t prevRelayTwoMode = 0;
-    if (display::refreshPage || user::auxRelayTwoMode != prevRelayTwoMode) {   
-      drawRadioButton(620, 430, user::auxRelayTwoMode, true);
+    // Aux 2 buttons
+    static uint8_t prevRelayTwoMode, previousRelayTwoState;
+    if (display::refreshPage || user::auxRelayTwoState != previousRelayTwoState || user::auxRelayTwoMode != prevRelayTwoMode) {   
+      tft.fillRect(118, 280, 410, 34, user::backgroundColor);
+      tft.print(120, 280, F("Aux 2 on/")); (user::auxRelayTwoMode ?  tft.print(F("cyclic")) : tft.print(F("timer"))); tft.print(F("/off"));
+      drawTriStateButton(600, 280, user::auxRelayTwoState);
+      drawRadioButton(630, 430, user::auxRelayTwoMode, true);
       prevRelayTwoMode = user::auxRelayTwoMode;
+      previousRelayTwoState = user::auxRelayTwoState;
     }
   }
 }
@@ -1103,8 +1104,8 @@ void fansPage() {
       tft.print(300, 116, F("Fan one target"));
       tft.print(180, 166, F("Min speed"));
       tft.print(506, 166, F("Max speed"));
-      drawUpDownButtons(230, 400, 310, 400, RA8875_BLUE);
-      drawUpDownButtons(570, 400, 650, 400, RA8875_BLUE);
+      drawUpDownButtons(210, 400, 310, 400, RA8875_BLUE);
+      drawUpDownButtons(580, 400, 680, 400, RA8875_BLUE);
       infoButton(770, 120);
     }
     drawTwoValues(285, user::targetMinFanOneSpeed, RA8875_BLACK, 0, 620, user::targetMaxFanOneSpeed, RA8875_BLACK, 0, "%", 50);
@@ -1117,8 +1118,8 @@ void fansPage() {
       tft.print(300, 116, F("Fan two target"));
       tft.print(180, 166, F("Min speed"));
       tft.print(506, 166, F("Max speed"));
-      drawUpDownButtons(230, 400, 310, 400, RA8875_BLUE);
-      drawUpDownButtons(570, 400, 650, 400, RA8875_BLUE);
+      drawUpDownButtons(210, 400, 310, 400, RA8875_BLUE);
+      drawUpDownButtons(580, 400, 680, 400, RA8875_BLUE);
       infoButton(770, 120);
     }
     drawTwoValues(285, user::targetMinFanTwoSpeed, RA8875_BLACK, 0, 620, user::targetMaxFanTwoSpeed, RA8875_BLACK, 0, "%", 50);
@@ -1131,8 +1132,8 @@ void fansPage() {
       tft.print(296, 116, F("Target air temp"));
       tft.print(176, 170, F("Minimum"));
       tft.print(530, 170, F("Maximum"));
-      drawUpDownButtons(230, 400, 310, 400, RA8875_BLUE);
-      drawUpDownButtons(585, 400, 665, 400, RA8875_BLUE);
+      drawUpDownButtons(210, 400, 310, 400, RA8875_BLUE);
+      drawUpDownButtons(580, 400, 680, 400, RA8875_BLUE);
       infoButton(770, 120);
     }
     if (user::convertToF)
@@ -1148,8 +1149,8 @@ void fansPage() {
       tft.print(290, 116, F("Target humidity"));
       tft.print(176, 170, F("Minimum"));
       tft.print(530, 170, F("Maximum"));
-      drawUpDownButtons(230, 400, 310, 400, RA8875_BLUE);
-      drawUpDownButtons(585, 400, 665, 400, RA8875_BLUE);
+      drawUpDownButtons(210, 400, 310, 400, RA8875_BLUE);
+      drawUpDownButtons(580, 400, 680, 400, RA8875_BLUE);
       infoButton(770, 120);
     }
     drawTwoValues(285, user::targetMinHumidity, RA8875_BLACK, 1, 650, user::targetMaxHumidity, RA8875_BLACK, 1, "%", 50);

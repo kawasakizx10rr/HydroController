@@ -1371,22 +1371,22 @@ void settingsTwoPageTouched() {
     }
   }
   else if (display::showEcTdsValue) {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) {  // ec solution down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) {  // ec solution down
       sensor::ecSolution = adjustValue(sensor::ecSolution, -0.1, 1, 10);
       sensor::tdsSolution = convertEcToTds(sensor::ecSolution);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) {  // ec solution up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) {  // ec solution up
       sensor::ecSolution = adjustValue(sensor::ecSolution, 0.1, 0.1, 10);
       sensor::tdsSolution = convertEcToTds(sensor::ecSolution);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) {  // tds solution down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) {  // tds solution down
       sensor::tdsSolution = adjustValue(sensor::tdsSolution, -0.1, 1, 9999);
       sensor::ecSolution = convertTdsToEc(sensor::tdsSolution);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) {  // tds solution up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) {  // tds solution up
       sensor::tdsSolution = adjustValue(sensor::tdsSolution, 0.1, 1, 9999);
       sensor::ecSolution = convertTdsToEc(sensor::tdsSolution);
       device::settingsAdjusted = true;
@@ -1407,19 +1407,19 @@ void settingsTwoPageTouched() {
     }
   }
   else if (display::showPhDownUpValue) {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) {  // ph down solution down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) {  // ph down solution down
       sensor::phDownSolution = adjustValue(sensor::phDownSolution, -0.1, 1, 14);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) {  // ph down solution up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) {  // ph down solution up
       sensor::phDownSolution = adjustValue(sensor::phDownSolution, 0.1, 1, 14);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) {  // ph up solution down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) {  // ph up solution down
       sensor::phUpSolution = adjustValue(sensor::phUpSolution, -0.1, 1, 14);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) {  // ph up solution up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) {  // ph up solution up
       sensor::phUpSolution = adjustValue(sensor::phUpSolution, 0.1, 1, 14);
       device::settingsAdjusted = true;
     }
@@ -1947,19 +1947,19 @@ void settingsFourPageTouched() {
 
 void ecTdsPageTouched() {
   if (user::convertToTds) {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) {  // min target ppm down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) {  // min target ppm down
       user::targetMinTds = adjustValue(user::targetMinTds, -1, 1, user::targetMaxTds - 1);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) {  // min target ppm up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) {  // min target ppm up
       user::targetMinTds = adjustValue(user::targetMinTds, 1, 1, user::targetMaxTds - 1);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) {  // max target ppm down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) {  // max target ppm down
       user::targetMaxTds = adjustValue(user::targetMaxTds, -1, user::targetMinTds + 1, 999);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) {  // max target ppm up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) {  // max target ppm up
       user::targetMaxTds = adjustValue(user::targetMaxTds, 1, user::targetMinTds + 1, 999);
       device::settingsAdjusted = true;
     }
@@ -1972,19 +1972,19 @@ void ecTdsPageTouched() {
     }
   }
   else {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) {  // min target ec down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) {  // min target ec down
       user::targetMinEc = adjustValue(user::targetMinEc, -0.01, 0.1, user::targetMaxEc - 0.1);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) {  // min target ec up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) {  // min target ec up
       user::targetMinEc = adjustValue(user::targetMinEc, 0.01, 0.1, user::targetMaxEc - 0.1);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) {  // max target ec down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) {  // max target ec down
       user::targetMaxEc = adjustValue(user::targetMaxEc, -0.01, user::targetMinEc + 0.1, 99);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) {  // max target ec up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) {  // max target ec up
       user::targetMaxEc = adjustValue(user::targetMaxEc, 0.01, user::targetMinEc + 0.1, 99);
       device::settingsAdjusted = true;
     }
@@ -1999,19 +1999,19 @@ void ecTdsPageTouched() {
 }
 
 void phPageTouched() {
-  if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) { // min target ph down
+  if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) { // min target ph down
     user::targetMinPh = adjustValue(user::targetMinPh, -0.01, 1, user::targetMaxPh - 0.1);
     device::settingsAdjusted = true;
   }
-  else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) { // min target ph up
+  else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) { // min target ph up
     user::targetMinPh = adjustValue(user::targetMinPh, 0.01, 1,  user::targetMaxPh - 0.1);
     device::settingsAdjusted = true;
   }
-  else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) { // max target ph down
+  else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) { // max target ph down
     user::targetMaxPh = adjustValue(user::targetMaxPh, -0.01, user::targetMinPh + 0.1, 14);
     device::settingsAdjusted = true;
   }
-  else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) { // max target ph up
+  else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) { // max target ph up
     user::targetMaxPh = adjustValue(user::targetMaxPh, 0.01, user::targetMinPh + 0.1, 14);
     device::settingsAdjusted = true;
   }
@@ -2026,19 +2026,19 @@ void phPageTouched() {
 
 void co2PageTouched() {
   if (display::co2PageScrollPos == 0) {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) { // targetCo2 down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) { // targetCo2 down
       user::targetCo2 = adjustValue(user::targetCo2, -1, 400, 5000);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) { // targetCo2 up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) { // targetCo2 up
       user::targetCo2 = adjustValue(user::targetCo2, 1, 400, 5000);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) { // co2 tolerance down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) { // co2 tolerance down
       user::co2Offset = adjustValue(user::co2Offset, -1, 0, 100);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) { // co2 tolerance up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) { // co2 tolerance up
       user::co2Offset = adjustValue(user::co2Offset, 1, 0, 100);
       device::settingsAdjusted = true;
     }
@@ -2191,28 +2191,28 @@ void co2PageTouched() {
 
 void waterPageTouched() {
   if (display::waterPageScrollPos == 0) {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) { // min target water level down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) { // min target water level down
       if (user::convertToInches)
         user::targetMinWaterHeightInches = adjustValue(user::targetMinWaterHeightInches, -1, 1, user::targetMaxWaterHeightInches - 1);
       else
         user::targetMinWaterHeight = adjustValue(user::targetMinWaterHeight, -1, 1, user::targetMaxWaterHeight - 1);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) { // min target water level up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) { // min target water level up
       if (user::convertToInches)
         user::targetMinWaterHeightInches = adjustValue(user::targetMinWaterHeightInches, 1, 1, user::targetMaxWaterHeightInches - 1);
       else
         user::targetMinWaterHeight = adjustValue(user::targetMinWaterHeight, 1, 1, user::targetMaxWaterHeight - 1);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) { // max target water level down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) { // max target water level down
       if (user::convertToInches)
         user::targetMaxWaterHeightInches = adjustValue(user::targetMaxWaterHeightInches, -1, user::targetMinWaterHeightInches + 1, 99);
       else
         user::targetMaxWaterHeight = adjustValue(user::targetMaxWaterHeight, -1, user::targetMinWaterHeight + 1, 999);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) { // max target water level up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) { // max target water level up
       if (user::convertToInches)
         user::targetMaxWaterHeightInches = adjustValue(user::targetMaxWaterHeightInches, 1, user::targetMinWaterHeightInches + 1, 99);
       else
@@ -2228,28 +2228,28 @@ void waterPageTouched() {
     }
   }
   else if (display::waterPageScrollPos == 1) {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) { // min target temperature down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) { // min target temperature down
       if (user::convertToF)
         user::targetMinWaterTempF = adjustValue(user::targetMinWaterTempF, -0.1, 1, user::targetMaxWaterTempF - 0.1);
       else
         user::targetMinWaterTemp = adjustValue(user::targetMinWaterTemp, -0.1, 1, user::targetMaxWaterTemp - 0.1);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) { // min target temperature up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) { // min target temperature up
       if (user::convertToF)
         user::targetMinWaterTempF = adjustValue(user::targetMinWaterTempF, 0.1, 1, user::targetMaxWaterTempF - 0.1);
       else
         user::targetMinWaterTemp = adjustValue(user::targetMinWaterTemp, 0.1, 1, user::targetMaxWaterTemp - 0.1);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) { // max target temperature down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) { // max target temperature down
       if (user::convertToF)
         user::targetMaxWaterTempF = adjustValue(user::targetMaxWaterTempF, -0.1, user::targetMinWaterTempF + 0.1, 210);
       else
         user::targetMaxWaterTemp = adjustValue(user::targetMaxWaterTemp, -0.1, user::targetMinWaterTemp + 0.1, 99);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) { // max target temperature up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) { // max target temperature up
       if (user::convertToF)
         user::targetMaxWaterTempF = adjustValue(user::targetMaxWaterTempF, 0.1, user::targetMinWaterTempF + 0.1, 210);
       else
@@ -2272,7 +2272,7 @@ void waterPageTouched() {
         user::waterTankLength = adjustValue(user::waterTankLength, -1, 1, 999);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) { // water tank length up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) { // water tank length up
       if (user::convertToInches)
         user::waterTankLengthInches = adjustValue(user::waterTankLengthInches, 1, 1, 999);
       else
@@ -2633,7 +2633,7 @@ void dosersPageTouched() {
 
 void timerPagedTouched() {
   if (display::timerPagePageScrollPos == 0) {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) { // on time down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) { // on time down
       beep();
       if (user::lightMode == 0) {
         user::lightOnDuration = adjustValue(user::lightOnDuration, -1, 1, 1440);
@@ -2652,7 +2652,7 @@ void timerPagedTouched() {
       }
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) { // on time up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) { // on time up
       beep();
       if (user::lightMode == 0) {
         user::lightOnDuration = adjustValue(user::lightOnDuration, 1, 1, 1440);
@@ -2671,7 +2671,7 @@ void timerPagedTouched() {
       }
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) { // off time down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) { // off time down
       beep();
       if (user::lightMode == 0) {
         user::lightOffDuration = adjustValue(user::lightOffDuration, -1, 1, 1440);
@@ -2690,7 +2690,7 @@ void timerPagedTouched() {
       }
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) { // off time up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) { // off time up
       beep();
       if (user::lightMode == 0) {
         user::lightOffDuration = adjustValue(user::lightOffDuration, 1, 1, 1440);
@@ -2719,7 +2719,7 @@ void timerPagedTouched() {
   }
   // ====================================================================================================================================================
   else if (display::timerPagePageScrollPos == 1) {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) { // on time down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) { // on time down
       beep();
       if (user::auxRelayOneMode == 0) {
         user::auxRelayOneOnDuration = adjustValue(user::auxRelayOneOnDuration, -1, 1, 1440);
@@ -2738,7 +2738,7 @@ void timerPagedTouched() {
       }
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) { // on time up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) { // on time up
       beep();
       if (user::auxRelayOneMode == 0) {
         user::auxRelayOneOnDuration = adjustValue(user::auxRelayOneOnDuration, 1, 1, 1440);
@@ -2757,7 +2757,7 @@ void timerPagedTouched() {
       }
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) { // off time down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) { // off time down
       beep();
       if (user::auxRelayOneMode == 0) {
         user::auxRelayOneOffDuration = adjustValue(user::auxRelayOneOffDuration, -1, 1, 1440);
@@ -2776,7 +2776,7 @@ void timerPagedTouched() {
       }
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) { // off time up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) { // off time up
       beep();
       if (user::auxRelayOneMode == 0) {
         user::auxRelayOneOffDuration = adjustValue(user::auxRelayOneOffDuration, 1, 1, 1440);
@@ -2805,7 +2805,7 @@ void timerPagedTouched() {
   }
   // ====================================================================================================================================================
   else if (display::timerPagePageScrollPos == 2) {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) { // on time down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) { // on time down
       beep();
       if (user::auxRelayTwoMode == 0) {
         user::auxRelayTwoOnDuration = adjustValue(user::auxRelayTwoOnDuration, -1, 1, 1440); // max is 32760
@@ -2824,7 +2824,7 @@ void timerPagedTouched() {
       }
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) { // on time up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) { // on time up
       beep();
       if (user::auxRelayTwoMode == 0) {
         user::auxRelayTwoOnDuration = adjustValue(user::auxRelayTwoOnDuration, 1, 1, 1440);
@@ -2843,7 +2843,7 @@ void timerPagedTouched() {
       }
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) { // off time down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) { // off time down
       beep();
       if (user::auxRelayTwoMode == 0) {
         user::auxRelayTwoOffDuration = adjustValue(user::auxRelayTwoOffDuration, -1, 1, 1440);
@@ -2862,7 +2862,7 @@ void timerPagedTouched() {
       }
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) { // off time up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) { // off time up
       beep();
       if (user::auxRelayTwoMode == 0) {
         user::auxRelayTwoOffDuration = adjustValue(user::auxRelayTwoOffDuration, 1, 1, 1440);
@@ -2924,16 +2924,15 @@ void timerPagedTouched() {
       device::settingsAdjusted = true;
     }
 
-    else if (display::touch_x >= 620 && display::touch_x <= 700 && display::touch_y >= 330 && display::touch_y <= 370) { // light mode cyclic
+    else if (display::touch_x >= 630 && display::touch_x <= 710 && display::touch_y >= 330 && display::touch_y <= 370) { // light mode cyclic
       beep();
       device::lightDuration = 0;
       device::lightOn = true;
       digitalWrite(pin::light, !device::relayOffState);
       user::lightMode = 0;
-      display::refreshPage = true;
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 700 && display::touch_x <= 780 && display::touch_y >= 330 && display::touch_y <= 370) { // light mode timer
+    else if (display::touch_x >= 710 && display::touch_x <= 790 && display::touch_y >= 330 && display::touch_y <= 370) { // light mode timer
       beep();
       if (user::lightState == device::CONST_ON) {
         digitalWrite(pin::light, !device::relayOffState);
@@ -2955,7 +2954,6 @@ void timerPagedTouched() {
         }
       }
       user::lightMode = 1;
-      display::refreshPage = true;
       device::settingsAdjusted = true;
     }
     // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -2991,16 +2989,15 @@ void timerPagedTouched() {
       digitalWrite(pin::auxRelayOne, device::relayOffState);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 620 && display::touch_x <= 700 && display::touch_y >= 380 && display::touch_y <= 420) { // mode cyclic
+    else if (display::touch_x >= 630 && display::touch_x <= 710 && display::touch_y >= 380 && display::touch_y <= 420) { // mode cyclic
       beep();
       device::auxRelayOneDuration = 0;
       device::auxRelayOneOn = true;
       digitalWrite(pin::auxRelayOne, !device::relayOffState);
       user::auxRelayOneMode = 0;
-      display::refreshPage = true;
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 700 && display::touch_x <= 780 && display::touch_y >= 380 && display::touch_y <= 420) { // mode timer
+    else if (display::touch_x >= 710 && display::touch_x <= 790 && display::touch_y >= 380 && display::touch_y <= 420) { // mode timer
       beep();
       if (user::auxRelayOneState == device::CONST_ON) {
         digitalWrite(pin::auxRelayOne, !device::relayOffState);
@@ -3022,7 +3019,6 @@ void timerPagedTouched() {
         }
       }
       user::auxRelayOneMode = 1;
-      display::refreshPage = true;
       device::settingsAdjusted = true;
     }
     // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -3058,16 +3054,15 @@ void timerPagedTouched() {
       digitalWrite(pin::auxRelayTwo, device::relayOffState);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 580 && display::touch_x <= 660 && display::touch_y >= 430 && display::touch_y <= 470) { // mode cyclic
+    else if (display::touch_x >= 630 && display::touch_x <= 710 && display::touch_y >= 430 && display::touch_y <= 470) { // mode cyclic
       beep();
       device::auxRelayTwoDuration = 0;
       device::auxRelayTwoOn = true;
       digitalWrite(pin::auxRelayTwo, !device::relayOffState);
       user::auxRelayTwoMode = 0;
-      display::refreshPage = true;
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 660 && display::touch_x <= 740 && display::touch_y >= 430 && display::touch_y <= 470) { // mode timer
+    else if (display::touch_x >= 710 && display::touch_x <= 790 && display::touch_y >= 430 && display::touch_y <= 470) { // mode timer
       beep();
       if (user::auxRelayTwoState == device::CONST_ON) {
         digitalWrite(pin::auxRelayTwo, !device::relayOffState);
@@ -3089,7 +3084,6 @@ void timerPagedTouched() {
         }
       }
       user::auxRelayTwoMode = 1;
-      display::refreshPage = true;
       device::settingsAdjusted = true;
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
@@ -3106,14 +3100,14 @@ void fansPageTouched() {
   if (display::fansPage == 0) {
     if (user::fanOneFixedSpeed) {
       // fan one min speed down AND fan one max speed down
-      if ((display::touch_x >= 190 && display::touch_x <= 250 && display::touch_y >= 350 && display::touch_y <= 420) || (display::touch_x >= 530 && display::touch_x <= 590 && display::touch_y >= 350 && display::touch_y <= 420))  {
+      if ((display::touch_x >= 210 && display::touch_x <= 260 && display::touch_y >= 400 && display::touch_y <= 450) || (display::touch_x >= 580 && display::touch_x <= 630 && display::touch_y >= 400 && display::touch_y <= 450))  {
         user::targetMinFanOneSpeed = adjustValue(user::targetMinFanOneSpeed, -1, 0, 100);
         user::targetMaxFanOneSpeed = adjustValue(user::targetMaxFanOneSpeed, -1, 0, 100);
         sendToSlave('Z', user::targetMinFanOneSpeed);
         device::settingsAdjusted = true;
       }
       // fan one min speed up AND fan one max speed up if either is presed
-      else if ((display::touch_x >= 270 && display::touch_x <= 330 && display::touch_y >= 350 && display::touch_y <= 420) || (display::touch_x >= 610 && display::touch_x <= 670 && display::touch_y >= 350 && display::touch_y <= 420)) {
+      else if ((display::touch_x >= 310 && display::touch_x <= 360 && display::touch_y >= 400 && display::touch_y <= 450) || (display::touch_x >= 680 && display::touch_x <= 730 && display::touch_y >= 400 && display::touch_y <= 450)) {
         user::targetMinFanOneSpeed = adjustValue(user::targetMinFanOneSpeed, 1, 0, 100);
         user::targetMaxFanOneSpeed = adjustValue(user::targetMaxFanOneSpeed, 1, 0, 100);
         sendToSlave('Z', user::targetMinFanOneSpeed);
@@ -3121,19 +3115,19 @@ void fansPageTouched() {
       }
     }
     else {
-      if (display::touch_x >= 190 && display::touch_x <= 250 && display::touch_y >= 350 && display::touch_y <= 420) { // fan one min speed down
+      if (display::touch_x >= 210 && display::touch_x <= 260 && display::touch_y >= 400 && display::touch_y <= 450) { // fan one min speed down
         user::targetMinFanOneSpeed = adjustValue(user::targetMinFanOneSpeed, -1, 0, 100);
         device::settingsAdjusted = true;
       }
-      else if (display::touch_x >= 270 && display::touch_x <= 330 && display::touch_y >= 350 && display::touch_y <= 420) { // fan one min speed up
+      else if (display::touch_x >= 310 && display::touch_x <= 360 && display::touch_y >= 400 && display::touch_y <= 450) { // fan one min speed up
         user::targetMinFanOneSpeed = adjustValue(user::targetMinFanOneSpeed, 1, 0, user::targetMaxFanOneSpeed - 1);
         device::settingsAdjusted = true;
       }
-      else if (display::touch_x >= 530 && display::touch_x <= 590 && display::touch_y >= 350 && display::touch_y <= 420) { // fan one max speed down
+      else if (display::touch_x >= 580 && display::touch_x <= 630 && display::touch_y >= 400 && display::touch_y <= 450) { // fan one max speed down
         user::targetMaxFanOneSpeed = adjustValue(user::targetMaxFanOneSpeed, -1, user::targetMinFanOneSpeed + 1, 100);
         device::settingsAdjusted = true;
       }
-      else if (display::touch_x >= 610 && display::touch_x <= 670 && display::touch_y >= 350 && display::touch_y <= 420) { // fan one max speed up
+      else if (display::touch_x >= 680 && display::touch_x <= 730 && display::touch_y >= 400 && display::touch_y <= 450) { // fan one max speed up
         user::targetMaxFanOneSpeed = adjustValue(user::targetMaxFanOneSpeed, 1, 0, 100);
         device::settingsAdjusted = true;
       }
@@ -3149,14 +3143,14 @@ void fansPageTouched() {
   else if (display::fansPage == 1) {
     if (user::fanTwoFixedSpeed) {
       // fan two min speed down AND fan two max speed down if either is presed
-      if ((display::touch_x >= 190 && display::touch_x <= 250 && display::touch_y >= 350 && display::touch_y <= 420) || (display::touch_x >= 530 && display::touch_x <= 590 && display::touch_y >= 350 && display::touch_y <= 420))  {
+      if ((display::touch_x >= 210 && display::touch_x <= 260 && display::touch_y >= 400 && display::touch_y <= 450) || (display::touch_x >= 580 && display::touch_x <= 630 && display::touch_y >= 400 && display::touch_y <= 450))  {
         user::targetMinFanTwoSpeed = adjustValue(user::targetMinFanTwoSpeed, -1, 0, 100);
         user::targetMaxFanTwoSpeed = adjustValue(user::targetMaxFanTwoSpeed, -1, 0, 100);
         sendToSlave('X', user::targetMinFanTwoSpeed);
         device::settingsAdjusted = true;
       }
       // fan two min speed up AND fan two max speed up if either is presed
-      else if ((display::touch_x >= 270 && display::touch_x <= 330 && display::touch_y >= 350 && display::touch_y <= 420) || (display::touch_x >= 610 && display::touch_x <= 670 && display::touch_y >= 350 && display::touch_y <= 420)) {
+      else if ((display::touch_x >= 310 && display::touch_x <= 360 && display::touch_y >= 400 && display::touch_y <= 450) || (display::touch_x >= 680 && display::touch_x <= 730 && display::touch_y >= 400 && display::touch_y <= 450)) {
         user::targetMinFanTwoSpeed = adjustValue(user::targetMinFanTwoSpeed, 1, 0, 100);
         user::targetMaxFanTwoSpeed = adjustValue(user::targetMaxFanTwoSpeed, 1, 0, 100);
         sendToSlave('X', user::targetMinFanTwoSpeed);
@@ -3164,19 +3158,19 @@ void fansPageTouched() {
       }
     }
     else {
-      if (display::touch_x >= 190 && display::touch_x <= 250 && display::touch_y >= 350 && display::touch_y <= 420) { // fan two min speed down
+      if (display::touch_x >= 210 && display::touch_x <= 260 && display::touch_y >= 400 && display::touch_y <= 450) { // fan two min speed down
         user::targetMinFanTwoSpeed = adjustValue(user::targetMinFanTwoSpeed, -1, 0, 100);
         device::settingsAdjusted = true;
       }
-      else if (display::touch_x >= 270 && display::touch_x <= 330 && display::touch_y >= 350 && display::touch_y <= 420) { // fan two min speed up
+      else if (display::touch_x >= 310 && display::touch_x <= 360 && display::touch_y >= 400 && display::touch_y <= 450) { // fan two min speed up
         user::targetMinFanTwoSpeed = adjustValue(user::targetMinFanTwoSpeed, 1, 0, user::targetMaxFanTwoSpeed - 1);
         device::settingsAdjusted = true;
       }
-      else if (display::touch_x >= 530 && display::touch_x <= 590 && display::touch_y >= 350 && display::touch_y <= 420) { // fan two max speed down
+      else if (display::touch_x >= 580 && display::touch_x <= 630 && display::touch_y >= 400 && display::touch_y <= 450) { // fan two max speed down
         user::targetMaxFanTwoSpeed = adjustValue(user::targetMaxFanTwoSpeed, -1, user::targetMinFanTwoSpeed + 1, 100);
         device::settingsAdjusted = true;
       }
-      else if (display::touch_x >= 610 && display::touch_x <= 670 && display::touch_y >= 350 && display::touch_y <= 420) { // fan two max speed up
+      else if (display::touch_x >= 680 && display::touch_x <= 730 && display::touch_y >= 400 && display::touch_y <= 450) { // fan two max speed up
         user::targetMaxFanTwoSpeed = adjustValue(user::targetMaxFanTwoSpeed, 1, 0, 100);
         device::settingsAdjusted = true;
       }
@@ -3190,28 +3184,28 @@ void fansPageTouched() {
     }
   }
   else if (display::fansPage == 2) {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) { // min target air temp down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) { // min target air temp down
       if (user::convertToF)
         user::targetMinAirTempF = adjustValue(user::targetMinAirTempF, -0.1, 1, 210);
       else
         user::targetMinAirTemp = adjustValue(user::targetMinAirTemp, -0.1, 1, 99);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) { // min target air temp up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) { // min target air temp up
       if (user::convertToF)
         user::targetMinAirTempF = adjustValue(user::targetMinAirTempF, 0.1, 1, user::targetMaxAirTempF - 1);
       else
         user::targetMinAirTemp = adjustValue(user::targetMinAirTemp, 0.1, 1, user::targetMaxAirTemp - 1);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) { // max target air temp down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) { // max target air temp down
       if (user::convertToF)
         user::targetMaxAirTempF = adjustValue(user::targetMaxAirTempF, -0.1, user::targetMinAirTempF + 1, 210);
       else
         user::targetMaxAirTemp = adjustValue(user::targetMaxAirTemp, -0.1, user::targetMinAirTemp + 1, 99);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) { // max target air temp up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) { // max target air temp up
       if (user::convertToF)
         user::targetMaxAirTempF = adjustValue(user::targetMaxAirTempF, 0.1, 0, 210);
       else
@@ -3227,19 +3221,19 @@ void fansPageTouched() {
     }
   }
   else if (display::fansPage == 3) {
-    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 435) { // min target humidity down
+    if (display::touch_x >= 195 && display::touch_x <= 245 && display::touch_y >= 385 && display::touch_y <= 445) { // min target humidity down
       user::targetMinHumidity = adjustValue(user::targetMinHumidity, -0.1, 1, 100);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 435) { // min target humidity up
+    else if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 385 && display::touch_y <= 445) { // min target humidity up
       user::targetMinHumidity = adjustValue(user::targetMinHumidity, 0.1, 1, user::targetMaxHumidity - 1);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 435) { // max target humidity down
+    else if (display::touch_x >= 565 && display::touch_x <= 615 && display::touch_y >= 385 && display::touch_y <= 445) { // max target humidity down
       user::targetMaxHumidity = adjustValue(user::targetMaxHumidity, -0.1, user::targetMinHumidity + 1, 100);
       device::settingsAdjusted = true;
     }
-    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 435) { // max target humidity up
+    else if (display::touch_x >= 665 && display::touch_x <= 715 && display::touch_y >= 385 && display::touch_y <= 445) { // max target humidity up
       user::targetMaxHumidity = adjustValue(user::targetMaxHumidity, 0.1, 1, 100);
       device::settingsAdjusted = true;
     }

@@ -1,12 +1,13 @@
 /*
-  Version V4.9.3 Updated on the 18th Feb 2024
+  Version V4.9.3 Updated on the 06th Mar 2024
 */
 // TO DO: add user setup guide for new device / reset
 // add back in esp8266 wifi
 // device::settingsAdjusted = true;
-// water height as float
+// water height as float ?
 // lightErrorNotification
-// co2Notification
+
+
 
 //#define USING_HDC1080 // comment this line to use a dht22
 
@@ -209,7 +210,7 @@ const char fanPage5Info[]               PROGMEM = "Set the fan modes. The air te
 const char warningPageInfo[]            PROGMEM = "Set the error margin for each environmental reading. When the given reading is outside the target +/- the error margin, a critical error is raised.";
 const char maxminsPageInfo[]            PROGMEM = "View the environmental readings history. Note the maximum and minimum readings are shared between save profiles.";
 const char profilesPageInfo[]           PROGMEM = "Select the user profile to load. You can save and load the current settings to any of the profiles., and rename each of the profile.";
-// settings Info[]
+// settings Info
 const char calDoserPageInfo[]           PROGMEM = "Set the PWM for each of the dosing pumps, the aim is to achive 1 milliliter per second. You can also adjust the pumps voltage on the PCB if required."; 
 const char rtcTimePageInfo[]            PROGMEM = "Set the date and time for the clock. Note the time is a 24 hour format and the date is a dd-mm-yyyy format.";
 const char displayTimeoutPageInfo[]     PROGMEM = "Set the display timeout interval in minutes, the display will be turned off when it has not been touched for the given interval.";
@@ -226,6 +227,7 @@ const char wifiPassPageInfo[]           PROGMEM = "Set the password for the WiFi
 const char auxRelayTimerPageInfo[]      PROGMEM = "Set the duration for relays cyclic timer. When set to auto, the relay will turn on and off every duration, else it can be set to be permanently on or off.";
 const char selectBrightnessInfo[]       PROGMEM = "Set the display brightness in precent. Please avoid setting the display brighter than required, as it can impact the lifetime of the display.";
 const char pleaseWait[]                 PROGMEM = "Please wait a few seconds while the calibration is preformed.";
+const char timerSettingsPageInfo[]      PROGMEM = "Set the relays timer mode, this can be either cyclic ot 24-hr timer, and the relays state which can be either on, off or timer.";
 const char* const infoMessageArray[] PROGMEM = {
   ecPageInfo,                    // 0
   tdsPageInfo,                   // 1
@@ -315,7 +317,7 @@ bool globalDebug = true;
 float currentDoserMls = 0;
 uint16_t profileEEPROMSize = 0;
 uint16_t systemEEPROMSize = 0;
-const char* versionNumber = "4.9.4";
+const char* versionNumber = "4.9.3";
 bool relayOffState = HIGH;
 bool disableVL53L0X = false;
 const uint8_t unoAddress = 9;

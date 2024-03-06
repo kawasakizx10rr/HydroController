@@ -1243,27 +1243,24 @@ void drawTimer(const uint16_t a_x, const uint16_t a_y, uint8_t& a_previousOnTime
   }
 }
 
-void drawTriStateButton(const uint16_t a_x, const uint16_t a_y, const uint8_t& a_value, uint8_t& a_previousValue) {
-  if (display::refreshPage || a_value != a_previousValue) {
-    tft.fillRoundRect(a_x-2, a_y-2, 184, 44, 5, RA8875_BLACK);
-    if (a_value == 0) { // auto
-      tft.fillRoundRect(a_x, a_y, 60, 40, 5, display::RA8875_DARKGREY);
-      tft.fillRoundRect(a_x+60, a_y, 60, 40, 5, RA8875_GREEN);
-      tft.fillRoundRect(a_x+120, a_y, 60, 40, 5, display::RA8875_DARKGREY);
-    }
-    else if (a_value == 1) { // on
-      tft.fillRoundRect(a_x, a_y, 60, 40, 5, RA8875_GREEN);
-      tft.fillRoundRect(a_x+60, a_y, 60, 40, 5, display::RA8875_DARKGREY);
-      tft.fillRoundRect(a_x+120, a_y, 60, 40, 5, display::RA8875_DARKGREY);
-      tft.drawLine(a_x+120, a_y, a_x+120, a_y+40, RA8875_BLACK);
-    }
-    else { // off
-      tft.fillRoundRect(a_x, a_y, 60, 40, 5, display::RA8875_DARKGREY);
-      tft.fillRoundRect(a_x+60, a_y, 60, 40, 5, display::RA8875_DARKGREY);
-      tft.fillRoundRect(a_x+120, a_y, 60, 40, 5, RA8875_RED);
-      tft.drawLine(a_x+60, a_y, a_x+60, a_y+40, RA8875_BLACK);
-    }
-    a_previousValue = a_value;
+void drawTriStateButton(const uint16_t a_x, const uint16_t a_y, const uint8_t& a_value) {
+  tft.fillRoundRect(a_x-2, a_y-2, 184, 44, 5, RA8875_BLACK);
+  if (a_value == 0) { // auto
+    tft.fillRoundRect(a_x, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+    tft.fillRoundRect(a_x+60, a_y, 60, 40, 5, RA8875_GREEN);
+    tft.fillRoundRect(a_x+120, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+  }
+  else if (a_value == 1) { // on
+    tft.fillRoundRect(a_x, a_y, 60, 40, 5, RA8875_GREEN);
+    tft.fillRoundRect(a_x+60, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+    tft.fillRoundRect(a_x+120, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+    tft.drawLine(a_x+120, a_y, a_x+120, a_y+40, RA8875_BLACK);
+  }
+  else { // off
+    tft.fillRoundRect(a_x, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+    tft.fillRoundRect(a_x+60, a_y, 60, 40, 5, display::RA8875_DARKGREY);
+    tft.fillRoundRect(a_x+120, a_y, 60, 40, 5, RA8875_RED);
+    tft.drawLine(a_x+60, a_y, a_x+60, a_y+40, RA8875_BLACK);
   }
 }
 

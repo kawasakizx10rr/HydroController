@@ -762,7 +762,7 @@ bool i2cScanner(const uint8_t a_address) {
   if (device::globalDebug) {
     Serial.print(F("Scanning for I2C address 0x"));
     if( a_address < 16)
-     Serial.print(F("0");
+     Serial.print(F("0"));
     Serial.print(a_address, HEX); Serial.print(F("..."));
   }
   Wire.begin();
