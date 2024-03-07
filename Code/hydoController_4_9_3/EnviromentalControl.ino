@@ -622,7 +622,7 @@ void airControl() {
 
     float averageTemp = averageShortToFltArray(sensor::fanTemperatureArray, sensor::fanArrayPos);
     sensor::airStates tempAirState = sensor::IS_SAME;
-    if (hasChanged(airTemp, averageTemp, 1)) {
+    if (abs(airTemp - averageTemp) >=sensor:: airHysteresis) {
       //Serial.print(F("Has changed, tempAirState: "));
       if (airTemp < averageTemp)
         tempAirState = sensor::IS_FALLING;
@@ -632,7 +632,7 @@ void airControl() {
     }
     float averageHum = averageShortToFltArray(sensor::fanHumidityArray, sensor::fanArrayPos);
     sensor::airStates humAirState = sensor::IS_SAME;
-    if (hasChanged(sensor::humidity, averageHum, 1)) {
+    if (abs(sensor::humidity - averageHum) >= sensor::airHysteresis)  {
       //Serial.print(F("Has changed, humAirState: "));
       if (sensor::humidity < averageHum)
         humAirState = sensor::IS_FALLING;

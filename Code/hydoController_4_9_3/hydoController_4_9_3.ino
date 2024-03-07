@@ -629,6 +629,7 @@ uint16_t ldr = 0;
 float waterTemp = 0;
 float airTemp = 0;
 float humidity = 0;
+float airHysteresis = 0.1;
 float waterLevel = 0;
 float waterVolumeLtrs = 0;
 float emptyWaterTankDepth = 0;
