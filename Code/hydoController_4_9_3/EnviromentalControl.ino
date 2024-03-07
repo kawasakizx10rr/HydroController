@@ -5,7 +5,7 @@ void envriomentalControl() {
     rtc.refresh();
     previousMillis = millis();
   }
-  relayTimers();
+  relayTimers("");
   waterLevelControl();
   waterTemperatureControl();
   co2Control();
@@ -105,7 +105,7 @@ void waterLevelControl() {
           }
         }
       }
-      updateRelayTimers(); 
+      updateRelayTimers("waterLevelControl"); 
     }
     // Turn off the outlet pump
     if (outletPumpIsOn) {
@@ -149,7 +149,7 @@ void waterLevelControl() {
       digitalWrite(pin::inletPump, !device::relayOffState);
       // Refill the tank and run the refill dosers
       while (refillTank(device::prevMillis, previousWaterLevel, startRefilling, runRefillDosers, inletPumpIsOn)) {
-        updateRelayTimers(); 
+        updateRelayTimers("waterLevelControl"); 
       }    
       // Refill complete
       device::dosingTimerHourCounter = 0;
@@ -288,7 +288,7 @@ void waterTemperatureControl() {
 }
 
 // Control the external lighting
-void relayTimers() {
+void relayTimers(const char* a_caller) {
   if (user::lightState == device::AUTO_TIMER) { 
     if (user::lightMode == 0) {
         static uint8_t prevMinute = 69;
@@ -376,6 +376,9 @@ void relayTimers() {
         saveLogMessage(5);
       }
     }
+    if (a_caller != "") {
+       Serial.print(F("\n------------")); Serial.print(a_caller); Serial.println(F("------------"));
+    }
   }
   // ========================================================================================================
   if (user::auxRelayTwoState == device::AUTO_TIMER) { 
@@ -438,11 +441,11 @@ bool restartTimer(const uint8_t a_onTimeMin, const uint8_t a_onTimeHour, const u
 }
 
 // called in while loops
-void updateRelayTimers() {
+void updateRelayTimers(const char* a_caller) {
   static uint32_t previousMillis = millis();
   if (millis() - previousMillis >= 1000UL) {
     rtc.refresh();
-    relayTimers();
+    relayTimers(a_caller);
     previousMillis = millis();
   }  
 }
@@ -504,7 +507,7 @@ void co2Control() {
         }
         device::prevMillis = millis();
       }
-      updateRelayTimers();
+      updateRelayTimers("co2Control");
     }
     digitalWrite(pin::co2Solenoid, device::relayOffState);
   }
@@ -1075,7 +1078,7 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
         }
       }
     }
-    updateRelayTimers();
+    updateRelayTimers("waterEcPhControl");
   }
 }
 
