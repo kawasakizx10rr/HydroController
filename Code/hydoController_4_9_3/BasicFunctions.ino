@@ -177,8 +177,8 @@ void initializeDevice() {
   device::previousDosingHour = rtc.hour();
 
     // Start the AC fans
-  device::fanOneSpeed = user::targetMinFanOneSpeed;
-  device::fanTwoSpeed = user::targetMinFanTwoSpeed;
+  device::fanOneSpeed = user::targetMaxFanOneSpeed;
+  device::fanTwoSpeed = user::targetMaxFanTwoSpeed;
   sendToSlave('Z', device::fanOneSpeed);
   sendToSlave('X', device::fanTwoSpeed);
   // If the LED is disabled send cmd to Slave
