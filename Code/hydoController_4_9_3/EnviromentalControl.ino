@@ -289,13 +289,17 @@ void waterTemperatureControl() {
 
 // Control the external lighting
 void relayTimers(const char* a_caller) {
+  bool printedHeader = false;
   if (user::lightState == device::AUTO_TIMER) { 
     if (user::lightMode == 0) {
         static uint8_t prevMinute = 69;
         if (rtc.minute() != prevMinute) {
           device::lightDuration++;
-          if (device::globalDebug) {  
-            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
+          if (device::globalDebug) { 
+            if (!printedHeader) {
+              Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
+              printedHeader = true;
+            } 
             Serial.print(F("Light ")); Serial.print(device::lightOn ? F("on") : F("off")); Serial.print(F(" duration (mins): ")); Serial.println(device::lightDuration);
           }
           prevMinute = rtc.minute();
@@ -318,15 +322,25 @@ void relayTimers(const char* a_caller) {
     else {
       if (user::lightOnTimeHour == rtc.hour() && user::lightOnTimeMin == rtc.minute() && !device::lightOn) {
         digitalWrite(pin::light, !device::relayOffState);
-        if (device::globalDebug)
+        if (device::globalDebug) {
+          if (!printedHeader) {
+            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
+            printedHeader = true;
+          } 
           Serial.println(F("Light on"));
+        }
         device::lightOn = true;
         saveLogMessage(4);
       }
       else if (user::lightOffTimeHour == rtc.hour() && user::lightOffTimeMin == rtc.minute() && device::lightOn) {
         digitalWrite(pin::light, device::relayOffState);
-        if (device::globalDebug)
+        if (device::globalDebug) {
+          if (!printedHeader) {
+            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
+            printedHeader = true;
+          } 
           Serial.println(F("Light off"));
+        }
         device::lightOn = false;
         saveLogMessage(5);
       }
@@ -339,8 +353,10 @@ void relayTimers(const char* a_caller) {
         if (rtc.minute() != prevMinute) {
           device::auxRelayOneDuration++;
           if (device::globalDebug) {
-            if (user::lightState != device::AUTO_TIMER)
+            if (!printedHeader) {
               Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
+              printedHeader = true;
+            } 
             Serial.print(F("Aux relay 1 ")); Serial.print(device::auxRelayOneOn ? F("on") : F("off")); Serial.print(F(" duration (mins): ")); Serial.println(device::auxRelayOneDuration);
           }
           prevMinute = rtc.minute();
@@ -363,15 +379,25 @@ void relayTimers(const char* a_caller) {
     else {
       if (user::auxRelayOneOnTimeHour == rtc.hour() && user::auxRelayOneOnTimeMin == rtc.minute() && !device::auxRelayOneOn) {
         digitalWrite(pin::auxRelayOne, !device::relayOffState);
-        if (device::globalDebug)
+        if (device::globalDebug) {
+          if (!printedHeader) {
+            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
+            printedHeader = true;
+          } 
           Serial.println(F("Aux relay 1 on"));
+        }
         device::auxRelayOneOn = true;
         saveLogMessage(4);
       }
       else if (user::auxRelayOneOffTimeHour == rtc.hour() && user::auxRelayOneOffTimeMin == rtc.minute() && device::auxRelayOneOn) {
         digitalWrite(pin::auxRelayOne, device::relayOffState);
-        if (device::globalDebug)
+        if (device::globalDebug) {
+          if (!printedHeader) {
+            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
+            printedHeader = true;
+          } 
           Serial.println(F("Aux relay 1 off"));
+        }
         device::auxRelayOneOn = false;
         saveLogMessage(5);
       }
@@ -384,8 +410,10 @@ void relayTimers(const char* a_caller) {
         if (rtc.minute() != prevMinute) {
           device::auxRelayTwoDuration++;
           if (device::globalDebug) {
-            if (user::lightState != device::AUTO_TIMER && user::auxRelayOneState != device::AUTO_TIMER)
+            if (!printedHeader) {
               Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
+              printedHeader = true;
+            } 
             Serial.print(F("Aux relay 2 ")); Serial.print(device::auxRelayTwoOn ? F("on") : F("off")); Serial.print(F(" duration (mins): ")); Serial.println(device::auxRelayTwoDuration);
           }
           prevMinute = rtc.minute();
@@ -408,21 +436,31 @@ void relayTimers(const char* a_caller) {
     else {
       if (user::auxRelayTwoOnTimeHour == rtc.hour() && user::auxRelayTwoOnTimeMin == rtc.minute() && !device::auxRelayTwoOn) {
         digitalWrite(pin::auxRelayTwo, !device::relayOffState);
-        if (device::globalDebug)
+        if (device::globalDebug) {
+          if (!printedHeader) {
+            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
+            printedHeader = true;
+          } 
           Serial.println(F("Aux relay 2 on"));
+        }
         device::auxRelayTwoOn = true;
         saveLogMessage(4);
       }
       else if (user::auxRelayTwoOffTimeHour == rtc.hour() && user::auxRelayTwoOffTimeMin == rtc.minute() && device::auxRelayTwoOn) {
         digitalWrite(pin::auxRelayTwo, device::relayOffState);
-        if (device::globalDebug)
+        if (device::globalDebug) {
+          if (!printedHeader) {
+            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
+            printedHeader = true;
+          } 
           Serial.println(F("Aux relay 2 off"));
+        }
         device::auxRelayTwoOn = false;
         saveLogMessage(5);
       }
     }
   }
-  if (a_caller != NULL) {
+  if (a_caller != NULL && printedHeader) {
     Serial.print(F("\n------------")); Serial.print(a_caller); Serial.println(F("------------"));
   }
 }
