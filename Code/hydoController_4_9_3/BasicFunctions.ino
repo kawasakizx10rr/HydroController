@@ -1,6 +1,7 @@
 void initializeDevice() {
   Wire.begin();
   if (device::globalDebug) {
+    Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
     Serial.print(F("SPI max speed: ")); Serial.print(MAXSPISPEED / 1000000UL); Serial.println(F("Mhz"));
   }
   tft.begin(RA8875_800x480);
