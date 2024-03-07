@@ -1,7 +1,6 @@
 void initializeDevice() {
   Wire.begin();
   if (device::globalDebug) {
-    Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
     Serial.print(F("SPI max speed: ")); Serial.print(MAXSPISPEED / 1000000UL); Serial.println(F("Mhz"));
   }
   tft.begin(RA8875_800x480);
@@ -686,57 +685,57 @@ void adjustFanMode(const float a_sensor, device::controlOptions& a_fanOption, co
   }
   if (greaterThan(a_sensor, a_maxTarget, 2) && a_state == sensor::IS_FALLING) {
     if (a_debug) {
-      Serial.print(F("greather than the max target ")); Serial.print(a_maxTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% but the ")); Serial.print(a_str); Serial.println(F(" is falling"));
+      Serial.print(F("greather than the max target ")); Serial.print(a_maxTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% but the ")); Serial.print(a_str); Serial.print(F(" is falling"));
     }
     a_fanOption = device::SPEED_IDLE;
   }
   else if (greaterThan(a_sensor, a_maxTarget, 2) && a_state == sensor::IS_RISING) {
     if (a_debug) {
-      Serial.print(F("greather than the max target ")); Serial.print(a_maxTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% but the ")); Serial.print(a_str); Serial.println(F(" is rising"));
+      Serial.print(F("greather than the max target ")); Serial.print(a_maxTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% but the ")); Serial.print(a_str); Serial.print(F(" is rising"));
     }
     a_fanOption = device::SPEED_UP; //device::SPEED_MAX;
   }
   else if (greaterThan(a_sensor, a_maxTarget, 2) && a_state == sensor::IS_SAME) {
     if (a_debug) {
-      Serial.print(F("greather than the max target ")); Serial.print(a_maxTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% yet the ")); Serial.print(a_str); Serial.println(F(" remains the same"));
+      Serial.print(F("greather than the max target ")); Serial.print(a_maxTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% yet the ")); Serial.print(a_str); Serial.print(F(" remains the same"));
     }
     a_fanOption = device::SPEED_UP;
   }
   else if (lessThan(a_sensor, a_minTarget, 2) && a_state == sensor::IS_FALLING) {
     if (a_debug) {
-      Serial.print(F("less than the min target ")); Serial.print(a_minTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% but the ")); Serial.print(a_str); Serial.println(F(" is falling"));
+      Serial.print(F("less than the min target ")); Serial.print(a_minTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% but the ")); Serial.print(a_str); Serial.print(F(" is falling"));
     }
     a_fanOption = device::SPEED_DOWN; //device::SPEED_MIN;
   }
   else if (lessThan(a_sensor, a_minTarget, 2) && a_state == sensor::IS_RISING) {
     if (a_debug) {
-      Serial.print(F("less than the min target ")); Serial.print(a_minTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% but the ")); Serial.print(a_str); Serial.println(F(" is rising"));
+      Serial.print(F("less than the min target ")); Serial.print(a_minTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% but the ")); Serial.print(a_str); Serial.print(F(" is rising"));
     }
     a_fanOption = device::SPEED_IDLE;
   }
   else if (lessThan(a_sensor, a_minTarget, 2) && a_state == sensor::IS_SAME) {
     if (a_debug) {
-      Serial.print(F("less than the min target ")); Serial.print(a_minTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% yet the ")); Serial.print(a_str); Serial.println(F(" remains the same"));
+      Serial.print(F("less than the min target ")); Serial.print(a_minTarget, 2); Serial.print(F(", by ")); Serial.print(a_percent); Serial.print(F("% yet the ")); Serial.print(a_str); Serial.print(F(" remains the same"));
     }
     a_fanOption = device::SPEED_DOWN;
   }
   else if (a_state == sensor::IS_FALLING) {
     if (a_debug) {
-      Serial.print(F("within the min ")); Serial.print(a_minTarget, 2); Serial.print(F(" and max ")); Serial.print(a_maxTarget, 2); Serial.print(F(" targets, but the ")); Serial.print(a_str); Serial.println(F(" is falling"));
+      Serial.print(F("within the min ")); Serial.print(a_minTarget, 2); Serial.print(F(" and max ")); Serial.print(a_maxTarget, 2); Serial.print(F(" targets, but the ")); Serial.print(a_str); Serial.print(F(" is falling"));
     }
     if (!(user::fansControlTemperature && user::fansControlHumidity))
       a_fanOption = device::SPEED_DOWN_SLOW;
   }
   else if (a_state == sensor::IS_RISING) {
     if (a_debug) {
-      Serial.print(F("within the min ")); Serial.print(a_minTarget, 2); Serial.print(F(" and max ")); Serial.print(a_maxTarget, 2); Serial.print(F(" targets, but the ")); Serial.print(a_str); Serial.println(F(" is rising "));
+      Serial.print(F("within the min ")); Serial.print(a_minTarget, 2); Serial.print(F(" and max ")); Serial.print(a_maxTarget, 2); Serial.print(F(" targets, but the ")); Serial.print(a_str); Serial.print(F(" is rising "));
     }
     if (!(user::fansControlTemperature && user::fansControlHumidity))
       a_fanOption = device::SPEED_UP_SLOW;
   }
   else if (a_state == sensor::IS_SAME) {
     if (a_debug) {
-      Serial.print(F("within the min ")); Serial.print(a_minTarget, 2); Serial.print(F(" and max ")); Serial.print(a_maxTarget, 2); Serial.print(F(" targets, and the ")); Serial.print(a_str); Serial.println(F(" remains the same"));
+      Serial.print(F("within the min ")); Serial.print(a_minTarget, 2); Serial.print(F(" and max ")); Serial.print(a_maxTarget, 2); Serial.print(F(" targets, and the ")); Serial.print(a_str); Serial.print(F(" remains the same"));
     }
     if (!(user::fansControlTemperature && user::fansControlHumidity))
       a_fanOption = device::SPEED_IDLE;

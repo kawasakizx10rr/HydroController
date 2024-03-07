@@ -43,7 +43,7 @@ void esp8266DataHandler() {
 }
 
 void getValues(const uint8_t a_page, const uint8_t a_slide) {
-  Serial.print(__FUNCTION__); Serial.print(F(" page: ")); Serial.print(a_page); Serial.print(F(", slide: ")); Serial.println(a_slide);
+  Serial.print(F("getValues page: ")); Serial.print(a_page); Serial.print(F(", slide: ")); Serial.println(a_slide); // __FUNCTION__ is not stored in PROGMEM
     // Page 0 (Home page)
   Serial1.print(F("!"));
   if (a_page == 0) {
@@ -458,7 +458,7 @@ void getValues(const uint8_t a_page, const uint8_t a_slide) {
 }
 
 void setValues(const uint8_t a_cmd, const char* a_val) {
-  Serial.print(__FUNCTION__); Serial.print(F(" cmd: ")); Serial.print(a_cmd); Serial.print(F(", val: ")); Serial.println(a_val);
+  Serial.print(F("setValues cmd: ")); Serial.print(a_cmd); Serial.print(F(", val: ")); Serial.println(a_val);
   // ============== PROFILES PAGE  ==============
   // profileOneName
   if (a_cmd ==0) {
