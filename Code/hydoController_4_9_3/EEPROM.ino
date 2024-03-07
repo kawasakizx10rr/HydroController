@@ -9,7 +9,6 @@ void initializeEEPROM() {
   device::profileEEPROMSize = getSetProfile(0, device::EEPROM_VERIFY);
   delay(50);
   if (device::globalDebug) {
-    Serial.println(__FUNCTION__);
     Serial.print(F("Current version number: ")); Serial.println(versionNum);
     Serial.print(F("Software version number: ")); Serial.println(device::versionNumber);
     Serial.print(F("System EEPROM size: ")); Serial.println(device::systemEEPROMSize);
@@ -51,7 +50,6 @@ template <typename T> void eepromGetSet(uint16_t& a_address, const device::eepro
 uint16_t getSetSystemEEPROM(const device::eepromModes a_mode) {
   uint16_t address = 7;
   if (device::globalDebug) {
-    Serial.println(__FUNCTION__);
     if (a_mode == device::EEPROM_VERIFY)
       Serial.print(F("Verifying")); 
     else if (a_mode == device::EEPROM_GET)
@@ -142,7 +140,6 @@ uint16_t getSetSystemEEPROM(const device::eepromModes a_mode) {
 
 void getSetProfileEEPROM(const uint8_t a_profile, const device::eepromModes a_mode) {
   if (device::globalDebug) {
-    Serial.println(__FUNCTION__);
     if (a_mode == device::EEPROM_VERIFY)
       Serial.print(F("Verifying")); 
     else if (a_mode == device::EEPROM_GET)
@@ -158,7 +155,6 @@ void getSetProfileEEPROM(const uint8_t a_profile, const device::eepromModes a_mo
 
 uint16_t getSetProfile(uint16_t a_address, const device::eepromModes a_mode) {
   if (device::globalDebug) {
-    Serial.println(__FUNCTION__);
     Serial.print(F("EEPROM starting at address: ")); Serial.println(a_address);
   }
   eepromGetSet(a_address, a_mode, device::minPh);                      

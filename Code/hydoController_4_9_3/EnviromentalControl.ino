@@ -5,7 +5,7 @@ void envriomentalControl() {
     rtc.refresh();
     previousMillis = millis();
   }
-  relayTimers(NULL);
+  relayTimers();
   waterLevelControl();
   waterTemperatureControl();
   co2Control();
@@ -26,7 +26,6 @@ void waterLevelControl() {
       for (uint8_t i = 0; i < 31; i++) {
         if (bitRead(user::autoFillDays, i) && rtc.day() == i + 1 && rtc.hour() == user::autoFillHour && rtc.minute() >= user::autoFillMinute) {
           if (device::globalDebug) {  
-            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
             Serial.println(F("Auto drain time matched, about to start the auto drain process"));
           }            
           saveLogMessage(1);
@@ -105,7 +104,7 @@ void waterLevelControl() {
           }
         }
       }
-      updateRelayTimers(__FUNCTION__); 
+      updateRelayTimers(); 
     }
     // Turn off the outlet pump
     if (outletPumpIsOn) {
@@ -121,7 +120,6 @@ void waterLevelControl() {
         if ((sensor::waterLevel < user::targetMinWaterHeight && !user::convertToInches) || (convertToInches(sensor::waterLevel) < user::targetMinWaterHeightInches && user::convertToInches)) {
           startRefilling = true;
           if (device::globalDebug) {  
-            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
             Serial.println(F("The water level is below the min target, starting refill process"));
           }         
         }
@@ -149,7 +147,7 @@ void waterLevelControl() {
       digitalWrite(pin::inletPump, !device::relayOffState);
       // Refill the tank and run the refill dosers
       while (refillTank(device::prevMillis, previousWaterLevel, startRefilling, runRefillDosers, inletPumpIsOn)) {
-        updateRelayTimers(__FUNCTION__); 
+        updateRelayTimers(); 
       }    
       // Refill complete
       device::dosingTimerHourCounter = 0;
@@ -268,7 +266,6 @@ void waterTemperatureControl() {
     if (waterTemp <= minTemp && !device::waterHeaterIsOn) {
       device::waterHeaterIsOn = true;
       if (device::globalDebug) {  
-        Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
         Serial.println(F("Water heater on"));
       }      
       digitalWrite(pin::waterHeater, !device::relayOffState);
@@ -277,7 +274,6 @@ void waterTemperatureControl() {
     else if (waterTemp > minTemp && device::waterHeaterIsOn) {
       device::waterHeaterIsOn = false;
       if (device::globalDebug) {  
-        Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
         Serial.println(F("Water heater off"));
       }   
       digitalWrite(pin::waterHeater, device::relayOffState);
@@ -288,18 +284,13 @@ void waterTemperatureControl() {
 }
 
 // Control the external lighting
-void relayTimers(const char* a_caller) {
-  bool printedHeader = false;
+void relayTimers() {
   if (user::lightState == device::AUTO_TIMER) { 
     if (user::lightMode == 0) {
         static uint8_t prevMinute = 69;
         if (rtc.minute() != prevMinute) {
           device::lightDuration++;
           if (device::globalDebug) { 
-            if (!printedHeader) {
-              Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
-              printedHeader = true;
-            } 
             Serial.print(F("Light ")); Serial.print(device::lightOn ? F("on") : F("off")); Serial.print(F(" duration (mins): ")); Serial.println(device::lightDuration);
           }
           prevMinute = rtc.minute();
@@ -323,10 +314,6 @@ void relayTimers(const char* a_caller) {
       if (user::lightOnTimeHour == rtc.hour() && user::lightOnTimeMin == rtc.minute() && !device::lightOn) {
         digitalWrite(pin::light, !device::relayOffState);
         if (device::globalDebug) {
-          if (!printedHeader) {
-            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
-            printedHeader = true;
-          } 
           Serial.println(F("Light on"));
         }
         device::lightOn = true;
@@ -335,10 +322,6 @@ void relayTimers(const char* a_caller) {
       else if (user::lightOffTimeHour == rtc.hour() && user::lightOffTimeMin == rtc.minute() && device::lightOn) {
         digitalWrite(pin::light, device::relayOffState);
         if (device::globalDebug) {
-          if (!printedHeader) {
-            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
-            printedHeader = true;
-          } 
           Serial.println(F("Light off"));
         }
         device::lightOn = false;
@@ -353,10 +336,6 @@ void relayTimers(const char* a_caller) {
         if (rtc.minute() != prevMinute) {
           device::auxRelayOneDuration++;
           if (device::globalDebug) {
-            if (!printedHeader) {
-              Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
-              printedHeader = true;
-            } 
             Serial.print(F("Aux relay 1 ")); Serial.print(device::auxRelayOneOn ? F("on") : F("off")); Serial.print(F(" duration (mins): ")); Serial.println(device::auxRelayOneDuration);
           }
           prevMinute = rtc.minute();
@@ -380,10 +359,6 @@ void relayTimers(const char* a_caller) {
       if (user::auxRelayOneOnTimeHour == rtc.hour() && user::auxRelayOneOnTimeMin == rtc.minute() && !device::auxRelayOneOn) {
         digitalWrite(pin::auxRelayOne, !device::relayOffState);
         if (device::globalDebug) {
-          if (!printedHeader) {
-            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
-            printedHeader = true;
-          } 
           Serial.println(F("Aux relay 1 on"));
         }
         device::auxRelayOneOn = true;
@@ -391,11 +366,7 @@ void relayTimers(const char* a_caller) {
       }
       else if (user::auxRelayOneOffTimeHour == rtc.hour() && user::auxRelayOneOffTimeMin == rtc.minute() && device::auxRelayOneOn) {
         digitalWrite(pin::auxRelayOne, device::relayOffState);
-        if (device::globalDebug) {
-          if (!printedHeader) {
-            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
-            printedHeader = true;
-          } 
+        if (device::globalDebug) { 
           Serial.println(F("Aux relay 1 off"));
         }
         device::auxRelayOneOn = false;
@@ -410,10 +381,6 @@ void relayTimers(const char* a_caller) {
         if (rtc.minute() != prevMinute) {
           device::auxRelayTwoDuration++;
           if (device::globalDebug) {
-            if (!printedHeader) {
-              Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
-              printedHeader = true;
-            } 
             Serial.print(F("Aux relay 2 ")); Serial.print(device::auxRelayTwoOn ? F("on") : F("off")); Serial.print(F(" duration (mins): ")); Serial.println(device::auxRelayTwoDuration);
           }
           prevMinute = rtc.minute();
@@ -437,10 +404,6 @@ void relayTimers(const char* a_caller) {
       if (user::auxRelayTwoOnTimeHour == rtc.hour() && user::auxRelayTwoOnTimeMin == rtc.minute() && !device::auxRelayTwoOn) {
         digitalWrite(pin::auxRelayTwo, !device::relayOffState);
         if (device::globalDebug) {
-          if (!printedHeader) {
-            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
-            printedHeader = true;
-          } 
           Serial.println(F("Aux relay 2 on"));
         }
         device::auxRelayTwoOn = true;
@@ -449,19 +412,12 @@ void relayTimers(const char* a_caller) {
       else if (user::auxRelayTwoOffTimeHour == rtc.hour() && user::auxRelayTwoOffTimeMin == rtc.minute() && device::auxRelayTwoOn) {
         digitalWrite(pin::auxRelayTwo, device::relayOffState);
         if (device::globalDebug) {
-          if (!printedHeader) {
-            Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
-            printedHeader = true;
-          } 
           Serial.println(F("Aux relay 2 off"));
         }
         device::auxRelayTwoOn = false;
         saveLogMessage(5);
       }
     }
-  }
-  if (a_caller != NULL && printedHeader) {
-    Serial.print(F("\n------------")); Serial.print(a_caller); Serial.println(F("------------"));
   }
 }
 
@@ -479,11 +435,11 @@ bool restartTimer(const uint8_t a_onTimeMin, const uint8_t a_onTimeHour, const u
 }
 
 // called in while loops
-void updateRelayTimers(const char* a_caller) {
+void updateRelayTimers() {
   static uint32_t previousMillis = millis();
   if (millis() - previousMillis >= 1000UL) {
     rtc.refresh();
-    relayTimers(a_caller);
+    relayTimers();
     previousMillis = millis();
   }  
 }
@@ -497,9 +453,6 @@ void co2Control() {
   if (device::sensorsReady && !user::disableCo2Control) {
     // Check if it is time to start the Co2 adjustment
     if (user::co2CheckTimeHour == rtc.hour() && user::co2CheckTimeMinute >= rtc.minute() && rtc.day() != previousDate) {
-      if (device::globalDebug) {  
-        Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
-      }
       // set the gas time, manual time or calculated
       if (sensor::co2 < (user::targetCo2 - user::co2Offset)) {
         if (user::enableManualCo2Duration)
@@ -545,7 +498,7 @@ void co2Control() {
         }
         device::prevMillis = millis();
       }
-      updateRelayTimers(__FUNCTION__);
+      updateRelayTimers();
     }
     digitalWrite(pin::co2Solenoid, device::relayOffState);
   }
@@ -561,9 +514,6 @@ void airControl() {
   const bool fanDebug = device::globalDebug; // debug hidden for now while testing other functions
 
   if (device::sensorsReady && millis() - previousMillis >= 2000UL) {
-    if (fanDebug) {  
-      Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
-    }
     // If Co2 has disabled the fans for x durations, check to see if we can turn the fans back on else do nothing
     if (device::co2DisabledFans && device::co2TurnFansBackOnHour == rtc.hour() && device::co2TurnFansBackOnMinute >= rtc.minute())
       device::co2DisabledFans = false;
@@ -734,7 +684,6 @@ void waterEcPhControl() {
     device::previousDosingHour = rtc.hour();
     device::previousDosingMinute = rtc.minute();
     if (device::globalDebug) {
-      Serial.print(F("\n------------")); Serial.print(__FUNCTION__); Serial.println(F("------------"));
       Serial.print(F("Dosing Timer Hour Counter: ")); Serial.println(device::dosingTimerHourCounter);
     }
   }
@@ -1116,7 +1065,7 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
         }
       }
     }
-    updateRelayTimers("waterEcPhControl");
+    updateRelayTimers();
   }
 }
 
