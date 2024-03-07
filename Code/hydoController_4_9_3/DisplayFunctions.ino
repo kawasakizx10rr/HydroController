@@ -35,7 +35,7 @@ void launchCo2Notification(uint8_t& a_continueCo2Control, uint8_t& a_previousDat
         beep();
       }
     }
-    updateRelayTimers(); 
+    updateRelayTimers("co2Control"); 
   }
 }
 
@@ -101,7 +101,7 @@ void launchDrainNotification(uint8_t& a_continueDraining, bool& a_startDraining)
         display::refreshPage = true;
       }
     }
-    updateRelayTimers();
+    updateRelayTimers("waterLevelControl");
   }
 }
 
@@ -143,7 +143,7 @@ void launchRefillNotification(bool& a_startRefilling, uint8_t& a_continueRefilli
           beep();
         }
       }
-      updateRelayTimers(); 
+      updateRelayTimers("waterLevelControl"); 
     }
   }
 }
@@ -162,7 +162,7 @@ void launchDosingNotification(const float& a_sensorPercent, const uint8_t& a_dos
       dosingDialogTimer--;
       continuePreviousMillis = millis();
     }
-    updateRelayTimers();
+    updateRelayTimers("waterEcPhControl");
   }
   a_lastTouch = millis() + 5000UL;
 }
