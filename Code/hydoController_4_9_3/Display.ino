@@ -1166,6 +1166,8 @@ void fansPage() {
       tft.print(110, 230, F("Control humidity"));
       tft.print(110, 280, F("Fan one fixed speed"));
       tft.print(110, 330, F("Fan two fixed speed"));
+      tft.print(110, 380, F("Fan one enabled"));
+      tft.print(110, 430, F("Fan two enabled"));
       infoButton(770, 120);
     }
     // FAN MODES
@@ -1188,6 +1190,16 @@ void fansPage() {
     if (display::refreshPage || user::fanTwoFixedSpeed != previousFanTwoFixedSpeed) {
       drawRadioButton(640, 330, user::fanTwoFixedSpeed, false);
       previousFanTwoFixedSpeed = user::fanTwoFixedSpeed;
+    }
+    static bool previousFanOneEnabled;
+    if (display::refreshPage || user::fanOneEnabled != previousFanOneEnabled) {
+      drawRadioButton(640, 380, user::fanOneEnabled, false);
+      previousFanOneEnabled = user::fanOneEnabled;
+    }
+    static bool previousFanTwoEnabled;
+    if (display::refreshPage || user::fanTwoEnabled != previousFanTwoEnabled) {
+      drawRadioButton(640, 430, user::fanTwoEnabled, false);
+      previousFanTwoEnabled = user::fanTwoEnabled;
     }
   }
 }

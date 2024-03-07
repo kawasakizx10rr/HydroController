@@ -176,8 +176,12 @@ void initializeDevice() {
   device::previousDosingMinute = rtc.minute();
   device::previousDosingHour = rtc.hour();
 
-    // Start the AC fans
+  // Start the AC fans
+  if (user::fanOneEnabled)
+    device::fanOneJustStarted = 1;
   device::fanOneSpeed = user::targetMinFanOneSpeed;
+  if (user::fanTwoEnabled)
+    device::fanTwoJustStarted = 1;
   device::fanTwoSpeed = user::targetMinFanTwoSpeed;
   sendToSlave('Z', device::fanOneSpeed);
   sendToSlave('X', device::fanTwoSpeed);
