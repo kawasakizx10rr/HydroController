@@ -501,7 +501,7 @@ void airControl() {
   static float previousFanOneSpeed = 200;
   static float previousFanTwoSpeed = 200;
   float tempPercent = 0, humPercent = 0;
-  const bool fanDebug = false; // device::globalDebug; // debug hidden for now while testing other functions
+  const bool fanDebug = device::globalDebug; // debug hidden for now while testing other functions
 
   if (device::sensorsReady && millis() - previousMillis >= 2000UL) {
     if (fanDebug)   
@@ -647,19 +647,18 @@ void airControl() {
     else if (device::fanTwoSpeed > user::targetMaxFanTwoSpeed) 
       device::fanTwoSpeed = user::targetMaxFanTwoSpeed;
 
+    if (fanDebug) {
+      Serial.print(F("Fan one speed:")); Serial.println(device::fanOneSpeed);
+      Serial.print(F("Fan two speed:")); Serial.println(device::fanTwoSpeed);
+    }
+
     // Send the new fan speeds to the Atmel328P
     if (device::fanOneSpeed != previousFanOneSpeed) {
       sendToSlave('Z', device::fanOneSpeed);
-      if (fanDebug) {
-        Serial.print(F("Fan one speed:")); Serial.println(device::fanOneSpeed);
-      }
       previousFanOneSpeed = device::fanOneSpeed;
     }
     if (device::fanTwoSpeed != previousFanTwoSpeed) {
       sendToSlave('X', device::fanTwoSpeed);
-      if (fanDebug) {
-        Serial.print(F("Fan two speed:")); Serial.println(device::fanTwoSpeed);
-      }
       previousFanTwoSpeed = device::fanTwoSpeed;
     }
     previousMillis = millis();
