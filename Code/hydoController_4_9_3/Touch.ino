@@ -409,8 +409,8 @@ int16_t sliderXTouch() {
   if ((int16_t)display::touch_x > (display::lastScrollX + 20)) {
     //if ((int16_t)display::touch_x - (int16_t)display::lastTouchX >= 35) {
       display::scrollRightCount++;
-      Serial.print(F("touch_x ")); Serial.println(display::touch_x);
-      Serial.print(F("slide R ")); Serial.println(display::scrollRightCount);
+      //Serial.print(F("touch_x ")); Serial.println(display::touch_x);
+      //Serial.print(F("slide R ")); Serial.println(display::scrollRightCount);
       if (display::scrollRightCount >= 1)
         display::scrollLeftCount = 0;
       display::lastScrollX = display::touch_x;
@@ -419,8 +419,8 @@ int16_t sliderXTouch() {
   else if ((int16_t)display::touch_x < (display::lastScrollX - 20)) {
     //else if ((int16_t)display::touch_x - (int16_t)display::lastTouchX <= -35) {    
       display::scrollLeftCount++;
-      Serial.print(F("touch_x ")); Serial.println(display::touch_x);
-      Serial.print(F("slide L ")); Serial.println(display::scrollLeftCount);
+      //Serial.print(F("touch_x ")); Serial.println(display::touch_x);
+      //Serial.print(F("slide L ")); Serial.println(display::scrollLeftCount);
       if (display::scrollLeftCount >= 1)
         display::scrollRightCount = 0;
       display::lastScrollX = display::touch_x;
@@ -3268,6 +3268,24 @@ void fansPageTouched() {
       user::fanTwoFixedSpeed = !user::fanTwoFixedSpeed;
       if (user::fanTwoFixedSpeed)
         user::targetMinFanTwoSpeed = user::targetMaxFanTwoSpeed;
+      device::settingsAdjusted = true;
+    }
+    else if (display::touch_x >= 640 && display::touch_x <= 790 && display::touch_y >= 380 && display::touch_y <= 420) { // disable/enable fanOne
+      beep();
+      user::fanOneEnabled = !user::fanOneEnabled;
+      if (user::fanOneEnabled)
+        device::fanOneJustStarted = 1;
+      else 
+        device::fanOneSpeed = 0;
+      device::settingsAdjusted = true;
+    }
+    else if (display::touch_x >= 640 && display::touch_x <= 790 && display::touch_y >= 430 && display::touch_y <= 470) { // disable/enable fanTwo
+      beep();
+      user::fanTwoEnabled = !user::fanTwoEnabled;
+      if (user::fanTwoEnabled)
+        device::fanTwoJustStarted = 1;
+      else 
+        device::fanTwoSpeed = 0;
       device::settingsAdjusted = true;
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
