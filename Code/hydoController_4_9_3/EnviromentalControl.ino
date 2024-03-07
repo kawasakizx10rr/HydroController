@@ -512,164 +512,198 @@ void airControl() {
   static float previousFanTwoSpeed = 200;
   float tempPercent = 0, humPercent = 0;
   const bool fanDebug = device::globalDebug; // debug hidden for now while testing other functions
-
-  if (device::sensorsReady && millis() - previousMillis >= 2000UL) {
-    // If Co2 has disabled the fans for x durations, check to see if we can turn the fans back on else do nothing
-    if (device::co2DisabledFans && device::co2TurnFansBackOnHour == rtc.hour() && device::co2TurnFansBackOnMinute >= rtc.minute())
-      device::co2DisabledFans = false;
-    else if (device::co2DisabledFans)
-      return;
-
-    // Check to see if the temperature and or humidity is out of range of the user targets
-    device::controlOptions tempOption = device::SPEED_IDLE;
-    device::controlOptions humOption = device::SPEED_IDLE;
-    device::controlOptions fanMode = device::SPEED_IDLE;
-    const float maxAirTemp = user::convertToF ? user::targetMaxAirTempF : user::targetMaxAirTemp;
-    const float minAirTemp = user::convertToF ? user::targetMinAirTempF : user::targetMinAirTemp;
-    const float airTemp = user::convertToF ? convertToF(sensor::airTemp) : sensor::airTemp;
-    // Check to see if the temperature is out of range
-    if (airTemp > maxAirTemp && user::fansControlTemperature) {
-      float tempOutOfRange = abs(maxAirTemp - airTemp); 
-      tempPercent = tempOutOfRange / (maxAirTemp / 100.0);
-    }
-    else if (airTemp < minAirTemp && user::fansControlTemperature) {
-      float tempOutOfRange = abs(minAirTemp - airTemp);
-      tempPercent = tempOutOfRange / (minAirTemp / 100.0);
-      //Serial.println(F("SPEED_DOWN tempPercent: %d", tempPercent);
-    }
-
-    // Check to see if the humidity is out of range
-    if (sensor::humidity > user::targetMaxHumidity && user::fansControlHumidity)  {
-      float humOutOfRange = abs(user::targetMaxHumidity - sensor::humidity);
-      humPercent = humOutOfRange / (user::targetMaxHumidity / 100.0);
-      //Serial.println(F("SPEED_UP humPercent: %d", humPercent);
-    }
-    else if (sensor::humidity < user::targetMinHumidity && user::fansControlHumidity)  {
-      float humOutOfRange = abs(user::targetMinHumidity - sensor::humidity);
-      humPercent = humOutOfRange / (user::targetMinHumidity / 100.0);
-      //Serial.println(F("SPEED_DOWN humPercent: %d", humPercent);
-    }
-
-    // Control the air heater
-    static uint8_t prevAirHeaterMin = 69;
-    if (rtc.minute() != prevAirHeaterMin) {
-      if (airTemp <= minAirTemp && !device::airHeaterIsOn) {
-        device::airHeaterIsOn = true;
+  //
+  if (device::fanOneJustStarted || device::fanTwoJustStarted) {
+    if (millis() - previousMillis >= 100UL) {
+      if (device::fanOneJustStarted == 1) {
         if (fanDebug)   
-          Serial.println(F("air heater on"));
-        digitalWrite(pin::airHeater, !device::relayOffState);
-        saveLogMessage(11); // save log message, air heater on
+          Serial.println(F("Spolling up fan one"));
+        device::fanOneSpeed = user::targetMaxFanOneSpeed;
+        device::fanOneJustStarted = 2;
       }
-      else if (airTemp > minAirTemp &&device::airHeaterIsOn) {
-        device::airHeaterIsOn = false;
-        if (fanDebug)   
-          Serial.println(F("air heater off"));
-        digitalWrite(pin::airHeater, device::relayOffState);
-        saveLogMessage(12); // save log message, air heater off
-      }
-      prevAirHeaterMin = rtc.minute();
-    }
-
-    float averageTemp = averageShortToFltArray(sensor::fanTemperatureArray, sensor::fanArrayPos);
-    sensor::airStates tempAirState = sensor::IS_SAME;
-    if (abs(airTemp - averageTemp) >=sensor:: airHysteresis) {
-      //Serial.print(F("Has changed, tempAirState: "));
-      if (airTemp < averageTemp)
-        tempAirState = sensor::IS_FALLING;
-      else if (airTemp > averageTemp)
-        tempAirState = sensor::IS_RISING;
-      //Serial.println(tempAirState);
-    }
-    float averageHum = averageShortToFltArray(sensor::fanHumidityArray, sensor::fanArrayPos);
-    sensor::airStates humAirState = sensor::IS_SAME;
-    if (abs(sensor::humidity - averageHum) >= sensor::airHysteresis)  {
-      //Serial.print(F("Has changed, humAirState: "));
-      if (sensor::humidity < averageHum)
-        humAirState = sensor::IS_FALLING;
-      else if (sensor::humidity > averageHum)
-        humAirState = sensor::IS_RISING;
-      //Serial.println(humAirState);
-    }
-
-    if (user::fansControlTemperature) {
-      if (fanDebug) {
-        Serial.print(F("Air temp: ")); Serial.print(airTemp, 2); Serial.print(F("c, average temp: ")); Serial.print(averageTemp, 2); Serial.print(F("c, over ")); Serial.print(sensor::fanArrayPos); Serial.println(F(" reads @ 2 sec per read"));
-      }     
-      adjustFanMode(airTemp, tempOption, tempAirState, "air temp", tempPercent, minAirTemp, maxAirTemp, fanDebug);
-    }
-    if (user::fansControlHumidity) {
-      if (fanDebug) {
-        Serial.print(F("Humidity: ")); Serial.print(sensor::humidity, 2); Serial.print(F("%, averageHum: ")); Serial.print(averageHum, 2); Serial.println(F("%, over ")); Serial.print(sensor::fanArrayPos); Serial.println(F(" reads @ 2 sec per read"));
+      else if (device::fanOneJustStarted == 2) {
+        if (device::fanOneSpeed > user::targetMinFanOneSpeed)
+          device::fanOneSpeed--;
+        if (device::fanOneSpeed == user::targetMinFanOneSpeed)
+          device::fanOneJustStarted = 0;
       }   
-      adjustFanMode(sensor::humidity, humOption, humAirState, "humidity", humPercent, user::targetMinHumidity, user::targetMaxHumidity, fanDebug);
+      //
+      if (device::fanTwoJustStarted == 1) {
+        if (fanDebug)   
+          Serial.println(F("Spolling up fan two"));
+        device::fanTwoSpeed = user::targetMaxFanTwoSpeed;
+        device::fanTwoJustStarted = 2;
+      }
+      else if (device::fanTwoJustStarted == 2) {
+        if (device::fanTwoSpeed > user::targetMinFanTwoSpeed)
+          device::fanTwoSpeed--;
+        if (device::fanTwoSpeed == user::targetMinFanTwoSpeed)
+          device::fanTwoJustStarted = 0;
+      } 
+      previousMillis = millis();
     }
+  }
+  //
+  else {
+    if (device::sensorsReady && millis() - previousMillis >= 2000UL) {
+      // If Co2 has disabled the fans for x durations, check to see if we can turn the fans back on else do nothing
+      if (device::co2DisabledFans && device::co2TurnFansBackOnHour == rtc.hour() && device::co2TurnFansBackOnMinute >= rtc.minute())
+        device::co2DisabledFans = false;
+      else if (device::co2DisabledFans)
+        return;
 
-    // Temperature has priority over humidity
-    if (tempOption != device::SPEED_IDLE || !user::fansControlHumidity) {
-      fanMode = tempOption;
-      if (fanDebug) {
-        Serial.print(F("Fans set to control temperature")); Serial.print(user::fansControlHumidity ? F(", as temperature takes priority\n") : F("\n"));
-      }     
+      // Check to see if the temperature and or humidity is out of range of the user targets
+      device::controlOptions tempOption = device::SPEED_IDLE;
+      device::controlOptions humOption = device::SPEED_IDLE;
+      device::controlOptions fanMode = device::SPEED_IDLE;
+      const float maxAirTemp = user::convertToF ? user::targetMaxAirTempF : user::targetMaxAirTemp;
+      const float minAirTemp = user::convertToF ? user::targetMinAirTempF : user::targetMinAirTemp;
+      const float airTemp = user::convertToF ? convertToF(sensor::airTemp) : sensor::airTemp;
+      // Check to see if the temperature is out of range
+      if (airTemp > maxAirTemp && user::fansControlTemperature) {
+        float tempOutOfRange = abs(maxAirTemp - airTemp); 
+        tempPercent = tempOutOfRange / (maxAirTemp / 100.0);
+      }
+      else if (airTemp < minAirTemp && user::fansControlTemperature) {
+        float tempOutOfRange = abs(minAirTemp - airTemp);
+        tempPercent = tempOutOfRange / (minAirTemp / 100.0);
+        //Serial.println(F("SPEED_DOWN tempPercent: %d", tempPercent);
+      }
+
+      // Check to see if the humidity is out of range
+      if (sensor::humidity > user::targetMaxHumidity && user::fansControlHumidity)  {
+        float humOutOfRange = abs(user::targetMaxHumidity - sensor::humidity);
+        humPercent = humOutOfRange / (user::targetMaxHumidity / 100.0);
+        //Serial.println(F("SPEED_UP humPercent: %d", humPercent);
+      }
+      else if (sensor::humidity < user::targetMinHumidity && user::fansControlHumidity)  {
+        float humOutOfRange = abs(user::targetMinHumidity - sensor::humidity);
+        humPercent = humOutOfRange / (user::targetMinHumidity / 100.0);
+        //Serial.println(F("SPEED_DOWN humPercent: %d", humPercent);
+      }
+
+      // Control the air heater
+      static uint8_t prevAirHeaterMin = 69;
+      if (rtc.minute() != prevAirHeaterMin) {
+        if (airTemp <= minAirTemp && !device::airHeaterIsOn) {
+          device::airHeaterIsOn = true;
+          if (fanDebug)   
+            Serial.println(F("air heater on"));
+          digitalWrite(pin::airHeater, !device::relayOffState);
+          saveLogMessage(11); // save log message, air heater on
+        }
+        else if (airTemp > minAirTemp &&device::airHeaterIsOn) {
+          device::airHeaterIsOn = false;
+          if (fanDebug)   
+            Serial.println(F("air heater off"));
+          digitalWrite(pin::airHeater, device::relayOffState);
+          saveLogMessage(12); // save log message, air heater off
+        }
+        prevAirHeaterMin = rtc.minute();
+      }
+
+      float averageTemp = averageShortToFltArray(sensor::fanTemperatureArray, sensor::fanArrayPos);
+      sensor::airStates tempAirState = sensor::IS_SAME;
+      if (abs(airTemp - averageTemp) >=sensor:: airHysteresis) {
+        //Serial.print(F("Has changed, tempAirState: "));
+        if (airTemp < averageTemp)
+          tempAirState = sensor::IS_FALLING;
+        else if (airTemp > averageTemp)
+          tempAirState = sensor::IS_RISING;
+        //Serial.println(tempAirState);
+      }
+      float averageHum = averageShortToFltArray(sensor::fanHumidityArray, sensor::fanArrayPos);
+      sensor::airStates humAirState = sensor::IS_SAME;
+      if (abs(sensor::humidity - averageHum) >= sensor::airHysteresis)  {
+        //Serial.print(F("Has changed, humAirState: "));
+        if (sensor::humidity < averageHum)
+          humAirState = sensor::IS_FALLING;
+        else if (sensor::humidity > averageHum)
+          humAirState = sensor::IS_RISING;
+        //Serial.println(humAirState);
+      }
+
+      if (user::fansControlTemperature) {
+        if (fanDebug) {
+          Serial.print(F("Air temp: ")); Serial.print(airTemp, 2); Serial.print(F("c, average temp: ")); Serial.print(averageTemp, 2); Serial.print(F("c, over ")); Serial.print(sensor::fanArrayPos); Serial.println(F(" reads @ 2 sec per read"));
+        }     
+        adjustFanMode(airTemp, tempOption, tempAirState, "air temp", tempPercent, minAirTemp, maxAirTemp, fanDebug);
+      }
+      if (user::fansControlHumidity) {
+        if (fanDebug) {
+          Serial.print(F("Humidity: ")); Serial.print(sensor::humidity, 2); Serial.print(F("%, averageHum: ")); Serial.print(averageHum, 2); Serial.println(F("%, over ")); Serial.print(sensor::fanArrayPos); Serial.println(F(" reads @ 2 sec per read"));
+        }   
+        adjustFanMode(sensor::humidity, humOption, humAirState, "humidity", humPercent, user::targetMinHumidity, user::targetMaxHumidity, fanDebug);
+      }
+
+      // Temperature has priority over humidity
+      if (tempOption != device::SPEED_IDLE || !user::fansControlHumidity) {
+        fanMode = tempOption;
+        if (fanDebug) {
+          Serial.print(F("Fans set to control temperature")); Serial.print(user::fansControlHumidity ? F(", as temperature takes priority\n") : F("\n"));
+        }     
+      }
+      else {
+        fanMode = humOption;
+        if (fanDebug) {
+          Serial.print(F("Fans set to control humidity")); Serial.print(user::fansControlTemperature ? F(", as the temperature is in range\n") : F("\n"));
+        }        
+      }
+      
+      // adjust the fan speeds
+      if (user::fanOneEnabled && !user::fanOneFixedSpeed) {
+        if (fanMode == device::SPEED_MAX)
+          device::fanOneSpeed = user::targetMaxFanOneSpeed;
+        else if (fanMode == device::SPEED_MIN)
+          device::fanOneSpeed = user::targetMinFanOneSpeed;
+        else if (fanMode == device::SPEED_UP && device::fanOneSpeed < user::targetMaxFanOneSpeed)
+          device::fanOneSpeed++;
+        else if (fanMode == device::SPEED_UP_SLOW && device::fanOneSpeed < user::targetMaxFanOneSpeed)
+          device::fanOneSpeed += 0.25;
+        else if (fanMode == device::SPEED_DOWN && device::fanOneSpeed > user::targetMinFanOneSpeed)
+          device::fanOneSpeed--;
+        else if (fanMode == device::SPEED_DOWN_SLOW && device::fanOneSpeed > user::targetMinFanOneSpeed)
+          device::fanOneSpeed -= 0.25;
+        if (device::fanOneSpeed < user::targetMinFanOneSpeed) 
+          device::fanOneSpeed = user::targetMinFanOneSpeed;   
+        else if (device::fanOneSpeed > user::targetMaxFanOneSpeed) 
+          device::fanOneSpeed = user::targetMaxFanOneSpeed;  
+      }
+      if (user::fanTwoEnabled && !user::fanTwoFixedSpeed) {
+        if (fanMode == device::SPEED_MAX)
+          device::fanTwoSpeed = user::targetMaxFanTwoSpeed;
+        else if (fanMode == device::SPEED_MIN)
+          device::fanTwoSpeed = user::targetMinFanTwoSpeed;
+        else if (fanMode == device::SPEED_UP && device::fanTwoSpeed < user::targetMaxFanTwoSpeed)
+          device::fanTwoSpeed++;
+        else if (fanMode == device::SPEED_UP_SLOW && device::fanTwoSpeed < user::targetMaxFanTwoSpeed)
+          device::fanTwoSpeed += 0.25;
+        else if (fanMode == device::SPEED_DOWN && device::fanTwoSpeed > user::targetMinFanTwoSpeed)
+          device::fanTwoSpeed--;
+        else if (fanMode == device::SPEED_DOWN_SLOW && device::fanTwoSpeed > user::targetMinFanTwoSpeed)
+          device::fanTwoSpeed -= 0.25;
+        if (device::fanTwoSpeed < user::targetMinFanTwoSpeed) 
+          device::fanTwoSpeed = user::targetMinFanTwoSpeed;  
+        else if (device::fanTwoSpeed > user::targetMaxFanTwoSpeed) 
+          device::fanTwoSpeed = user::targetMaxFanTwoSpeed;
+      }
+      previousMillis = millis();
     }
-    else {
-      fanMode = humOption;
-      if (fanDebug) {
-        Serial.print(F("Fans set to control humidity")); Serial.print(user::fansControlTemperature ? F(", as the temperature is in range\n") : F("\n"));
-      }        
-    }
-    
-    // adjust the fan speeds
-    if (fanMode == device::SPEED_MAX)
-      device::fanOneSpeed = user::targetMaxFanOneSpeed;
-    else if (fanMode == device::SPEED_MIN)
-      device::fanOneSpeed = user::targetMinFanOneSpeed;
-    else if (fanMode == device::SPEED_UP && device::fanOneSpeed < user::targetMaxFanOneSpeed)
-      device::fanOneSpeed++;
-    else if (fanMode == device::SPEED_UP_SLOW && device::fanOneSpeed < user::targetMaxFanOneSpeed)
-      device::fanOneSpeed += 0.25;
-    else if (fanMode == device::SPEED_DOWN && device::fanOneSpeed > user::targetMinFanOneSpeed)
-      device::fanOneSpeed--;
-    else if (fanMode == device::SPEED_DOWN_SLOW && device::fanOneSpeed > user::targetMinFanOneSpeed)
-      device::fanOneSpeed -= 0.25;
-
-    if (fanMode == device::SPEED_MAX)
-      device::fanTwoSpeed = user::targetMaxFanTwoSpeed;
-    else if (fanMode == device::SPEED_MIN)
-      device::fanTwoSpeed = user::targetMinFanTwoSpeed;
-    else if (fanMode == device::SPEED_UP && device::fanTwoSpeed < user::targetMaxFanTwoSpeed)
-      device::fanTwoSpeed++;
-    else if (fanMode == device::SPEED_UP_SLOW && device::fanTwoSpeed < user::targetMaxFanTwoSpeed)
-      device::fanTwoSpeed += 0.25;
-    else if (fanMode == device::SPEED_DOWN && device::fanTwoSpeed > user::targetMinFanTwoSpeed)
-      device::fanTwoSpeed--;
-    else if (fanMode == device::SPEED_DOWN_SLOW && device::fanTwoSpeed > user::targetMinFanTwoSpeed)
-      device::fanTwoSpeed -= 0.25;
-
-    // Check to see if the fan speed is less than or greater than the min or max speed and if so adjust the current fans speed
-    if (device::fanOneSpeed < user::targetMinFanOneSpeed) 
-      device::fanOneSpeed = user::targetMinFanOneSpeed;   
-    else if (device::fanOneSpeed > user::targetMaxFanOneSpeed) 
-      device::fanOneSpeed = user::targetMaxFanOneSpeed;   
-    if (device::fanTwoSpeed < user::targetMinFanTwoSpeed) 
-      device::fanTwoSpeed = user::targetMinFanTwoSpeed;  
-    else if (device::fanTwoSpeed > user::targetMaxFanTwoSpeed) 
-      device::fanTwoSpeed = user::targetMaxFanTwoSpeed;
-
+  }
+  // Send the new fan speeds to the Atmel328P
+  if (device::fanOneSpeed != previousFanOneSpeed) {
     if (fanDebug) {
-      Serial.print(F("Fan one speed:")); Serial.println(device::fanOneSpeed);
-      Serial.print(F("Fan two speed:")); Serial.println(device::fanTwoSpeed);
+      Serial.print(F("Fan one speed: ")); Serial.println(device::fanOneSpeed);
     }
-
-    // Send the new fan speeds to the Atmel328P
-    if (device::fanOneSpeed != previousFanOneSpeed) {
-      sendToSlave('Z', device::fanOneSpeed);
-      previousFanOneSpeed = device::fanOneSpeed;
+    sendToSlave('Z', device::fanOneSpeed);
+    previousFanOneSpeed = device::fanOneSpeed;
+  }
+  if (device::fanTwoSpeed != previousFanTwoSpeed) {
+    if (fanDebug) {
+      Serial.print(F("Fan two speed: ")); Serial.println(device::fanTwoSpeed);
     }
-    if (device::fanTwoSpeed != previousFanTwoSpeed) {
-      sendToSlave('X', device::fanTwoSpeed);
-      previousFanTwoSpeed = device::fanTwoSpeed;
-    }
-    previousMillis = millis();
+    sendToSlave('X', device::fanTwoSpeed);
+    previousFanTwoSpeed = device::fanTwoSpeed;
   }
 }
 

@@ -310,7 +310,9 @@ uint16_t getSetProfile(uint16_t a_address, const device::eepromModes a_mode) {
   eepromGetSet(a_address, a_mode, user::fansControlTemperature);      
   eepromGetSet(a_address, a_mode, user::fansControlHumidity);        
   eepromGetSet(a_address, a_mode, user::fanOneFixedSpeed);           
-  eepromGetSet(a_address, a_mode, user::fanTwoFixedSpeed);      
+  eepromGetSet(a_address, a_mode, user::fanTwoFixedSpeed); 
+  eepromGetSet(a_address, a_mode, user::fanOneEnabled);           
+  eepromGetSet(a_address, a_mode, user::fanTwoEnabled);      
   eepromGetSet(a_address, a_mode, user::numberOfDosers);      
   eepromGetSet(a_address, a_mode, user::heightSensor);  
   eepromGetSet(a_address, a_mode, sensor::sensorArrayPos);     
