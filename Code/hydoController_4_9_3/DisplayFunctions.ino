@@ -1574,7 +1574,7 @@ void displaySystemLogs() {
       tft.print(105, startY, (const __FlashStringHelper *)logText);
       tft.print(F(" "));
       tft.print(message::timeStrArray[i]);
-      startY += 50;
+      startY += 42;
     }
   }
 }

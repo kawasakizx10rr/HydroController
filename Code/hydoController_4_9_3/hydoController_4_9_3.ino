@@ -685,6 +685,7 @@ bool remotlyLoadUserProfile = false;
 bool remotlySaveUserProfile = false;
 char ssid[16] = "HydroController";
 char password[16] = "Password1!";
+//char buffer[256] {0};
 bool hiddenNetwork = false;
 }
 

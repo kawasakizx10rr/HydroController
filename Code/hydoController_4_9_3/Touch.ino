@@ -211,69 +211,8 @@ void sliders() {
       }
       //Serial.print(F("systemLogScrollPos: ")); Serial.print(display::systemLogScrollPos); Serial.print(F(", max systemLogPos: ")); Serial.println(message::systemLogPos);
     }
-
-    else if (display::settingsPage == 0) {
-      if (!display::showRTCtime) {
-        if (slideYIncrement == 1 && display::settingsPageZeroScrollPos < 2) {
-          display::settingsPageZeroScrollPos++;
-          display::refreshPage = true;
-          beep();
-          clearPage();
-        }
-        else if (slideYIncrement == -1 && display::settingsPageZeroScrollPos > 0) {
-          display::settingsPageZeroScrollPos--;
-          display::refreshPage = true;
-          beep();
-          clearPage();
-        }
-      }
-    }
-    else if (display::settingsPage == 1) {
-      if (!user::resetSettings) {
-        if (slideYIncrement == 1 && display::settingsPageOneScrollPos < 5) {
-          display::settingsPageOneScrollPos++;
-          display::refreshPage = true;
-          beep();
-          clearPage();
-        }
-        else if (slideYIncrement == -1 && display::settingsPageOneScrollPos > 0) {
-          display::settingsPageOneScrollPos--;
-          display::refreshPage = true;
-          beep();
-          clearPage();
-        }
-      }
-    }
-    else if (display::settingsPage == 2) {
-      if (slideYIncrement == 1 && display::settingsPageTwoScrollPos < 1) {
-        display::settingsPageTwoScrollPos++;
-        display::refreshPage = true;
-        beep();
-        clearPage();
-      }
-      else if (slideYIncrement == -1 && display::settingsPageTwoScrollPos > 0) {
-        display::settingsPageTwoScrollPos--;
-        display::refreshPage = true;
-        beep();
-        clearPage();
-      }
-    }
-    else if (display::settingsPage == 3) {
-      if (slideYIncrement == 1 && display::settingsPageThreeScrollPos < 2) {
-        display::settingsPageThreeScrollPos++;
-        display::refreshPage = true;
-        beep();
-        clearPage();
-      }
-      else if (slideYIncrement == -1 && display::settingsPageThreeScrollPos > 0) {
-        display::settingsPageThreeScrollPos--;
-        display::refreshPage = true;
-        beep();
-        clearPage();
-      }
-    }
     // Settings page X axsis slider
-    if (!display::showingDialog) {
+    else if (!display::showingDialog) {
       if (slideXIncrement == 1 && display::settingsPage < 4) {
         display::settingsPage++;
         display::refreshPage = true;
@@ -331,9 +270,6 @@ void sliders() {
         display::refreshPage = true;
         beep();
         clearPage();
-      }
-      else {
-
       }
     }
   }

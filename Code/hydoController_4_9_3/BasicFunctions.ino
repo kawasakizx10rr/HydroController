@@ -10,9 +10,9 @@ void initializeDevice() {
   tft.backlight(true);
   tft.displayOn(true);
   tft.brightness(user::brightness);
-  if (device::globalDebug) {
+  //if (device::globalDebug) { // Always show this message so we know if a crash/reset has happended
     Serial.print(F("Hydro Master v")); Serial.print(device::versionNumber); Serial.println(F(" started..."));
-  }
+  //}
   tft.fillWindow(RA8875_BLACK);
   tft.setFont(&akashi_36px_Regular);
   tft.setFontScale(2);
