@@ -313,7 +313,7 @@ uint8_t infoPos = 0;
 
 namespace device {
 uint32_t prevMillis = millis();
-bool globalDebug = true; 
+bool globalDebug = false; 
 float currentDoserMls = 0;
 uint16_t profileEEPROMSize = 0;
 uint16_t systemEEPROMSize = 0;
@@ -747,4 +747,5 @@ void loop() {
   envriomentalControl();
   displayWarnings();
   esp8266DataHandler();
+  serialDebugger();
 }

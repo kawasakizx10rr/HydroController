@@ -223,6 +223,48 @@ void initializeDevice() {
   //runDosers(enabledDosers, dosingMls, 35.67, 0, millis());
 }
 
+// called in while loops
+void timedEvents() {
+  static uint32_t previousMillis = millis();
+  if (millis() - previousMillis >= 1000UL) {
+    rtc.refresh();
+    relayTimers();
+    esp8266DataHandler();
+    serialDebugger();
+    previousMillis = millis();
+  }  
+}
+
+void serialDebugger() {
+  char str[16], charCnt = 0;
+  char buffer[16] {0};
+  while (Serial.available() > 0) {
+    char c = Serial.read();
+    if (c == '=') {
+      strcpy(str, buffer);
+      memset(buffer, 0 , 16);
+      charCnt = 0;
+    }
+    else if (c == '\r' || c == '\n' || c == '\0') {
+      setDebugCmd(str, buffer);
+      charCnt = 0;
+    }   
+    else if (c >= 32 && c <= 126 && charCnt < 16) {
+      buffer[charCnt++] = c;
+    }
+  }
+}
+
+void setDebugCmd(const char* a_str, const char* a_buffer) {
+  if (strcmp(a_str, "debug") == 0)  {  
+    device::globalDebug = atoi(a_buffer);
+    Serial.print(F("Setting debug to ")); Serial.println(device::globalDebug ? F("true") : F("false"));
+  }
+  else {
+    Serial.print(F("Unknown cmd: ")); Serial.print(a_str); Serial.print(F("=")); Serial.println(a_buffer);
+  }
+}
+
 // Send a switchcase and command to the 328P via i2c
 void sendToSlave(const char& a_switchcase, const uint8_t& a_value) {
   Wire.beginTransmission(device::unoAddress);

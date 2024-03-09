@@ -1909,7 +1909,7 @@ void drawSettingsPageFour() {
         Serial.print(F("cal touch y: "));  Serial.println(display::touch_y); 
       }
 
-      updateRelayTimers(); 
+      timedEvents(); 
     }
   }
   else {

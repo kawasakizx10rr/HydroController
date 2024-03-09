@@ -104,7 +104,7 @@ void waterLevelControl() {
           }
         }
       }
-      updateRelayTimers(); 
+      timedEvents(); 
     }
     // Turn off the outlet pump
     if (outletPumpIsOn) {
@@ -147,7 +147,7 @@ void waterLevelControl() {
       digitalWrite(pin::inletPump, !device::relayOffState);
       // Refill the tank and run the refill dosers
       while (refillTank(device::prevMillis, previousWaterLevel, startRefilling, runRefillDosers, inletPumpIsOn)) {
-        updateRelayTimers(); 
+        timedEvents(); 
       }    
       // Refill complete
       device::dosingTimerHourCounter = 0;
@@ -434,16 +434,6 @@ bool restartTimer(const uint8_t a_onTimeMin, const uint8_t a_onTimeHour, const u
   }
 }
 
-// called in while loops
-void updateRelayTimers() {
-  static uint32_t previousMillis = millis();
-  if (millis() - previousMillis >= 1000UL) {
-    rtc.refresh();
-    relayTimers();
-    previousMillis = millis();
-  }  
-}
-
 // controls the enviroments co2 levels
 void co2Control() {
   bool startCo2Relay = false;
@@ -498,7 +488,7 @@ void co2Control() {
         }
         device::prevMillis = millis();
       }
-      updateRelayTimers();
+      timedEvents();
     }
     digitalWrite(pin::co2Solenoid, device::relayOffState);
   }
@@ -1099,7 +1089,7 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
         }
       }
     }
-    updateRelayTimers();
+    timedEvents();
   }
 }
 

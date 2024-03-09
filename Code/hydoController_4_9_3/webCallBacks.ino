@@ -1,11 +1,11 @@
 // !value,value
 void esp8266DataHandler() {
-  bool getData = false, readData = false;
-  uint8_t value = 0, cmdsRecived = 0, charCnt = 0;
-  char buffer[32] {0};
-  uint32_t timeout = millis() + 100UL;
+  static bool getData = false, readData = false;
+  static uint8_t value = 0, cmdsRecived = 0, charCnt = 0;
+  static char buffer[32] {0};
+  //uint32_t timeout = millis() + 100UL;
   if (wifi::wifiEnabled) {
-    while (Serial1.available() > 0 && millis() < timeout) {
+    while (Serial1.available() > 0) {// && millis() < timeout
       char c = Serial1.read();
       // reset local variables
       if (c == '!') {
@@ -18,6 +18,7 @@ void esp8266DataHandler() {
       }
       // value to be stored
       else if (c == ',' && readData) {
+        //Serial.print(F("cmdsRecived: ")); Serial.print(cmdsRecived); Serial.print(F(", buffer: ")); Serial.println(buffer);
         if (cmdsRecived == 0) {
           getData = atoi(buffer);
         }
@@ -29,10 +30,14 @@ void esp8266DataHandler() {
             getValues(value, atoi(buffer));
           else
             setValues(value, buffer);
+          value = 0;
+          cmdsRecived = 0;
+          getData = false;
+          readData = false;
         }
         memset(buffer, 0 , 32);
         cmdsRecived++;
-        charCnt = 0;
+        charCnt = 0;     
       }
       // add serial data to buffer
       else if (c >= 32 && c <= 126 && charCnt < 32 && readData) { // 'space' to '~'
@@ -46,6 +51,7 @@ void getValues(const uint8_t a_page, const uint8_t a_slide) {
   Serial.print(F("getValues page: ")); Serial.print(a_page); Serial.print(F(", slide: ")); Serial.println(a_slide); // __FUNCTION__ is not stored in PROGMEM
     // Page 0 (Home page)
   Serial1.print(F("!"));
+  delay(5);
   if (a_page == 0) {
     printInt(user::convertToF);
     printInt(user::convertToInches); 
@@ -243,11 +249,11 @@ void getValues(const uint8_t a_page, const uint8_t a_slide) {
   }
   // Page 3 (Profiles page)
   else if (a_page == 3) {
-    Serial1.print(user::profileOneName); Serial1.print(F(","));
-    Serial1.print(user::profileTwoName); Serial1.print(F(","));
-    Serial1.print(user::profileThreeName); Serial1.print(F(","));
-    Serial1.print(user::profileFourName); Serial1.print(F(","));
-    Serial1.print(user::profileOneName); Serial1.print(F(","));
+    Serial1.print(user::profileOneName); Serial1.print(F(",")); delay(5);
+    Serial1.print(user::profileTwoName); Serial1.print(F(",")); delay(5);
+    Serial1.print(user::profileThreeName); Serial1.print(F(",")); delay(5);
+    Serial1.print(user::profileFourName); Serial1.print(F(",")); delay(5);
+    Serial1.print(user::profileOneName); Serial1.print(F(",")); delay(5);
   }
   // Page 4 (Settings page)
   else if (a_page == 4) {
@@ -453,7 +459,7 @@ void getValues(const uint8_t a_page, const uint8_t a_slide) {
     printFloat(user::humidityErrorMargin, 1);
   }
   else {
-    Serial.print(F("Page not found!"));
+    Serial.println(F("Page not found!"));
   }
 }
 
@@ -918,20 +924,20 @@ void setValues(const uint8_t a_cmd, const char* a_val) {
 void printFloat(const float a_value, const int16_t a_precison) {
  Serial1.print(a_value, a_precison); 
  Serial1.print(F(","));
- delay(1);
+ delay(5);
 }
 
 void printInt(const uint16_t a_value) {
  Serial1.print(a_value); 
  Serial1.print(F(","));
- delay(1);
+ delay(5);
 }
 
 void printShortArray(const uint16_t* a_array, const int16_t a_len, const bool a_isCompressed) {
   for (int i = 0; i < a_len; i++) {
     Serial1.print(uncompressShort(a_array[i], a_isCompressed)); 
     Serial1.print(F(","));
-    delay(1);
+    delay(5);
   }
 }
 
@@ -939,7 +945,7 @@ void printBitArray(const uint32_t a_value, const int8_t a_len) {
   for (int i = a_len; i >= 0; i--) {
     Serial1.print(bitRead(a_value, i)); 
     Serial1.print(F(","));
-    delay(1);
+    delay(5);
   }
 }
 
