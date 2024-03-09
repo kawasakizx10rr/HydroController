@@ -37,8 +37,9 @@ void handleRoot() {
 void setValue() {
   yield();
   uint8_t cmdIndex = 0;
-  String cmd = server.arg("cmd");
-  char val[64]{ 0 };
+  char cmd[32]{0};
+  char val[64]{0};
+  server.arg("cmd").toCharArray(cmd, 32);
   server.arg("val").toCharArray(val, 64);
   if (cmd == "" || val[0] == 0) {  //Parameters not found
     if (device::globalDebug)
@@ -53,562 +54,562 @@ void setValue() {
     }
     // ============== PROFILES PAGE ==============
     // profileOneName
-    if (cmd == F("profileOneName")) {
+    if (strcmp(cmd, "profileOneName") == 0) {
       cmdIndex = 0;
-      buffToCharArray(val, user::profileOneName, 11);
+      buffToCharArray(val, user::profileOneName, 16);
     }
     // profileTwoName
-    else if (cmd == F("profileTwoName")) {
+    else if (strcmp(cmd, "profileTwoName") == 0) {
       cmdIndex = 1;
-      buffToCharArray(val, user::profileTwoName, 11);
+      buffToCharArray(val, user::profileTwoName, 16);
     }
     // profileThreeName
-    else if (cmd == F("profileThreeName")) {
+    else if (strcmp(cmd, "profileThreeName") == 0) {
       cmdIndex = 2;
-      buffToCharArray(val, user::profileThreeName, 11);
+      buffToCharArray(val, user::profileThreeName, 16);
     }
     // profileFourName
-    else if (cmd == F("profileFourName")) {
+    else if (strcmp(cmd, "profileFourName") == 0) {
       cmdIndex = 3;
-      buffToCharArray(val, user::profileFourName, 11);
+      buffToCharArray(val, user::profileFourName, 16);
     }
     // profileFiveName
-    else if (cmd == F("profileFiveName")) {
+    else if (strcmp(cmd, "profileFiveName") == 0) {
       cmdIndex = 4;
-      buffToCharArray(val, user::profileFiveName, 11);
+      buffToCharArray(val, user::profileFiveName, 16);
     }
     // loadData
-    else if (cmd == F("loadData")) {
+    else if (strcmp(cmd, "loadData") == 0) {
       cmdIndex = 5;
       device::remotlyLoadUserProfile = atoi(val);
     }
     // saveData
-    else if (cmd == F("saveData")) {
+    else if (strcmp(cmd, "saveData") == 0) {
       cmdIndex = 6;
       device::remotlySaveUserProfile = atoi(val);
     }
     // ============== SETTINGS PAGE  ==============
     // numberOfDosers
-    else if (cmd == F("numDosers")) {
+    else if (strcmp(cmd, "numDosers") == 0) {
       cmdIndex = 7;
       user::numberOfDosers = atoi(val);
     }
     // dosingInterval
-    else if (cmd == F("dosingInt")) {
+    else if (strcmp(cmd, "dosingInt") == 0) {
       cmdIndex = 8;
       user::dosingInterval = atoi(val);
     }
     // convertToFarenheit
-    else if (cmd == F("convertToF")) {
+    else if (strcmp(cmd, "convertToF") == 0) {
       cmdIndex = 9;
       user::convertToF = strBool(val);
     }
     // convertToInchs
-    else if (cmd == F("convertToInchs")) {
+    else if (strcmp(cmd, "convertToInchs") == 0) {
       cmdIndex = 10;
       user::convertToInches = strBool(val);
     }
     // convertToTds
-    else if (cmd == F("convertToTds")) {
+    else if (strcmp(cmd, "convertToTds") == 0) {
 			cmdIndex = 11;
       user::convertToTds = strBool(val);
     }
     // disableCo2Warnings
-    else if (cmd == F("disableCo2Warn")) {
+    else if (strcmp(cmd, "disableCo2Warn") == 0) {
 			cmdIndex = 12;
       user::disableCo2Warnings = strBool(val);
     }
     // disableEcWarnings
-    else if (cmd == F("disableEcWarn")) {
+    else if (strcmp(cmd, "disableEcWarn") == 0) {
 			cmdIndex = 13;
       user::disableEcWarnings = strBool(val);
     }
     // disablePpmWarnings
-    else if (cmd == F("disablePpmWarn")) {
+    else if (strcmp(cmd, "disablePpmWarn") == 0) {
 			cmdIndex = 14;
       user::disablePpmWarnings = strBool(val);
     }
     // disablePhWarnings
-    else if (cmd == F("disablePhWarn")) {
+    else if (strcmp(cmd, "disablePhWarn") == 0) {
 			cmdIndex = 15;
       user::disablePhWarnings = strBool(val);
     }
     // disableWaterTempWarnings
-    else if (cmd == F("disableWaterTempWarn")) {
+    else if (strcmp(cmd, "disableWaterTempWarn") == 0) {
 			cmdIndex = 16;
       user::disableWaterTempWarnings = strBool(val);
     }
     // disableWaterHeightWarnings
-    else if (cmd == F("disableWaterHeightWarn")) {
+    else if (strcmp(cmd, "disableWaterHeightWarn") == 0) {
 			cmdIndex = 17;
       user::disableWaterHeightWarnings = strBool(val);
     }
     // disableAirTempWarnings
-    else if (cmd == F("disableAirTempWarn")) {
+    else if (strcmp(cmd, "disableAirTempWarn") == 0) {
 			cmdIndex = 18;
       user::disableAirTempWarnings = strBool(val);
     }
     // disableHumidityWarnings
-    else if (cmd == F("disableHumidityWarn")) {
+    else if (strcmp(cmd, "disableHumidityWarn") == 0) {
 			cmdIndex = 19;
       user::disableHumidityWarnings = strBool(val);
     }
     // ============== EC PAGE ==============
     // targetMinEc
-    else if (cmd == F("targetMinEc")) {
+    else if (strcmp(cmd, "targetMinEc") == 0) {
 			cmdIndex = 20;
       user::targetMinEc = atof(val);
     }
     // targetMaxEc
-    else if (cmd == F("targetMaxEc")) {
+    else if (strcmp(cmd, "targetMaxEc") == 0) {
 			cmdIndex = 21;
       user::targetMaxEc = atof(val);
     }
     // ============== TDS/PPM PAGE ==============
     // targetMinTds
-    else if (cmd == F("targetMinTds")) {
+    else if (strcmp(cmd, "targetMinTds") == 0) {
 			cmdIndex = 22;
       user::targetMinTds = atof(val);
     }
     // targetMaxTds
-    else if (cmd == F("targetMaxTds")) {
+    else if (strcmp(cmd, "targetMaxTds") == 0) {
 			cmdIndex = 23;
       user::targetMaxTds = atof(val);
     }
     // ============== PH PAGE ==============
     // targetMinPh
-    else if (cmd == F("targetMinPh")) {
+    else if (strcmp(cmd, "targetMinPh") == 0) {
 			cmdIndex = 24;
       user::targetMinPh = atof(val);
     }
     // targetMaxPh
-    else if (cmd == F("targetMaxPh")) {
+    else if (strcmp(cmd, "targetMaxPh") == 0) {
 			cmdIndex = 25;
       user::targetMaxPh = atof(val);
     }
     // ============== Co2 PAGE ==============
     // targetCo2
-    else if (cmd == F("targetCo2")) {
+    else if (strcmp(cmd, "targetCo2") == 0) {
 			cmdIndex = 26;
       user::targetCo2 = atoi(val);
     }
     // co2Offset
-    else if (cmd == F("co2Offset")) {
+    else if (strcmp(cmd, "co2Offset") == 0) {
 			cmdIndex = 27;
       user::co2Offset = atoi(val);
     }
     // roomLength
-    else if (cmd == F("roomLength")) {
+    else if (strcmp(cmd, "roomLength") == 0) {
 			cmdIndex = 28;
       user::roomLength = atoi(val);
     }
     // roomWidth
-    else if (cmd == F("roomWidth")) {
+    else if (strcmp(cmd, "roomWidth") == 0) {
 			cmdIndex = 29;
       user::roomWidth = atoi(val);
     }
     // roomHeight
-    else if (cmd == F("roomHeight")) {
+    else if (strcmp(cmd, "roomHeight") == 0) {
 			cmdIndex = 30;
       user::roomHeight = atoi(val);
     }
     // co2Flowrate
-    else if (cmd == F("co2Flowrate")) {
+    else if (strcmp(cmd, "co2Flowrate") == 0) {
 			cmdIndex = 31;
       user::co2Flowrate = atof(val);
     }
     // co2CheckTimeMinute
-    else if (cmd == F("co2CheckTimeMin")) {
+    else if (strcmp(cmd, "co2CheckTimeMin") == 0) {
 			cmdIndex = 32;
       user::co2CheckTimeMinute = atoi(val);
     }
     // co2CheckTimeHour
-    else if (cmd == F("co2CheckTimeHour")) {
+    else if (strcmp(cmd, "co2CheckTimeHour") == 0) {
 			cmdIndex = 33;
       user::co2CheckTimeHour = atoi(val);
     }
     // disableFansTimer
-    else if (cmd == F("disableFansTimer")) {
+    else if (strcmp(cmd, "disableFansTimer") == 0) {
 			cmdIndex = 34;
       user::disableFansTimer = atoi(val);
     }
     // manualCo2Duration
-    else if (cmd == F("gasTimeEnabled")) {
+    else if (strcmp(cmd, "gasTimeEnabled") == 0) {
 			cmdIndex = 35;
       user::enableManualCo2Duration = strBool(val);
     }
     // manualCo2GasDuration
-    else if (cmd == F("gasTime")) {
+    else if (strcmp(cmd, "gasTime") == 0) {
 			cmdIndex = 36;
       user::manualCo2GasDuration = atoi(val);
     }
     // disableCo2Control
-    else if (cmd == F("disableCo2Control")) {
+    else if (strcmp(cmd, "disableCo2Control") == 0) {
 			cmdIndex = 37;
       user::disableCo2Control = strBool(val);
     }
     // ============== WATER PAGE ==============
     // targetMinWaterHeight
-    else if (cmd == F("targetMinWaterLvl")) {
+    else if (strcmp(cmd, "targetMinWaterLvl") == 0) {
 			cmdIndex = 38;
       user::targetMinWaterHeight = atof(val);
     }
     // targetMaxWaterHeight
-    else if (cmd == F("targetMaxWaterLvl")) {
+    else if (strcmp(cmd, "targetMaxWaterLvl") == 0) {
 			cmdIndex = 39;
       user::targetMaxWaterHeight = atof(val);
     }
     // targetMinWaterTemp
-    else if (cmd == F("targetMinWaterTemp")) {
+    else if (strcmp(cmd, "targetMinWaterTemp") == 0) {
 			cmdIndex = 40;
       user::targetMinWaterTemp = atof(val);
     }
     // targetMaxWaterTemp
-    else if (cmd == F("targetMaxWaterTemp")) {
+    else if (strcmp(cmd, "targetMaxWaterTemp") == 0) {
 			cmdIndex = 41;
       user::targetMaxWaterTemp = atof(val);
     }
     // targetWaterTankLength
-    else if (cmd == F("targetWaterTankLength")) {
+    else if (strcmp(cmd, "targetWaterTankLength") == 0) {
 			cmdIndex = 42;
       user::waterTankLength = atof(val);
     }
     // targetWaterTankWidth
-    else if (cmd == F("targetWaterTankWidth")) {
+    else if (strcmp(cmd, "targetWaterTankWidth") == 0) {
 			cmdIndex = 43;
       user::waterTankWidth = atof(val);
     }
     // autoFillDays
-    else if (cmd == F("autoFillDays")) {
+    else if (strcmp(cmd, "autoFillDays") == 0) {
 			cmdIndex = 44;
       buffToBoolArray(val, user::autoFillDays, 31);
     }
     // autoFillMinute
-    else if (cmd == F("autoFillMinute")) {
+    else if (strcmp(cmd, "autoFillMinute") == 0) {
 			cmdIndex = 45;
       user::autoFillMinute = atoi(val);
     }
     // autoFillHour
-    else if (cmd == F("autoFillHour")) {
+    else if (strcmp(cmd, "autoFillHour") == 0) {
 			cmdIndex = 46;
       user::autoFillHour = atoi(val);
     }
     // disableDrainAndRefill
-    else if (cmd == F("disableRefillDrain")) {
+    else if (strcmp(cmd, "disableRefillDrain") == 0) {
 			cmdIndex = 47;
       user::disableDrainAndRefill = strBool(val);
     }
     // refillDoserOneMills
-    else if (cmd == F("d1mls")) {
+    else if (strcmp(cmd, "d1mls") == 0) {
 			cmdIndex = 48;
       user::refillDoserOneMills = atoi(val);
     }
     // refillDoserTwoMills
-    else if (cmd == F("d2mls")) {
+    else if (strcmp(cmd, "d2mls") == 0) {
 			cmdIndex = 49;
       user::refillDoserTwoMills = atoi(val);
     }
     // refillDoserThreeMills
-    else if (cmd == F("d3mls")) {
+    else if (strcmp(cmd, "d3mls") == 0) {
 			cmdIndex = 50;
       user::refillDoserThreeMills = atoi(val);
     }
     // refillDoserFourMills
-    else if (cmd == F("d4mls")) {
+    else if (strcmp(cmd, "d4mls") == 0) {
 			cmdIndex = 51;
       user::refillDoserFourMills = atoi(val);
     }
     // refillDoserFiveMills
-    else if (cmd == F("d5mls")) {
+    else if (strcmp(cmd, "d5mls") == 0) {
 			cmdIndex = 52;
       user::refillDoserFiveMills = atoi(val);
     }
     // refillDoserSixMills
-    else if (cmd == F("d6mls")) {
+    else if (strcmp(cmd, "d6mls") == 0) {
 			cmdIndex = 53;
       user::refillDoserSixMills = atoi(val);
     }
     // ============== DOSER PAGE ==============
     // doserOneMills
-    else if (cmd == F("doserMls_1")) {
+    else if (strcmp(cmd, "doserMls_1") == 0) {
 			cmdIndex = 54;
       user::doserOneMills = atoi(val);
     }
     // doserTwoMills
-    else if (cmd == F("doserMls_2")) {
+    else if (strcmp(cmd, "doserMls_2") == 0) {
 			cmdIndex = 55;
       user::doserTwoMills = atoi(val);
     }
     // doserThreeMills
-    else if (cmd == F("doserMls_3")) {
+    else if (strcmp(cmd, "doserMls_3") == 0) {
 			cmdIndex = 56;
       user::doserThreeMills = atoi(val);
     }
     // doserFourMills
-    else if (cmd == F("doserMls_4")) {
+    else if (strcmp(cmd, "doserMls_4") == 0) {
 			cmdIndex = 57;
       user::doserFourMills = atoi(val);
     }
     // doserFiveMills
-    else if (cmd == F("doserMls_5")) {
+    else if (strcmp(cmd, "doserMls_5") == 0) {
 			cmdIndex = 58;
       user::doserFiveMills = atoi(val);
     }
     // doserSixMills
-    else if (cmd == F("doserMls_6")) {
+    else if (strcmp(cmd, "doserMls_6") == 0) {
 			cmdIndex = 59;
       user::doserSixMills = atoi(val);
     }
     // doserOneMode
-    else if (cmd == F("doserOneMode")) {
+    else if (strcmp(cmd, "doserOneMode") == 0) {
 			cmdIndex = 60;
       user::doserOneMode = atoi(val);
     }
     // doserTwoMode
-    else if (cmd == F("doserTwoMode")) {
+    else if (strcmp(cmd, "doserTwoMode") == 0) {
 			cmdIndex = 61;
       user::doserTwoMode = atoi(val);
     }
     // doserThreeMode
-    else if (cmd == F("doserThreeMode")) {
+    else if (strcmp(cmd, "doserThreeMode") == 0) {
 			cmdIndex = 62;
       user::doserThreeMode = atoi(val);
     }
     // doserFourMode
-    else if (cmd == F("doserFourMode")) {
+    else if (strcmp(cmd, "doserFourMode") == 0) {
 			cmdIndex = 63;
       user::doserFourMode = atoi(val);
     }
     // doserFiveMode
-    else if (cmd == F("doserFiveMode")) {
+    else if (strcmp(cmd, "doserFiveMode") == 0) {
 			cmdIndex = 64;
       user::doserFiveMode = atoi(val);
     }
     // doserSixMode
-    else if (cmd == F("doserSixMode")) {
+    else if (strcmp(cmd, "doserSixMode") == 0) {
 			cmdIndex = 65;
       user::doserSixMode = atoi(val);
     }
     // ============== TIMER PAGE ==============
     // lightOnTimeMin
-    else if (cmd == F("lightOnTimeMin")) {
+    else if (strcmp(cmd, "lightOnTimeMin") == 0) {
 			cmdIndex = 66;
       user::lightOnTimeMin = atoi(val);
     }
     // lightOnTimeHour
-    else if (cmd == F("lightOnTimeHour")) {
+    else if (strcmp(cmd, "lightOnTimeHour") == 0) {
 			cmdIndex = 67;
       user::lightOnTimeHour = atoi(val);
     }
     // lightOffTimeMin
-    else if (cmd == F("lightOffTimeMin")) {
+    else if (strcmp(cmd, "lightOffTimeMin") == 0) {
 			cmdIndex = 68;
       user::lightOffTimeMin = atoi(val);
     }
     // lightOffTimeHour
-    else if (cmd == F("lightOffTimeHour")) {
+    else if (strcmp(cmd, "lightOffTimeHour") == 0) {
 			cmdIndex = 69;
       user::lightOffTimeHour = atoi(val);
     }
     // lightOnDuration
-    else if (cmd == F("lightOnDuration")) {
+    else if (strcmp(cmd, "lightOnDuration") == 0) {
 			cmdIndex = 70;
       user::lightOnDuration = atoi(val);
     }
     // lightOffDuration
-    else if (cmd == F("lightOffDuration")) {
+    else if (strcmp(cmd, "lightOffDuration") == 0) {
 			cmdIndex = 71;
       user::lightOffDuration = atoi(val);
     }
     // lightState
-    else if (cmd == F("lightState")) {
+    else if (strcmp(cmd, "lightState") == 0) {
 			cmdIndex = 72;
       user::lightState = atoi(val);
     }
     // lightMode
-    else if (cmd == F("lightMode")) {
+    else if (strcmp(cmd, "lightMode") == 0) {
 			cmdIndex = 73;
       user::lightMode = atoi(val);
     }
     // auxRelayOneOnTimeHour
-    else if (cmd == F("auxRelayOneOnTimeHour")) {
+    else if (strcmp(cmd, "auxRelayOneOnTimeHour") == 0) {
 			cmdIndex = 74;
       user::auxRelayOneOnTimeHour = atoi(val);
     }
     // auxRelayOneOnTimeMin
-    else if (cmd == F("auxRelayOneOnTimeMin")) {
+    else if (strcmp(cmd, "auxRelayOneOnTimeMin") == 0) {
 			cmdIndex = 75;
       user::auxRelayOneOnTimeMin = atoi(val);
     }
     // auxRelayOneOffTimeHour
-    else if (cmd == F("auxRelayOneOffTimeHour")) {
+    else if (strcmp(cmd, "auxRelayOneOffTimeHour") == 0) {
 			cmdIndex = 76;
       user::auxRelayOneOffTimeHour = atoi(val);
     }
     // auxRelayOneOffTimeMin
-    else if (cmd == F("auxRelayOneOffTimeMin")) {
+    else if (strcmp(cmd, "auxRelayOneOffTimeMin") == 0) {
 			cmdIndex = 77;
       user::auxRelayOneOffTimeMin = atoi(val);
     }
     // auxRelayOneOnDuration
-    else if (cmd == F("auxRelayOneOnDuration")) {
+    else if (strcmp(cmd, "auxRelayOneOnDuration") == 0) {
 			cmdIndex = 78;
       user::auxRelayOneOnDuration = atoi(val);
     }
     // auxRelayOneOffDuration
-    else if (cmd == F("auxRelayOneOffDuration")) {
+    else if (strcmp(cmd, "auxRelayOneOffDuration") == 0) {
 			cmdIndex = 79;
       user::auxRelayOneOffDuration = atoi(val);
     }
     // auxRelayOneState
-    else if (cmd == F("auxRelayOneState")) {
+    else if (strcmp(cmd, "auxRelayOneState") == 0) {
 			cmdIndex = 80;
       user::auxRelayOneState = atoi(val);
     }
     // auxRelayOneMode
-    else if (cmd == F("auxRelayOneMode")) {
+    else if (strcmp(cmd, "auxRelayOneMode") == 0) {
 			cmdIndex = 81;
       user::auxRelayOneMode = atoi(val);
     }
     // auxRelayTwoOnTimeHour
-    else if (cmd == F("auxRelayTwoOnTimeHour")) {
+    else if (strcmp(cmd, "auxRelayTwoOnTimeHour") == 0) {
 			cmdIndex = 82;
       user::auxRelayTwoOnTimeHour = atoi(val);
     }
     // auxRelayTwoOnTimeMin
-    else if (cmd == F("auxRelayTwoOnTimeMin")) {
+    else if (strcmp(cmd, "auxRelayTwoOnTimeMin") == 0) {
 			cmdIndex = 83;
       user::auxRelayTwoOnTimeMin = atoi(val);
     }
     // auxRelayTwoOffTimeHour
-    else if (cmd == F("auxRelayTwoOffTimeHour")) {
+    else if (strcmp(cmd, "auxRelayTwoOffTimeHour") == 0) {
 			cmdIndex = 84;
       user::auxRelayTwoOffTimeHour = atoi(val);
     }
     // auxRelayTwoOffTimeMin
-    else if (cmd == F("auxRelayTwoOffTimeMin")) {
+    else if (strcmp(cmd, "auxRelayTwoOffTimeMin") == 0) {
 			cmdIndex = 85;
       user::auxRelayTwoOffTimeMin = atoi(val);
     }
     // auxRelayTwoOnDuration
-    else if (cmd == F("auxRelayTwoOnDuration")) {
+    else if (strcmp(cmd, "auxRelayTwoOnDuration") == 0) {
 			cmdIndex = 86;
       user::auxRelayTwoOnDuration = atoi(val);
     }
     // auxRelayTwoOffDuration
-    else if (cmd == F("auxRelayTwoOffDuration")) {
+    else if (strcmp(cmd, "auxRelayTwoOffDuration") == 0) {
 			cmdIndex = 87;
       user::auxRelayTwoOffDuration = atoi(val);
     }
     // auxRelayTwoState
-    else if (cmd == F("auxRelayTwoState")) {
+    else if (strcmp(cmd, "auxRelayTwoState") == 0) {
 			cmdIndex = 88;
       user::auxRelayTwoState = atoi(val);
     }
     // auxRelayTwoMode
-    else if (cmd == F("auxRelayTwoMode")) {
+    else if (strcmp(cmd, "auxRelayTwoMode") == 0) {
 			cmdIndex = 89;
       user::auxRelayTwoMode = atoi(val);
     }
     // ============== FANS PAGE ==============
     // targetMinFanOneSpeed
-    else if (cmd == F("fanOneMinSpeed")) {
+    else if (strcmp(cmd, "fanOneMinSpeed") == 0) {
 			cmdIndex = 90;
       user::targetMinFanOneSpeed = atoi(val);
     }
     // targetMaxFanOneSpeed
-    else if (cmd == F("fanOneMaxSpeed")) {
+    else if (strcmp(cmd, "fanOneMaxSpeed") == 0) {
 			cmdIndex = 91;
       user::targetMaxFanOneSpeed = atoi(val);
     }
     // targetMinFanTwoSpeed
-    else if (cmd == F("fanTwoMinSpeed")) {
+    else if (strcmp(cmd, "fanTwoMinSpeed") == 0) {
 			cmdIndex = 92;
       user::targetMinFanTwoSpeed = atoi(val);
     }
     // targetMaxFanTwoSpeed
-    else if (cmd == F("fanTwoMaxSpeed")) {
+    else if (strcmp(cmd, "fanTwoMaxSpeed") == 0) {
 			cmdIndex = 93;
       user::targetMaxFanTwoSpeed = atoi(val);
     }
     // targetMinAirTemp
-    else if (cmd == F("targetMinAirTemp")) {
+    else if (strcmp(cmd, "targetMinAirTemp") == 0) {
 			cmdIndex = 94;
       user::targetMinAirTemp = atof(val);
     }
     // targetMaxAirTemp
-    else if (cmd == F("targetMaxAirTemp")) {
+    else if (strcmp(cmd, "targetMaxAirTemp") == 0) {
 			cmdIndex = 95;
       user::targetMaxAirTemp = atof(val);
     }
     // targetMinHumidity
-    else if (cmd == F("targetMinHumidity")) {
+    else if (strcmp(cmd, "targetMinHumidity") == 0) {
 			cmdIndex = 96;
       user::targetMinHumidity = atof(val);
     }
     // targetMaxHumidity
-    else if (cmd == F("targetMaxHumidity")) {
+    else if (strcmp(cmd, "targetMaxHumidity") == 0) {
 			cmdIndex = 97;
       user::targetMaxHumidity = atof(val);
     }
     // fansControlTemp
-    else if (cmd == F("fansControlTemp")) {
+    else if (strcmp(cmd, "fansControlTemp") == 0) {
 			cmdIndex = 98;
       user::fansControlTemperature = strBool(val);
     }
     // fansControlHum
-    else if (cmd == F("fansControlHum")) {
+    else if (strcmp(cmd, "fansControlHum") == 0) {
 			cmdIndex = 99;
       user::fansControlHumidity = strBool(val);
     }
     // fanOneFixedSpeed
-    else if (cmd == F("fanOneFixedSpeed")) {
+    else if (strcmp(cmd, "fanOneFixedSpeed") == 0) {
 			cmdIndex = 100;
       user::fanOneFixedSpeed = strBool(val);
     }
     // fanTwoFixedSpeed
-    else if (cmd == F("fanTwoFixedSpeed")) {
+    else if (strcmp(cmd, "fanTwoFixedSpeed") == 0) {
 			cmdIndex = 101;
       user::fanTwoFixedSpeed = strBool(val);
     }
     // ============== WARNINGS PAGE ==============
     // ecErrorMargin
-    else if (cmd == F("ecErrorMargin")) {
+    else if (strcmp(cmd, "ecErrorMargin") == 0) {
 			cmdIndex = 102;
       user::ecErrorMargin = atof(val);
     }
     // tdsErrorMargin
-    else if (cmd == F("tdsErrorMargin")) {
+    else if (strcmp(cmd, "tdsErrorMargin") == 0) {
 			cmdIndex = 103;
       user::tdsErrorMargin = atoi(val);
     }
     // phErrorMargin
-    else if (cmd == F("phErrorMargin")) {
+    else if (strcmp(cmd, "phErrorMargin") == 0) {
 			cmdIndex = 104;
       user::phErrorMargin = atof(val);
     }
     // co2ErrorMargin
-    else if (cmd == F("co2ErrorMargin")) {
+    else if (strcmp(cmd, "co2ErrorMargin") == 0) {
 			cmdIndex = 105;
       user::co2ErrorMargin = atoi(val);
     }
     // waterHeightErrorMargin
-    else if (cmd == F("waterHeightErrorMargin")) {
+    else if (strcmp(cmd, "waterHeightErrorMargin") == 0) {
 			cmdIndex = 106;
       user::waterHeightErrorMargin = atof(val);
     }
     // waterTempErrorMargin
-    else if (cmd == F("waterTempErrorMargin")) {
+    else if (strcmp(cmd, "waterTempErrorMargin") == 0) {
 			cmdIndex = 107;
       user::waterTempErrorMargin = atof(val);
     }
     // airTempErrorMargin
-    else if (cmd == F("airTempErrorMargin")) {
+    else if (strcmp(cmd, "airTempErrorMargin") == 0) {
 			cmdIndex = 108;
       user::airTempErrorMargin = atof(val);
     }
     // humidityErrorMargin
-    else if (cmd == F("humidityErrorMargin")) {
+    else if (strcmp(cmd, "humidityErrorMargin") == 0) {
 			cmdIndex = 109;
       user::humidityErrorMargin = atof(val);
     } 
@@ -616,11 +617,7 @@ void setValue() {
       Serial.println(F("server arg not recognised!"));
     yield();
     // Send updated value back to the Mega2560
-    Serial.print(F("!0,"));
-    Serial.print(cmdIndex);
-    Serial.print(F(","));
-    Serial.print(val);
-    Serial.print(F(","));
+    Serial.print(F("!0,")); Serial.print(cmdIndex); Serial.print(F(",")); Serial.print(val); Serial.print(F(","));
   }
   server.send(200, "text/plane", "OK");
 }
@@ -630,11 +627,10 @@ void getPageData() {
   uint8_t page = atoi(server.arg("page").c_str());
   uint8_t slide = atoi(server.arg("slide").c_str());
   // Request data from Mega2560
-  Serial.print("!1,");
-  Serial.print(page);
-  Serial.print(",");
-  Serial.print(slide);
-  Serial.print(F(","));
+  Serial.flush();
+  delay(5);
+  Serial.print("!1,"); Serial.print(page); Serial.print(","); Serial.print(slide); Serial.print(F(","));
+  delay(5);
   receiveSerialData(page, slide);
   // Copy data to a buffer and send to the server
   if (device::globalDebug) {
@@ -991,7 +987,6 @@ void copyIntToArray(const int a_value) {
   itoa(a_value, buffer, 10);
   strcat(wifi::buffer, buffer);
   strcat(wifi::buffer, ",");
-  delay(1);
   yield();
 }
 
@@ -1006,7 +1001,6 @@ void copyFloatToArray(const float a_value, const uint8_t& a_precison) {
   dtostrf(a_value, 0, a_precison, buffer);
   strcat(wifi::buffer, buffer);
   strcat(wifi::buffer, ",");
-  delay(1);
   yield();
 }
 
@@ -1014,7 +1008,6 @@ void buffToCharArray(const char* a_src, char* a_dest, const int& a_size) {
   for (uint8_t i = 0; i < a_size; i++) {
     a_dest[i] = a_src[i];
   }
-  delay(1);
   yield();
 }
 
@@ -1026,7 +1019,6 @@ void buffToBoolArray(char* a_src, bool* a_dest, const int& a_size) {
       a_dest[i++] = atoi(data);
     data = strtok(NULL, ",");
   }
-  delay(1);
   yield();
 }
 

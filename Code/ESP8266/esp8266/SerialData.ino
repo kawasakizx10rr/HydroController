@@ -1,35 +1,43 @@
 void receiveSerialData(const uint8_t a_page, const uint8_t a_slide) {
-  bool getData = false, readData = false;
-  uint8_t value = 0, index = 0, charCnt = 0;
-  char buffer[32] {0};
-  uint32_t timeout = millis() + 100UL;
-  while (Serial.available() > 0 && millis() < timeout) {
-    char c = Serial.read();
-    // reset local variables
-    if (c == '!') {
-      memset(buffer, 0 , 16);
-      getData = false;
-      value = 0;
-      index = 0;
-      charCnt = 0;
-      readData = true;
+  bool readData = false;
+  uint8_t index = 0, charCnt = 0;
+  char buffer[64] {0};
+  uint32_t timeout = millis() + 2000UL;
+  while (millis() <= timeout) {
+    if (Serial.available() > 0) {
+      char c = Serial.read();
+      // reset local variables
+      if (c == '!') {
+        memset(buffer, 0 , 64);
+        Serial.print(F("!1,253,0,")); // JUST FOR DEBUGGING
+        index = 0;
+        charCnt = 0;
+        readData = true;
+        timeout = millis();
+      }
+      // value to be stored
+      else if (c == ',') {
+        if (!updateValue(a_page, a_slide, buffer, index)) {
+          Serial.print(F("!1,255,0,")); // JUST FOR DEBUGGING
+          readData = false;
+          break;
+        }   
+        //Serial.print(F("!1,254,")); Serial.print(index); Serial.print(F(",")); // JUST FOR DEBUGGING 
+        memset(buffer, 0, 64);    
+        index++;
+        charCnt = 0;
+        timeout = millis();
+      }
+      // add serial data to buffer
+      else if (c >= 32 && c <= 126 && charCnt < 64) {
+        buffer[charCnt++] = c;
+      }
     }
-    // value to be stored
-    else if (c == ',' && readData) {
-      updateValue(a_page, a_slide, buffer, index);
-      memset(buffer, 0 , 16);
-      yield();
-      index++;
-      charCnt = 0;
-    }
-    // add serial data to buffer
-    else if (c >= 32 && c <= 126 && charCnt < 16 && readData) {
-      buffer[charCnt++] = c;
-    }
+    yield();
   } 
 }
 
-void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buffer, const uint8_t a_index) {
+bool updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buffer, const uint8_t a_index) {
   if (a_page == 0) {
     if (a_index == 0)
       bufferToBool(user::convertToF, a_buffer);
@@ -42,8 +50,8 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToFloat(user::targetMinEc, a_buffer);
       else if (a_index == 4)
         bufferToFloat(user::targetMaxEc, a_buffer);
-      else 
-        copyBufferToArray(sensor::ecArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+      else if (copyBufferToArray(sensor::ecArray, sensor::maxSensorArrayVals, a_index - 5, a_buffer))
+        return false;
     } 
     else if (a_slide == 1) {  // home page slide 1
       if (a_index == 2)
@@ -52,8 +60,8 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToUint16(user::targetMinTds, a_buffer);
       else if (a_index == 4)
         bufferToUint16(user::targetMaxTds, a_buffer);
-      else
-        copyBufferToArray(sensor::tdsArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+      else if (copyBufferToArray(sensor::tdsArray, sensor::maxSensorArrayVals, a_index - 5, a_buffer))
+        return false;
     } 
     else if (a_slide == 2) {  // home page slide 2
       if (a_index == 2)
@@ -62,8 +70,8 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToFloat(user::targetMinPh, a_buffer);
       else if (a_index == 4)
         bufferToFloat(user::targetMaxPh, a_buffer);
-      else  
-        copyBufferToArray(sensor::phArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+      else if (copyBufferToArray(sensor::phArray, sensor::maxSensorArrayVals, a_index - 5, a_buffer))
+        return false;
     } 
     else if (a_slide == 3) {  // home page slide 3
       if (a_index == 2)
@@ -72,8 +80,8 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToUint16(user::targetCo2, a_buffer);
       else if (a_index == 4)
         bufferToUint16(user::targetCo2, a_buffer);
-      else 
-        copyBufferToArray(sensor::co2Array, sensor::maxSensorArrayVals, a_index, a_buffer);
+      else if (copyBufferToArray(sensor::co2Array, sensor::maxSensorArrayVals, a_index - 5, a_buffer))
+        return false;
     } 
     else if (a_slide == 4) {  // home page slide 4
       if (a_index == 2)
@@ -82,8 +90,8 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToFloat(user::targetMinWaterTemp, a_buffer);
       else if (a_index == 4)
         bufferToFloat(user::targetMaxWaterTemp, a_buffer);
-      else 
-        copyBufferToArray(sensor::waterTemperatureArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+      else if (copyBufferToArray(sensor::waterTemperatureArray, sensor::maxSensorArrayVals, a_index - 5, a_buffer))
+        return false;
     } 
     else if (a_slide == 5) {  // home page slide 5
       if (a_index == 2)
@@ -92,8 +100,8 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToFloat(user::targetMinWaterHeight, a_buffer);
       else if (a_index == 4)
         bufferToFloat(user::targetMaxWaterHeight, a_buffer);
-      else 
-        copyBufferToArray(sensor::waterLevelArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+      else if (copyBufferToArray(sensor::waterLevelArray, sensor::maxSensorArrayVals, a_index - 5, a_buffer))
+        return false;
     } 
     else if (a_slide == 6) {  // home page slide 6
       if (a_index == 2)
@@ -102,8 +110,8 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToFloat(user::targetMinAirTemp, a_buffer);
       else if (a_index == 4)
         bufferToFloat(user::targetMaxAirTemp, a_buffer);
-      else 
-        copyBufferToArray(sensor::airTemperatureArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+      else if (copyBufferToArray(sensor::airTemperatureArray, sensor::maxSensorArrayVals, a_index - 5, a_buffer))
+        return false;
     } 
     else if (a_slide == 7) {  // home page slide 7
       if (a_index == 2)
@@ -112,8 +120,8 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToFloat(user::targetMinHumidity, a_buffer);
       else if (a_index == 4)
         bufferToFloat(user::targetMaxHumidity, a_buffer);
-      else 
-        copyBufferToArray(sensor::humidityArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+      else if (copyBufferToArray(sensor::humidityArray, sensor::maxSensorArrayVals, a_index - 5, a_buffer))
+        return false;
     } 
     else if (a_slide == 8) {  // home page slide 8
       if (a_index == 2)
@@ -122,8 +130,8 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToUint8(user::targetMinFanOneSpeed, a_buffer);
       else if (a_index == 4)
         bufferToUint8(user::targetMaxFanOneSpeed, a_buffer);
-      else 
-        copyBufferToArray(sensor::fanOneSpeedArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+      else if (copyBufferToArray(sensor::fanOneSpeedArray, sensor::maxSensorArrayVals, a_index - 5, a_buffer))
+        return false;
     } 
     else if (a_slide == 9) {  // home page slide 9
       if (a_index == 2)
@@ -132,8 +140,8 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToUint8(user::targetMinFanTwoSpeed, a_buffer);
       else if (a_index == 4)
         bufferToUint8(user::targetMaxFanTwoSpeed, a_buffer);
-      else 
-        copyBufferToArray(sensor::fanTwoSpeedArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+      else if (copyBufferToArray(sensor::fanTwoSpeedArray, sensor::maxSensorArrayVals, a_index - 5, a_buffer))
+        return false;
     }
   }
   // Page 1 (Graphs page)
@@ -145,34 +153,44 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
     //
     else {
       if (a_slide == 0) {
-        copyBufferToArray(sensor::ecArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+        if(copyBufferToArray(sensor::ecArray, sensor::maxSensorArrayVals, a_index - 2, a_buffer))
+          return false;
       } 
       else if (a_slide == 1) {
-        copyBufferToArray(sensor::tdsArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+        if(copyBufferToArray(sensor::tdsArray, sensor::maxSensorArrayVals, a_index - 2, a_buffer))
+          return false;
       } 
       else if (a_slide == 2) {
-        copyBufferToArray(sensor::phArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+        if(copyBufferToArray(sensor::phArray, sensor::maxSensorArrayVals, a_index - 2, a_buffer))
+          return false;
       } 
       else if (a_slide == 3) {
-        copyBufferToArray(sensor::co2Array, sensor::maxSensorArrayVals, a_index, a_buffer);
+        if(copyBufferToArray(sensor::co2Array, sensor::maxSensorArrayVals, a_index - 2, a_buffer))
+          return false;
       } 
       else if (a_slide == 4) {
-        copyBufferToArray(sensor::waterTemperatureArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+        if(copyBufferToArray(sensor::waterTemperatureArray, sensor::maxSensorArrayVals, a_index - 2, a_buffer))
+          return false;
       } 
       else if (a_slide == 5) {
-        copyBufferToArray(sensor::waterLevelArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+        if(copyBufferToArray(sensor::waterLevelArray, sensor::maxSensorArrayVals, a_index - 2, a_buffer))
+          return false;
       } 
       else if (a_slide == 6) {
-        copyBufferToArray(sensor::airTemperatureArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+        if(copyBufferToArray(sensor::airTemperatureArray, sensor::maxSensorArrayVals, a_index - 2, a_buffer))
+          return false;
       } 
       else if (a_slide == 7) {
-        copyBufferToArray(sensor::humidityArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+        if(copyBufferToArray(sensor::humidityArray, sensor::maxSensorArrayVals, a_index - 2, a_buffer))
+          return false;
       } 
       else if (a_slide == 8) {
-        copyBufferToArray(sensor::fanOneSpeedArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+        if(copyBufferToArray(sensor::fanOneSpeedArray, sensor::maxSensorArrayVals, a_index - 2, a_buffer))
+          return false;
       } 
       else if (a_slide == 9) {
-        copyBufferToArray(sensor::fanTwoSpeedArray, sensor::maxSensorArrayVals, a_index, a_buffer);
+        if(copyBufferToArray(sensor::fanTwoSpeedArray, sensor::maxSensorArrayVals, a_index - 2, a_buffer))
+          return false;
       }
     }
   }
@@ -180,68 +198,90 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
   else if (a_page == 2) {
     if (a_index == 1)
       bufferToBool(user::convertToF, a_buffer);
-    else if (a_index == 2)    
+    else if (a_index == 2) {    
       bufferToBool(user::convertToInches, a_buffer);
+      return false;
+    }
     //
     if (a_slide == 0) {
       if (a_index == 3)
         bufferToFloat(device::minEc, a_buffer);
-      else if (a_index == 4)
+      else if (a_index == 4) {
         bufferToFloat(device::maxEc, a_buffer);
+        return false;
+      }
     } 
     else if (a_slide == 1) {
       if (a_index == 3)
         bufferToUint16(device::minTds, a_buffer);
-      else if (a_index == 4)
+      else if (a_index == 4) {
         bufferToUint16(device::maxTds, a_buffer);
+        return false;
+      }
     } 
     else if (a_slide == 2) {
       if (a_index == 3)
         bufferToFloat(device::minPh, a_buffer);
-      else if (a_index == 4)
+      else if (a_index == 4) {
         bufferToFloat(device::maxPh, a_buffer);
+        return false;
+      }
     } 
     else if (a_slide == 3) {
       if (a_index == 3)
         bufferToUint16(device::minCo2, a_buffer);
-      else if (a_index == 4)
+      else if (a_index == 4) {
         bufferToUint16(device::maxCo2, a_buffer);
+        return false;
+      }
     } 
     else if (a_slide == 4) {
       if (a_index == 3)
         bufferToFloat(device::minWaterTemp, a_buffer);
-      else if (a_index == 4)
+      else if (a_index == 4) {
         bufferToFloat(device::maxWaterTemp, a_buffer);
+        return false;
+      }
     } 
     else if (a_slide == 5) {
       if (a_index == 3)
         bufferToFloat(device::minWaterLevel, a_buffer);
-      else if (a_index == 4)
+      else if (a_index == 4) {
         bufferToFloat(device::maxWaterLevel, a_buffer);
+        return false;
+      }
     }
     else if (a_slide == 6) {
       if (a_index == 3)
         bufferToFloat(device::minAirTemp, a_buffer);
-      else if (a_index == 4)
+      else if (a_index == 4) {
         bufferToFloat(device::maxAirTemp, a_buffer);
+        return false;
+      }
     } 
     else if (a_slide == 7) {
       if (a_index == 3)
         bufferToFloat(device::minHumidity, a_buffer);
-      else if (a_index == 4)
+      else if (a_index == 4) {
         bufferToFloat(device::maxHumidity, a_buffer);
+        return false;
+      }
     } 
     else if (a_slide == 8) {
       if (a_index == 3)
         bufferToUint8(device::minFanOneSpeed, a_buffer);
-      else if (a_index == 4)
+      else if (a_index == 4) {
         bufferToUint8(device::maxFanOneSpeed, a_buffer);
+        return false;
+      }
     } 
     else if (a_slide == 9) {
       if (a_index == 3)
         bufferToUint8(device::minFanTwoSpeed, a_buffer);
-      else if (a_index == 4)
+      else if (a_index == 4) {
         bufferToUint8(device::maxFanTwoSpeed, a_buffer);
+        return false;
+      }
     }
   }
   // Page 3 (Profiles page)
@@ -254,8 +294,10 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
       strcpy(user::profileThreeName, a_buffer);
     else if (a_index == 4)
       strcpy(user::profileFourName, a_buffer);
-    else if (a_index == 5)
+    else if (a_index == 5) {
       strcpy(user::profileOneName, a_buffer);
+      return false;
+    }
   }
   // Page 4 (Settings page)
   else if (a_page == 4) {
@@ -283,8 +325,10 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
       bufferToBool(user::disableWaterHeightWarnings, a_buffer);
     else if (a_index == 12)
       bufferToBool(user::disableAirTempWarnings, a_buffer);
-    else if (a_index == 13) 
+    else if (a_index == 13) {
       bufferToBool(user::disableHumidityWarnings, a_buffer);
+      return false;
+    }
   }
   // Page 5 (EC\TDS page)
   else if (a_page == 5) {
@@ -296,15 +340,19 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
       bufferToUint16(user::targetMaxTds, a_buffer);
     else if (a_index == 4)
       bufferToFloat(user::targetMinEc, a_buffer);
-    else if (a_index == 5)     
+    else if (a_index == 5) {
       bufferToFloat(user::targetMaxEc, a_buffer);
+      return false;
+    }
   }
   // Page 6 (PH page)
   else if (a_page == 6) {
     if (a_index == 1)
       bufferToFloat(user::targetMinPh, a_buffer);
-    else if (a_index == 2)
+    else if (a_index == 2) {
       bufferToFloat(user::targetMaxPh, a_buffer);
+      return false;
+    }
   }
     // Page 7 (Co2 page)
   else if (a_page == 7) {  // small amount of data so no need to segment based on slider
@@ -328,8 +376,10 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
       bufferToBool(user::enableManualCo2Duration, a_buffer);
     else if (a_index == 10)
       bufferToBool(user::disableCo2Control, a_buffer);
-    else if (a_index == 11)
+    else if (a_index == 11) {
       bufferToUint16(user::manualCo2GasDuration, a_buffer);
+      return false;
+    }
   }
   // Page 8 (Water page)
   else if (a_page == 8) {  // small amount of data so no need to segment based on slider
@@ -367,8 +417,8 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
       bufferToUint16(user::refillDoserFiveMills, a_buffer);
     else if (a_index == 16)
       bufferToUint16(user::refillDoserSixMills, a_buffer);
-    else
-      copyBuffToBoolArray(user::autoFillDays, 31, a_index, a_buffer);
+    else if (copyBuffToBoolArray(user::autoFillDays, 31, a_index - 17, a_buffer))
+        return false;
   }
   // Page 9 (Doser page)
   else if (a_page == 9) {
@@ -396,8 +446,10 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
       bufferToUint16(user::doserFourMills, a_buffer);
     else if (a_index == 11)
       bufferToUint16(user::doserFiveMills, a_buffer);
-    else if (a_index == 12)
+    else if (a_index == 12) {
       bufferToUint16(user::doserSixMills, a_buffer);
+      return false;
+    }
       //doserOneSpeed = values[cnt++];
       //doserTwoSpeed = values[cnt++];
       //doserThreeSpeed = values[cnt++];
@@ -415,8 +467,10 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
       bufferToUint8(user::lightOffTimeMin, a_buffer);
     else if (a_index == 3)
       bufferToUint8(user::lightOffTimeHour, a_buffer);
-    else if (a_index == 4)
+    else if (a_index == 4) {
       bufferToUint8(user::lightMode, a_buffer);
+      return false;
+    }
   }
     // Page 11 (Fans page)
   else if (a_page == 11) {  // small amount of data so no need to segment based on slider
@@ -444,8 +498,10 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
       bufferToBool(user::fansControlHumidity, a_buffer);
     else if (a_index == 11)
       bufferToBool(user::fanOneFixedSpeed, a_buffer);
-    else if (a_index == 12)
+    else if (a_index == 12) {
       bufferToBool(user::fanTwoFixedSpeed, a_buffer);
+      return false;
+    }
   }
     // Page 12 (Warnings page)
   else if (a_page == 12) {  // small amount of data so no need to segment based on slider
@@ -515,12 +571,15 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
       bufferToFloat(user::targetMinHumidity, a_buffer);
     else if (a_index == 32)  
       bufferToFloat(user::targetMaxHumidity, a_buffer);
-    else if (a_index == 33)  
+    else if (a_index == 33) {  
       bufferToFloat(user::humidityErrorMargin, a_buffer);
+      return false;
+    }
   }
   else if (device::globalDebug) {
     Serial.print(F("Page not found!"));
   }
+  return true;
 }
 
 void bufferToFloat(float& a_value, const char* a_buffer) {
@@ -543,12 +602,18 @@ void bufferToUint32(uint32_t& a_value, const char* a_buffer) {
   a_value = atol(a_buffer);
 }
 
-void copyBufferToArray(float* a_array, const uint8_t a_len, const uint8_t a_index, const char* a_buffer) {
+bool copyBufferToArray(float* a_array, const uint8_t a_len, const uint8_t a_index, const char* a_buffer) {
   if (a_index < a_len)
     a_array[a_index] = atof(a_buffer);
+  if (a_index == a_len - 1)
+    return true;
+  return false;
 }
 
-void copyBuffToBoolArray(bool* a_array, const uint8_t a_len, const uint8_t a_index, const char* a_buffer) {
+bool copyBuffToBoolArray(bool* a_array, const uint8_t a_len, const uint8_t a_index, const char* a_buffer) {
   if (a_index < a_len)
     a_array[a_index] = atoi(a_buffer);
+  if (a_index == a_len - 1)
+    return true;
+  return false;
 }
