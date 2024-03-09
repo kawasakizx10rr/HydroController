@@ -1,4 +1,3 @@
-
 /*
   The logic for the data communication is as follows
 
@@ -14,12 +13,10 @@
 #include "index.h"
 
 namespace device {
+bool globalDebug = false; 
 bool remotlyLoadUserProfile = false;
 bool remotlySaveUserProfile = false;
-bool globalDebug = false; 
 bool lightOn = false;
-//uint8_t auxRelayOneSwitchedOnOffDay = 0;
-//uint8_t auxRelayTwoSwitchedOnOffDay = 0;
 uint8_t userProfile = 0;
 float minPh = 0;
 float maxPh = 0;
@@ -101,12 +98,11 @@ enum timerStatus {
 }
 
 namespace user {
-char profileOneName[16]   = "Profile_1";
-char profileTwoName[16]   = "Profile_2";
-char profileThreeName[16] = "Profile_3";
-char profileFourName[16]  = "Profile_4";
-char profileFiveName[16]  = "Profile_5";
-
+char profileOneName[16]   = "-";
+char profileTwoName[16]   = "-";
+char profileThreeName[16] = "-";
+char profileFourName[16]  = "-";
+char profileFiveName[16]  = "-";
 uint8_t lightOnTimeHour = 0;
 uint8_t lightOnTimeMin = 0;
 uint8_t lightOffTimeHour = 0;
@@ -115,7 +111,6 @@ uint8_t lightState = device::AUTO_TIMER;
 uint8_t lightMode = 1; // 0 cyclic, 1 timer
 int16_t lightOffDuration = 60;
 int16_t lightOnDuration = 60;
-
 uint8_t auxRelayOneOnTimeHour = 0;
 uint8_t auxRelayOneOnTimeMin = 0;
 uint8_t auxRelayOneOffTimeHour = 0;
@@ -124,7 +119,6 @@ uint8_t auxRelayOneState = device::AUTO_TIMER;
 uint8_t auxRelayOneMode = 0; // 0 cyclic, 1 timer
 int16_t auxRelayOneOnDuration = 0;
 int16_t auxRelayOneOffDuration = 0;
-
 uint8_t auxRelayTwoOnTimeHour = 0;
 uint8_t auxRelayTwoOnTimeMin = 0;
 uint8_t auxRelayTwoOffTimeHour = 0;
@@ -133,7 +127,6 @@ uint8_t auxRelayTwoState = device::AUTO_TIMER;
 uint8_t auxRelayTwoMode = 0; // 0 cyclic, 1 timer
 int16_t auxRelayTwoOnDuration = 0;
 int16_t auxRelayTwoOffDuration = 0;
-
 uint8_t targetMinFanOneSpeed = 0;
 uint8_t targetMaxFanOneSpeed = 0;
 uint8_t targetMinFanTwoSpeed = 0;
@@ -225,16 +218,7 @@ bool disableHumidityWarnings = false;
 //bool disableAllWarnings = false;
 bool disableLED = false;
 bool disableBeeper = false;
-bool disableDrainAndRefill = false; ///////////////
-bool clearWifiDetails = false;
-bool resetSettings = false;
-uint8_t rtcDayOfWeek = 0;
-uint8_t rtcSecond = 0;
-uint8_t rtcMinute = 0;
-uint8_t rtcHour = 0;
-uint8_t rtcDay = 0;
-uint8_t rtcMonth = 0;
-uint8_t rtcYear = 0;
+bool disableDrainAndRefill = false;
 enum heightSensors {
   SR04,
   ETAPE,
@@ -287,6 +271,7 @@ ESP8266WebServer server(80);
 
 void setup() {
   Serial.begin(115200);
+  Serial.setRxBufferSize(1024);
   delay(1000);
   Serial.flush();
   // HTML call back functions from user interactions

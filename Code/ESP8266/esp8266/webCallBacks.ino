@@ -627,10 +627,9 @@ void getPageData() {
   uint8_t page = atoi(server.arg("page").c_str());
   uint8_t slide = atoi(server.arg("slide").c_str());
   // Request data from Mega2560
-  Serial.flush();
-  delay(5);
+  //Serial.flush();
+ // delay(5);
   Serial.print("!1,"); Serial.print(page); Serial.print(","); Serial.print(slide); Serial.print(F(","));
-  delay(5);
   receiveSerialData(page, slide);
   // Copy data to a buffer and send to the server
   if (device::globalDebug) {
@@ -644,6 +643,7 @@ void getPageData() {
   if (page == 0) {
     copyIntToArray(user::convertToF);
     copyIntToArray(user::convertToInches);
+    copyIntToArray(sensor::sensorArrayPos); 
     if (slide == 0) {  // home page slide 0
       copyFloatToArray(sensor::ec, 2);
       copyFloatToArray(user::targetMinEc, 2);
@@ -709,6 +709,7 @@ void getPageData() {
   else if (page == 1) {
     copyIntToArray(user::convertToF);
     copyIntToArray(user::convertToInches);
+    copyIntToArray(sensor::sensorArrayPos); 
     if (slide == 0) {
       copyFloatArrayToArray(sensor::ecArray, sensor::maxSensorArrayVals, 2);
     } 

@@ -6287,9 +6287,10 @@ function getData(pageNumber) {
 		  var cnt = 0;	  
 		  // Page 1 slide 0
 		  if (pageNumber == 1) {
-			if (valLen == 29) {	
+			if (valLen == 30) {	
 				convertToF = (values[cnt++] == "0" ? false : true);	
 				convertToInchs = (values[cnt++] == "0" ? false : true);
+        arrayCount = values[cnt++];
 				if (homePageScrollPosition == 0) {		
 					ecSensor = values[cnt++];
 					targetMinEc = values[cnt++];
@@ -6363,13 +6364,14 @@ function getData(pageNumber) {
 				}
 			}
 			else
-				console.log("error expected 29, received " + valLen);
+				console.log("error expected 30, received " + valLen);
 		  }
 		  ///////////////////////////////////////////////////////////////////
 		  else if (pageNumber == 2) {
-			if (valLen == 26) {		
+			if (valLen == 27) {		
 				convertToF = (values[cnt++] == "0" ? false : true);		
 				convertToInchs = (values[cnt++] == "0" ? false : true);
+        arrayCount = values[cnt++];
 				if (graphPageScrollPosition == 0) {
 					for (var i = 0; i < 24; i++) 
 					  ecSenorArray[i] = values[cnt++];
@@ -6412,7 +6414,7 @@ function getData(pageNumber) {
 				}
 			}
 			else
-			  console.log("error expected 26, received " + valLen);
+			  console.log("error expected 27, received " + valLen);
 		  }
 		  ///////////////////////////////////////////////////////////////////
 		  else if (pageNumber == 3) {
