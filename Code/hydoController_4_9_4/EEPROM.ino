@@ -249,17 +249,14 @@ uint16_t getSetProfile(uint16_t a_address, const device::eepromModes a_mode) {
   eepromGetSet(a_address, a_mode, user::targetMaxFanOneSpeed);         
   eepromGetSet(a_address, a_mode, user::targetMinFanTwoSpeed);         
   eepromGetSet(a_address, a_mode, user::targetMaxFanTwoSpeed);   
-
   eepromGetSet(a_address, a_mode, user::targetDayMinAirTemp);             
   eepromGetSet(a_address, a_mode, user::targetDayMaxAirTemp);             
   eepromGetSet(a_address, a_mode, user::targetDayMinAirTempF);            
   eepromGetSet(a_address, a_mode, user::targetDayMaxAirTempF); 
-
   eepromGetSet(a_address, a_mode, user::targetNightMinAirTemp);             
   eepromGetSet(a_address, a_mode, user::targetNightMaxAirTemp);             
   eepromGetSet(a_address, a_mode, user::targetNightMinAirTempF);            
   eepromGetSet(a_address, a_mode, user::targetNightMaxAirTempF); 
-
   eepromGetSet(a_address, a_mode, user::targetMinWaterTempF);          
   eepromGetSet(a_address, a_mode, user::targetMaxWaterTempF);          
   eepromGetSet(a_address, a_mode, user::targetDayMinHumidity);            

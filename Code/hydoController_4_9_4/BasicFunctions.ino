@@ -195,8 +195,13 @@ void initializeDevice() {
   sendToSlave('B', user::disableBeeper);
 
   // Turn on the ESP8266-01
-  if (wifi::wifiEnabled)
+  if (wifi::wifiEnabled) {
+    tft.setTextColor(RA8875_WHITE, RA8875_BLACK);
+    tft.fillRect(120, 370, 679, 24, RA8875_BLACK);
+    tft.print(120, 370, F("Starting Wifi..."));
     digitalWrite(pin::espTransistor, HIGH);
+    wifi::connectionTime = millis();
+  }
     
   // save log message, system started
   saveLogMessage(0);
@@ -209,22 +214,14 @@ void initializeDevice() {
   tft.setTextColor(RA8875_WHITE, user::backgroundColor);
   tft.setTouchCalibration(device::calMinX, device::calMinY, device::calMaxX, device::calMaxY);
   display::lastTouchX = tft.width();
+}
 
-  // JUST FOR TESTING
-  //sensor::waterVolumeLtrs = 50;
-  //userSetupGuide(); 
-  //sensor::ec = 0.01;
-  //adjustWaterEc();
-  //sensor::tds = 10;
-  //adjustWaterTds();
-  // user::phDosingMode = user::INCREMENTAL; 
-  // sensor::ph = 5.4;
-  // adjustWaterPh();
-  
-  //device::currentlyDosing = true;
-  //float dosingMls[6] {10, 11, 12, 13, 14, 15};
-  //bool enabledDosers[6] {true, true, true, true, true, true};
-  //runDosers(enabledDosers, dosingMls, 35.67, 0, millis());
+void sendWifiDetails() {
+  Serial.print(F("sending Wifi details..."));
+  Serial1.print(F("$"));
+  Serial1.print(wifi::ssid); Serial1.print(F(","));
+  Serial1.print(wifi::password); Serial1.print(F(","));
+  Serial1.print(wifi::hiddenNetwork); Serial1.print(F(","));
 }
 
 // called in while loops

@@ -5,6 +5,13 @@ void esp8266DataHandler() {
   static char buffer[32] {0};
   //uint32_t timeout = millis() + 100UL;
   if (wifi::wifiEnabled) {
+    // When the user has adjusted the wifis ssid, password or hidden network, 
+    // or turn the esp on, send the new info after a few sendonds so the esp8266 can boot up fully
+    if (wifi::connectionTime != 0 && millis() - wifi::connectionTime >= 5000UL) {
+      sendWifiDetails();
+      wifi::connectionTime = 0;
+    }
+    // handle any requests from the ESP8266
     while (Serial1.available() > 0) {// && millis() < timeout
       char c = Serial1.read();
       // reset local variables
@@ -57,6 +64,7 @@ void esp8266DataHandler() {
 
 void getValues(const uint16_t a_page, const uint16_t a_slide) {
   Serial.print(F("getValues: ")); Serial.print(a_page); Serial.print(F(", ")); Serial.println(a_slide); // __FUNCTION__ is not stored in PROGMEM
+  delay(10);
   Serial1.print(F("!")); delay(1); // Start of transmission
   // Page 0 (Home page)
   if (a_page == 0) {

@@ -1016,6 +1016,7 @@ void settingsOnePageTouched() {
         }
         else if (display::touch_x >= 460 && display::touch_x <= 620 && display::touch_y >= 430 && display::touch_y <= 470) { // confirm
           beep();
+          wifi::connectionTime = millis();
           display::showWifiSsid = false;
           clearPage();
           display::showingDialog = false;
@@ -1054,6 +1055,7 @@ void settingsOnePageTouched() {
         }
         else if (display::touch_x >= 460 && display::touch_x <= 620 && display::touch_y >= 430 && display::touch_y <= 470) { // confirm
           beep();
+          wifi::connectionTime = millis();
           display::showWifiPassword = false;
           clearPage();
           display::showingDialog = false;
@@ -1133,10 +1135,11 @@ void settingsOnePageTouched() {
       if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 220 - scrollMargin && display::touch_y <= 250 - scrollMargin) { // enable Wifi
         static uint32_t previousWifiOnOffTime = millis();
         if (millis() >= previousWifiOnOffTime + 1000UL) {
+          beep();
           wifi::wifiEnabled = !wifi::wifiEnabled;
           digitalWrite(pin::espTransistor, wifi::wifiEnabled);
-          Serial.print(F("Wifi AP ")); Serial.println(wifi::wifiEnabled  ? F("enabled") : F("disabled"));
-          beep();
+          wifi::connectionTime = millis();
+          Serial.print(F("Wifi AP ")); Serial.println(wifi::wifiEnabled  ? F("enabled") : F("disabled"));    
           previousWifiOnOffTime = millis();
         }
       }
@@ -1161,6 +1164,7 @@ void settingsOnePageTouched() {
       if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 370 - scrollMargin && display::touch_y <= 400 - scrollMargin) { // enable WiFi hidden network
         wifi::hiddenNetwork = !wifi::hiddenNetwork;
         beep();
+        wifi::connectionTime = millis();
       }
     }
     if (display::settingsPageOneScrollPos <= 5) {
