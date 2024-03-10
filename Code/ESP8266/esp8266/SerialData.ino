@@ -2,7 +2,7 @@ void receiveSerialData(const uint8_t a_page, const uint8_t a_slide) {
   bool readData = false;
   uint16_t index = 0, charCnt = 0;
   char buffer[64] {0};
-  //uint32_t timeout = millis() + 2000UL;
+  //uint32_t timeout = millis() + 500UL;
   while (true) { // millis() <= timeout
     if (Serial.available() > 0) {
       char c = Serial.read();
@@ -13,7 +13,7 @@ void receiveSerialData(const uint8_t a_page, const uint8_t a_slide) {
         index = 0;
         charCnt = 0;
         readData = true;
-        timeout = millis();
+        //timeout = millis();
       }
       else if (c == '#' && readData) {
         //Serial.print("?EOT\n");  // End of transmission
@@ -45,7 +45,7 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
     else if (a_index == 1)
       bufferToBool(user::convertToInches, a_buffer);
     else if (a_index == 2)
-        bufferToUint16(sensor::sensorArrayPos, a_buffer);
+        bufferToUint8(sensor::sensorArrayPos, a_buffer);
     if (a_slide == 0) {  // home page slide 0
       if (a_index == 3)
         bufferToFloat(sensor::ec, a_buffer);
@@ -91,7 +91,7 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToFloat(sensor::waterTemp, a_buffer);
       else if (a_index == 4)
         bufferToFloat(user::targetMinWaterTemp, a_buffer);
-      else if (a_index == 5
+      else if (a_index == 5)
         bufferToFloat(user::targetMaxWaterTemp, a_buffer);
       else 
         copyBufferToArray(sensor::waterTemperatureArray, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
@@ -131,7 +131,7 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
         bufferToUint8(device::fanOneSpeed, a_buffer);
       else if (a_index == 4)
         bufferToUint8(user::targetMinFanOneSpeed, a_buffer);
-      else if (a_index == 5
+      else if (a_index == 5)
         bufferToUint8(user::targetMaxFanOneSpeed, a_buffer);
       else 
         copyBufferToArray(sensor::fanOneSpeedArray, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
@@ -154,7 +154,7 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
     else if (a_index == 1)
       bufferToBool(user::convertToInches, a_buffer);
     else if (a_index == 2)
-      bufferToUint16(sensor::sensorArrayPos, a_buffer);
+      bufferToUint8(sensor::sensorArrayPos, a_buffer);
     //
     else {
       if (a_slide == 0) {

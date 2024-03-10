@@ -345,11 +345,11 @@ let fanTwoSpeedArray = [];
 let autoFillDays = [];
 let arrayCount = 0;
 // profile names
-var profileOneName = "-";
-var profileTwoName = "-";
-var profileThreeName = "-";
-var profileFourName = "-";
-var profileFiveName = "-";
+let profileOneName = "-";
+let profileTwoName = "-";
+let profileThreeName = "-";
+let profileFourName = "-";
+let profileFiveName = "-";
 // Timer page (was lighting)
 let lightOnTimeHour = 0;
 let lightOnTimeMin = 0;
@@ -391,10 +391,10 @@ let fanOneMinSpeed = 0;
 let fanOneMaxSpeed = 0;
 let targetFanTwoMinSpeed = 0;
 let targetFanTwoMaxSpeed = 0;
-var fansControlTemp = true;
-var fansControlHum = true;
-var fanOneFixedSpeed = false;
-var fanTwoFixedSpeed = false;
+let fansControlTemp = true;
+let fansControlHum = true;
+let fanOneFixedSpeed = false;
+let fanTwoFixedSpeed = false;
 // user targets
 let targetMinAirTemp = 0;
 let targetMaxAirTemp = 0;
@@ -411,9 +411,9 @@ let co2Flowrate = 0;
 let co2CheckTimeMinute = 0;
 let co2CheckTimeHour = 0;
 let disableFansTimer = 0;
-var manGasTimeEnabled = false;
+let manGasTimeEnabled = false;
 let manualGasDurationTime = 0;
-var co2ControlDisabled = false;
+let co2ControlDisabled = false;
 let targetMinPh = 0;
 let targetMaxPh = 0;
 let targetMinEc = 0;
@@ -484,23 +484,23 @@ let waterTempErrorMargin = 0;
 let waterHeightErrorMargin = 0;
 let airTempErrorMargin = 0;
 let humidityErrorMargin = 0;
-var disablePpmWarn = false;
-var disableEcWarn = false;
-var disableCo2Warn = false;
-var disablePhWarn = false;
-var disableWaterTempWarn = false;
-var disableWaterHeightWarn = false;
-var disableAirTempWarn = false;
-var disableHumidityWarn = false;
+let disablePpmWarn = false;
+let disableEcWarn = false;
+let disableCo2Warn = false;
+let disablePhWarn = false;
+let disableWaterTempWarn = false;
+let disableWaterHeightWarn = false;
+let disableAirTempWarn = false;
+let disableHumidityWarn = false;
 // envriomental control
-var disableDrainAndRefill = false;
+let disableDrainAndRefill = false;
 // DEVICE
-var convertToF = false;
-var convertToInchs = false;
-var convertToTds = false;
+let convertToF = false;
+let convertToInchs = false;
+let convertToTds = false;
 // system
-var guiPageNumber = 0;
-var ledTimer;
+let guiPageNumber = 0;
+let ledTimer;
 const warningState = {
 NO_WARNING:0,
 MINOR_WARNING:1,
@@ -513,16 +513,16 @@ EC_OP_DOSER:2,
 PH_DOWN_DOSER:3,
 PH_UP_DOSER:4,
 }
-var previousErrorState = warningState.NO_WARNING;
-var ppmErrorState = warningState.NO_WARNING;
-var ecErrorState = warningState.NO_WARNING;
-var phErrorState = warningState.NO_WARNING;
-var co2ErrorState = warningState.NO_WARNING;
-var waterTempErrorState = warningState.NO_WARNING;
-var waterLevelErrorState = warningState.NO_WARNING;
-var airTempErrorState = warningState.NO_WARNING;
-var humidityErrorState = warningState.NO_WARNING;
-var userProfile = 0;
+let previousErrorState = warningState.NO_WARNING;
+let ppmErrorState = warningState.NO_WARNING;
+let ecErrorState = warningState.NO_WARNING;
+let phErrorState = warningState.NO_WARNING;
+let co2ErrorState = warningState.NO_WARNING;
+let waterTempErrorState = warningState.NO_WARNING;
+let waterLevelErrorState = warningState.NO_WARNING;
+let airTempErrorState = warningState.NO_WARNING;
+let humidityErrorState = warningState.NO_WARNING;
+let userProfile = 0;
 
 let screenWidth = window.innerWidth;
 let screenHeight = window.innerHeight;
@@ -540,9 +540,12 @@ let loadProfileNum = 0;
 let saveProfileNum = 0;
 let connectionTime = 0;
 
+let cmdsList = [];
+let homePageTimer;
+let previousWaterPageDoserScrollPosition = 0;
 
 (function () {
-  var width = window.innerWidth;
+  let width = window.innerWidth;
   window.addEventListener('resize', function () {
    if (window.innerWidth !== width) {
      window.location.reload(true);
@@ -551,7 +554,7 @@ let connectionTime = 0;
 })();
 
 function setDisplaySize() {     
-  var link = document.querySelector("link[rel~='icon']");
+  let link = document.querySelector("link[rel~='icon']");
   if (!link) {
       link = document.createElement('link');
       link.rel = 'icon';
@@ -560,7 +563,7 @@ function setDisplaySize() {
   link.href = document.getElementById("ico").src;
 
   let box = document.getElementById("homePageGraph");
-  var tempCanvas = document.getElementById("graphCanvas");
+  let tempCanvas = document.getElementById("graphCanvas");
   tempCanvas.width = box.offsetWidth;
   tempCanvas.height = box.offsetHeight;   
 
@@ -578,29 +581,29 @@ function setDisplaySize() {
   document.getElementById("button12_Img").src=document.getElementById("fan_blue").src;
   document.getElementById("button13_Img").src=document.getElementById("warning_blue").src;
   
-  var ldbutt = document.getElementsByClassName('ldbutt');
-  var lubutt = document.getElementsByClassName('lubutt');
-  for (var i = 0; i < ldbutt.length; i++) 
+  let ldbutt = document.getElementsByClassName('ldbutt');
+  let lubutt = document.getElementsByClassName('lubutt');
+  for (let i = 0; i < ldbutt.length; i++) 
     ldbutt[i].src = document.getElementById("largeUpButton").src
-  for (var i = 0; i < lubutt.length; i++) 
+  for (let i = 0; i < lubutt.length; i++) 
     lubutt[i].src = document.getElementById("largeUpButton").src
     
-  var lsa = document.getElementsByClassName('leftSlideArrowIcon');
-  var rsa = document.getElementsByClassName('rightSlideArrowIcon');
-  for (var i = 0; i < lsa.length; i++) 
+  let lsa = document.getElementsByClassName('leftSlideArrowIcon');
+  let rsa = document.getElementsByClassName('rightSlideArrowIcon');
+  for (let i = 0; i < lsa.length; i++) 
     lsa[i].src = document.getElementById("leftScrollArrow").src
-  for (var i = 0; i < rsa.length; i++) 
+  for (let i = 0; i < rsa.length; i++) 
     rsa[i].src = document.getElementById("leftScrollArrow").src
     
-  var dl = document.getElementsByClassName('doserL');
-  for (var i = 0; i < dl.length; i++) 
+  let dl = document.getElementsByClassName('doserL');
+  for (let i = 0; i < dl.length; i++) 
     dl[i].src = document.getElementById("doser_blue").src 
 
   document.getElementById("wrapper").style.width = screenWidth + "px";
   document.getElementById("wrapper").style.height = screenHeight + "px";
   
   if(screenWidth<1000) {  
-    var el = document.getElementById("content");
+    let el = document.getElementById("content");
     el.style.width="90%";
     el.style.height="90%";
     el.style.top="5%";
@@ -610,23 +613,23 @@ function setDisplaySize() {
 
 function setGraph2Size() {
   let box2 = document.getElementById("graphPageGraph");
-  var tempCanvas2 = document.getElementById("graphCanvas2");
+  let tempCanvas2 = document.getElementById("graphCanvas2");
   tempCanvas2.width = box2.offsetWidth;
   tempCanvas2.height = box2.offsetHeight;
 }
 
 function startTime() {
-  var today = new Date();
-  var h = today.getHours();
-  var m = today.getMinutes();
-  var s = today.getSeconds();
+  let today = new Date();
+  let h = today.getHours();
+  let m = today.getMinutes();
+  let s = today.getSeconds();
   m = checkTime(m);
   s = checkTime(s);
-  var l = " noon";
+  let l = " noon";
   if (h < 12) l = " am"
   else if (h > 12) l = " pm"
   document.getElementById('clockText').innerHTML = h + ":" + m + ":" + s + l;
-  var t = setTimeout(startTime, 500);
+  let t = setTimeout(startTime, 500);
 }
 
 function checkTime(i) {
@@ -3910,7 +3913,6 @@ eINFMEKmgXsR8AecKBVPIrm/i044DIW2CBBRZYYIEFFlhggQV6wbn/AeWMuU
 </footer>
 </div>
 <script type="text/JavaScript">
-var homePageTimer;
 document.getElementById('profileInputBox_1').addEventListener('keydown', function(e) {
   const regex = RegExp('[0-9a-zA-Z_]');
   if (!regex.test(e.key) && e.key != 'backspace')
@@ -3938,7 +3940,7 @@ document.getElementById('profileInputBox_5').addEventListener('keydown', functio
 });
 
 function setLedColor() {
-  var errorState = warningState.NO_WARNING;
+  let errorState = warningState.NO_WARNING;
   if (dosingInt > 0) {
     if (convertToTds && !disablePpmWarn) {
       if (tdsSensor <= (targetMinTds - tdsErrorMargin) || tdsSensor >= (targetMaxTds + tdsErrorMargin)) {
@@ -4120,7 +4122,7 @@ function setLedColor() {
 }
 
 function setWarningTextColor(id, errorState) {
-  var textColor = "black";
+  let textColor = "black";
   if (errorState == warningState.MINOR_WARNING)
     textColor = "yellow";
   else if (errorState == warningState.MAJOR_WARNING)
@@ -4130,11 +4132,11 @@ function setWarningTextColor(id, errorState) {
 
 function setPage(pageNumber, refreshValues) {
   guiPageNumber = pageNumber;
-  var buttonID = "button" + pageNumber;
-  for (i = 1;i < 14;i++) {
-    var currentButton = "button" + i;
-    var currentButtonImg = "button" + i + "_Img";
-    var currentPage = "page" + i;
+  let buttonID = "button" + pageNumber;
+  for (let i = 1;i < 14;i++) {
+    let currentButton = "button" + i;
+    let currentButtonImg = "button" + i + "_Img";
+    let currentPage = "page" + i;
     if (currentButton == buttonID) {
       document.getElementById(currentButtonImg).style.filter = "grayscale(0%)";
       document.getElementById(currentPage).style.display = "block";
@@ -4162,7 +4164,7 @@ function setPage(pageNumber, refreshValues) {
     document.getElementById('profileInputBox_3').value = profileThreeName;
     document.getElementById('profileInputBox_4').value = profileFourName;
     document.getElementById('profileInputBox_5').value = profileFiveName;
-    for (var i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
       document.getElementById('profileInputBox_' + (i + 1)).style.border = (userProfile == i ? "medium solid #0000FF" : "none");
     }
   }
@@ -4339,8 +4341,8 @@ function setPage(pageNumber, refreshValues) {
 }
 
 function updateCfIcons() {
-  var cfIcons = document.getElementsByName("cf");
-  for (var i = 0;i < cfIcons.length;i++) {
+  let cfIcons = document.getElementsByName("cf");
+  for (let i = 0;i < cfIcons.length;i++) {
     if (convertToF) {
       cfIcons[i].innerHTML = "f";
     }
@@ -4351,8 +4353,8 @@ function updateCfIcons() {
 }
 
 function updateCmIcons() {
-  var cmIcons = document.getElementsByName("cm");
-  for (var i = 0;i < cmIcons.length;i++) {
+  let cmIcons = document.getElementsByName("cm");
+  for (let i = 0;i < cmIcons.length;i++) {
     if (convertToInchs) {
       cmIcons[i].innerHTML = "\"";
       cmIcons[i].style.verticalAlign = "2vw";
@@ -4362,7 +4364,7 @@ function updateCmIcons() {
       cmIcons[i].style.verticalAlign = "bottom";
     }
   }
-  var floawRateIcon = document.getElementById("co2FlowRateSymbol");
+  let floawRateIcon = document.getElementById("co2FlowRateSymbol");
   if (convertToInchs) {
     floawRateIcon.innerHTML = "ft3";
     floawRateIcon.style.verticalAlign = "1.6vw";
@@ -4398,10 +4400,10 @@ function homePageSlider(inc) {
 	getData(1);
   }
 
-  var currentSlideIcon = "homeSlideIcon" + (homePageScrollPosition + 1);
+  let currentSlideIcon = "homeSlideIcon" + (homePageScrollPosition + 1);
   //console.log(currentSlideIcon);
-  for (i = 1; i < 11;i++) {
-    var slideIcon = "homeSlideIcon" + i;
+  for (let i = 1; i < 11;i++) {
+    let slideIcon = "homeSlideIcon" + i;
     document.getElementById(slideIcon).src = document.getElementById("slideIcon_blue").src;
     if (slideIcon == currentSlideIcon) {
       document.getElementById(slideIcon).style.filter = "grayscale(0%)";
@@ -4546,9 +4548,9 @@ function graphSlider(inc) {
 	getData(2);
   }
 
-  var currentSlideIcon = "graphSlideIcon" + (graphPageScrollPosition + 1);
-  for (i = 1;i < 11;i++) {
-    var slideIcon = "graphSlideIcon" + i;
+  let currentSlideIcon = "graphSlideIcon" + (graphPageScrollPosition + 1);
+  for (let i = 1;i < 11;i++) {
+    let slideIcon = "graphSlideIcon" + i;
     document.getElementById(slideIcon).src = document.getElementById("slideIcon_blue").src;
     if (slideIcon == currentSlideIcon) {
       document.getElementById(slideIcon).style.filter = "grayscale(0%)";
@@ -4612,9 +4614,9 @@ function maxMinPageSlider(inc) {
     else maxMinPageScrollPosition = 0;
 	getData(3);
   }
-  var currentSlideIcon = "maxMinSlideIcon" + (maxMinPageScrollPosition + 1);
-  for (i = 1;i < 11;i++) {
-    var slideIcon = "maxMinSlideIcon" + i;
+  let currentSlideIcon = "maxMinSlideIcon" + (maxMinPageScrollPosition + 1);
+  for (let i = 1;i < 11;i++) {
+    let slideIcon = "maxMinSlideIcon" + i;
     document.getElementById(slideIcon).src = document.getElementById("slideIcon_blue").src;
     if (slideIcon == currentSlideIcon) {
       document.getElementById(slideIcon).style.filter = "grayscale(0%)";
@@ -4745,12 +4747,12 @@ function co2PageSlider(inc) {
     else co2PageScrollPosition = 0;
   }
 
-  var currentSlideIcon = "co2SlideIcon" + (co2PageScrollPosition + 1);
-  var currentPage = "co2page" + (co2PageScrollPosition + 1);
+  let currentSlideIcon = "co2SlideIcon" + (co2PageScrollPosition + 1);
+  let currentPage = "co2page" + (co2PageScrollPosition + 1);
   //console.log(currentSlideIcon);
-  for (i = 1;i < 5;i++) {
-    var slideIcon = "co2SlideIcon" + i;
-    var newPage = "co2page" + i;
+  for (let i = 1;i < 5;i++) {
+    let slideIcon = "co2SlideIcon" + i;
+    let newPage = "co2page" + i;
     document.getElementById(slideIcon).src = document.getElementById("slideIcon_blue").src;
     if (slideIcon == currentSlideIcon) {
       document.getElementById(slideIcon).style.filter = "grayscale(0%)";
@@ -4773,10 +4775,8 @@ function co2PageSlider(inc) {
   }
 }
 
-var previousWaterPageDoserScrollPosition = 0;
-
 function waterPageSlider(inc) {
-  var doserPages = numDosers - 4;
+  let doserPages = numDosers - 4;
   if (inc < 0) {
     if (waterPageScrollPosition > 0 && waterPageDoserScrollPosition == 0)
         waterPageScrollPosition--;
@@ -4795,10 +4795,10 @@ function waterPageSlider(inc) {
         waterPageDoserScrollPosition = 0;
     }
   }
-  var currentSlideIcon = "waterSlideIcon" + (waterPageScrollPosition + 1);
-  for (i = 1;i < 6;i++) {
-    var slideIcon = "waterSlideIcon" + i;
-    var newPage = "waterPage" + i;
+  let currentSlideIcon = "waterSlideIcon" + (waterPageScrollPosition + 1);
+  for (let i = 1;i < 6;i++) {
+    let slideIcon = "waterSlideIcon" + i;
+    let newPage = "waterPage" + i;
     document.getElementById(slideIcon).src = document.getElementById("slideIcon_blue").src;
     if (slideIcon == currentSlideIcon) {
       document.getElementById(slideIcon).style.filter = "grayscale(0%)";
@@ -4820,8 +4820,8 @@ function waterPageSlider(inc) {
       document.getElementById("targetMinWaterLvlDiv").style.alignItems = "baseline";
       document.getElementById("targetMaxWaterLvlDiv").style.alignItems = "baseline";
     }
-    var waterIcons = document.getElementsByName("waterIcon");
-    for (var i = 0;i < waterIcons.length;i++) {
+    let waterIcons = document.getElementsByName("waterIcon");
+    for (let i = 0;i < waterIcons.length;i++) {
       if (convertToInchs) {
         waterIcons[i].innerHTML = "\"";
       }
@@ -4833,8 +4833,8 @@ function waterPageSlider(inc) {
   else if (waterPageScrollPosition == 1) {
     document.getElementById("targetMinWaterTemp").innerHTML = parseFloat(targetMinWaterTemp).toFixed(1);
     document.getElementById("targetMaxWaterTemp").innerHTML = parseFloat(targetMaxWaterTemp).toFixed(1);
-    var waterIcons = document.getElementsByName("waterIcon");
-    for (var i = 0;i < waterIcons.length;i++) {
+    let waterIcons = document.getElementsByName("waterIcon");
+    for (let i = 0;i < waterIcons.length;i++) {
       if (convertToF) {
         waterIcons[i].innerHTML = "f";
       }
@@ -4854,8 +4854,8 @@ function waterPageSlider(inc) {
       document.getElementById("targetWaterTankLengthDiv").style.alignItems = "baseline";
       document.getElementById("targetWaterTankWidthDiv").style.alignItems = "baseline";
     }
-    var waterIcons = document.getElementsByName("waterIcon");
-    for (var i = 0;i < waterIcons.length;i++) {
+    let waterIcons = document.getElementsByName("waterIcon");
+    for (let i = 0;i < waterIcons.length;i++) {
       if (convertToInchs) {
         waterIcons[i].innerHTML = "\"";
       }
@@ -4865,16 +4865,16 @@ function waterPageSlider(inc) {
     }
   }
   else if (waterPageScrollPosition == 3) {
-    for (var i = 0;i < 31;i++) {
-      var calanderDaysNumber = "calanderDay" + (i+1);
+    for (let i = 0;i < 31;i++) {
+      let calanderDaysNumber = "calanderDay" + (i+1);
       if (parseInt(autoFillDays[i]) == 1)
         document.getElementById(calanderDaysNumber).style.backgroundColor = "#0066ff";
       else
         document.getElementById(calanderDaysNumber).style.backgroundColor = "white";
     }
-    var timeSymbol = autoFillHour < 12 ? "AM" :"PM";
-    var t_autoFillHour = autoFillHour;
-    var t_autoFillMinute = autoFillMinute;
+    let timeSymbol = autoFillHour < 12 ? "AM" :"PM";
+    let t_autoFillHour = autoFillHour;
+    let t_autoFillMinute = autoFillMinute;
     if (t_autoFillHour < 10) t_autoFillHour = "0" + t_autoFillHour;
     if (t_autoFillMinute < 10) t_autoFillMinute = "0" + t_autoFillMinute;
     document.getElementById("refillTankTime").innerHTML = "Time " + t_autoFillHour + ":" + t_autoFillMinute + timeSymbol;
@@ -4890,8 +4890,8 @@ function waterPageSlider(inc) {
   else if (waterPageScrollPosition == 4) {
 	  const doserModesArray = [doserOneMode, doserTwoMode, doserThreeMode, doserFourMode, doserFiveMode, doserSixMode];
 	  const doserMillsArray = [refillDoserOneMills, refillDoserTwoMills, refillDoserThreeMills, refillDoserFourMills, refillDoserFiveMills, refillDoserSixMills];
-	  for (i = 0;i < 4;i++) {
-		var index = i + waterPageDoserScrollPosition;
+	  for (let i = 0;i < 4;i++) {
+		let index = i + waterPageDoserScrollPosition;
 		document.getElementById("waterDoser" + (index + 1)).innerHTML = index + 1;
 		//
 		if (doserModesArray[index] == doserModes.DOSER_OFF) {
@@ -4916,7 +4916,7 @@ function waterPageSlider(inc) {
 }
 
 function doserPageSlider(inc) {
-  var doserPages = numDosers - 4;
+  let doserPages = numDosers - 4;
   if (inc < 0) {
     if (doserPageScrollPosition > 0) doserPageScrollPosition--;
     else doserPageScrollPosition = doserPages;
@@ -4925,10 +4925,10 @@ function doserPageSlider(inc) {
     if (doserPageScrollPosition < doserPages) doserPageScrollPosition++;
     else doserPageScrollPosition = 0;
   }
-  var currentSlideIcon = "doserSlideIcon" + (doserPageScrollPosition + 1);  
+  let currentSlideIcon = "doserSlideIcon" + (doserPageScrollPosition + 1);  
   if (doserPages > 0) {
-    for (i = 1; i <= 3; i++) {
-      var slideIcon = "doserSlideIcon" + i;
+    for (let i = 1; i <= 3; i++) {
+      let slideIcon = "doserSlideIcon" + i;
       document.getElementById(slideIcon).src = document.getElementById("slideIcon_blue").src;
       if (slideIcon == currentSlideIcon) {
           document.getElementById(slideIcon).style.filter = "grayscale(0%)";
@@ -4942,8 +4942,8 @@ function doserPageSlider(inc) {
   }  
   const doserModesArray = [doserOneMode, doserTwoMode, doserThreeMode, doserFourMode, doserFiveMode, doserSixMode];
   const doserMillsArray = [doserOneMills, doserTwoMills, doserThreeMills, doserFourMills, doserFiveMills, doserSixMills];
-  for (i = 0;i < 4;i++) {
-	var index = i + doserPageScrollPosition;
+  for (let i = 0;i < 4;i++) {
+	let index = i + doserPageScrollPosition;
     document.getElementById("doser" + (i + 1)).innerHTML = index + 1;
 	//
 	if (doserModesArray[index] == doserModes.DOSER_OFF) {
@@ -4980,10 +4980,10 @@ function timerPageSlider(inc) {
     if (timerPageScrollPosition < 3) timerPageScrollPosition++;
     else timerPageScrollPosition = 0;
   }
-  var currentSlideIcon = "timerSlideIcon" + (timerPageScrollPosition + 1);
-  for (i = 1;i < 5;i++) {
-    var slideIcon = "timerSlideIcon" + i;
-    var newPage = "timerPage" + i;
+  let currentSlideIcon = "timerSlideIcon" + (timerPageScrollPosition + 1);
+  for (let i = 1;i < 5;i++) {
+    let slideIcon = "timerSlideIcon" + i;
+    let newPage = "timerPage" + i;
     document.getElementById(slideIcon).src = document.getElementById("slideIcon_blue").src;
     if (slideIcon == currentSlideIcon) {
       document.getElementById(slideIcon).style.filter = "grayscale(0%)";
@@ -5005,10 +5005,10 @@ function fanPageSlider(inc) {
     if (fanPageScrollPosition < 4) fanPageScrollPosition++;
     else fanPageScrollPosition = 0;
   }
-  var currentSlideIcon = "fanSlideIcon" + (fanPageScrollPosition + 1);
-  for (i = 1;i < 6;i++) {
-    var slideIcon = "fanSlideIcon" + i;
-    var newPage = "fanPage" + i;
+  let currentSlideIcon = "fanSlideIcon" + (fanPageScrollPosition + 1);
+  for (let i = 1; i < 6;i++) {
+    let slideIcon = "fanSlideIcon" + i;
+    let newPage = "fanPage" + i;
     document.getElementById(slideIcon).src = document.getElementById("slideIcon_blue").src;
     if (slideIcon == currentSlideIcon) {
       document.getElementById(slideIcon).style.filter = "grayscale(0%)";
@@ -5029,9 +5029,9 @@ function warningPageSlider(inc) {
     if (warningsPageScrollPosition < 7) warningsPageScrollPosition++;
     else warningsPageScrollPosition = 0;
   }
-  var currentSlideIcon = "warningSlideIcon" + (warningsPageScrollPosition + 1);
-  for (i = 1;i < 9;i++) {
-    var slideIcon = "warningSlideIcon" + i;
+  let currentSlideIcon = "warningSlideIcon" + (warningsPageScrollPosition + 1);
+  for (let i = 1;i < 9;i++) {
+    let slideIcon = "warningSlideIcon" + i;
     document.getElementById(slideIcon).src = document.getElementById("slideIcon_blue").src;
     if (slideIcon == currentSlideIcon) 
       document.getElementById(slideIcon).style.filter = "grayscale(0%)";
@@ -5166,7 +5166,7 @@ function saveProfileName(profile) {
 
 function loadProfile(profile) {
   loadProfileNum = profile;
-  for (var i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i++) {
     document.getElementById('profileInputBox_' + (i + 1)).style.border = (loadProfileNum == i ? "medium solid #0000FF" : "none");
   }
   setVal("loadData", loadProfileNum);
@@ -5174,7 +5174,7 @@ function loadProfile(profile) {
 
 function saveProfile(profile) {
   saveProfileNum = profile;
-  for (var i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i++) {
     document.getElementById('profileInputBox_' + (i + 1)).style.border = (saveProfileNum == i ? "medium solid #0000FF" : "none");
   }
   setVal("saveData", saveProfileNum);
@@ -5182,20 +5182,20 @@ function saveProfile(profile) {
 
 function updateCalanderDays(day) {
   parseInt(autoFillDays[day-1]) == 1 ? autoFillDays[day-1] = 0 : autoFillDays[day-1] = 1;
-  var calanderDay = "calanderDay" + day;
+  let calanderDay = "calanderDay" + day;
   if (autoFillDays[day-1] == 1) 
     document.getElementById(calanderDay).style.backgroundColor = "#0066ff";
   else
     document.getElementById(calanderDay).style.backgroundColor = "white";
-  var str = "";
-  for (var i = 0; i < 31; i++) {
+  let str = "";
+  for (let i = 0; i < 31; i++) {
     parseInt(autoFillDays[i]) == 1 ? str += "1," :str += "0,";
   }
   setVal("autoFillDays", str);
 }
 
 function adjustRefillTankTime(inc) {
-  var refillTime = adjustRefillTime(inc, autoFillMinute, autoFillHour);
+  let refillTime = adjustRefillTime(inc, autoFillMinute, autoFillHour);
   document.getElementById("refillTankTime").innerHTML = refillTime;
 }
 
@@ -5440,7 +5440,7 @@ function adjustCo2FlowRate(inc) {
 }
 
 function adjustCo2Interval(inc) {
-  var co2Time = adjustCo2Time(inc, co2CheckTimeMinute, co2CheckTimeHour);
+  let co2Time = adjustCo2Time(inc, co2CheckTimeMinute, co2CheckTimeHour);
   document.getElementById("co2Interval").innerHTML = co2Time;
   if (inc != null) {
     setVal("co2CheckTimeMin", co2CheckTimeMinute);
@@ -5456,13 +5456,13 @@ function adjustCo2FanDisableTime(inc) {
 function adjustLightOnTime(inc) {
   if (lightMode == 0) {
   	lightOnDuration = adjustValue(inc, lightOnDuration, 1, 1440, 0, "lightOnDuration");
-	var hrs = parseInt(lightOnDuration / 60);
-	var mins = lightOnDuration % 60;
+	let hrs = parseInt(lightOnDuration / 60);
+	let mins = lightOnDuration % 60;
 	document.getElementById("lightOnTime").innerHTML = hrs;
 	document.getElementById("lightOnTime2").innerHTML = mins;
   }
   else {
-	var onTime = adjustLightOnTimer(inc, lightOnTimeMin, lightOnTimeHour);
+	let onTime = adjustLightOnTimer(inc, lightOnTimeMin, lightOnTimeHour);
 	if (inc != null) {
 	  setVal("lightOnTimeMin", lightOnTimeMin);
       setVal("lightOnTimeHour", lightOnTimeHour);
@@ -5474,13 +5474,13 @@ function adjustLightOnTime(inc) {
 function adjustLightOffTime(inc) {
   if (lightMode == 0) {
   	lightOffDuration = adjustValue(inc, lightOffDuration, 1, 1440, 0, "lightOffDuration");
-	var hrs = parseInt(lightOffDuration / 60);
-	var mins = lightOffDuration % 60;
+	let hrs = parseInt(lightOffDuration / 60);
+	let mins = lightOffDuration % 60;
 	document.getElementById("lightOffTime").innerHTML = hrs;
 	document.getElementById("lightOffTime2").innerHTML = mins;
   }
   else {
-	var offTime = adjustLightOnTimer(inc, lightOffTimeMin, lightOffTimeHour);
+	let offTime = adjustLightOnTimer(inc, lightOffTimeMin, lightOffTimeHour);
 	if (inc != null) {
 	  setVal("lightOffTimeMin", lightOffTimeMin);
       setVal("lightOffTimeHour", lightOffTimeHour);
@@ -5492,13 +5492,13 @@ function adjustLightOffTime(inc) {
 function adjustAuxOneOnTime(inc) {
   if (auxRelayOneMode == 0) {
 	auxRelayOneOnDuration = adjustValue(inc, auxRelayOneOnDuration, 1, 1440, 0, "auxRelayOneOnDuration");
-	var hrs = parseInt(auxRelayOneOnDuration / 60)
-	var mins = auxRelayOneOnDuration % 60;
+	let hrs = parseInt(auxRelayOneOnDuration / 60)
+	let mins = auxRelayOneOnDuration % 60;
 	document.getElementById("auxRelayOneOnTime").innerHTML = hrs;
 	document.getElementById("auxRelayOneOnTime2").innerHTML = mins;	
   }
   else {
-  	var onTime = adjustAuxRelayOneOnTimer(inc, auxRelayOneOnTimeMin, auxRelayOneOnTimeHour);
+  	let onTime = adjustAuxRelayOneOnTimer(inc, auxRelayOneOnTimeMin, auxRelayOneOnTimeHour);
 	if (inc != null) {
 	  setVal("auxRelayOneOnTimeMin", auxRelayOneOnTimeMin);
       setVal("auxRelayOneOnTimeHour", auxRelayOneOnTimeHour);
@@ -5510,13 +5510,13 @@ function adjustAuxOneOnTime(inc) {
 function adjustAuxOneOffTime(inc) {
   if (auxRelayOneMode == 0) {
 	auxRelayOneOffDuration = adjustValue(inc, auxRelayOneOffDuration, 1, 1440, 0, "auxRelayOneOffDuration");
-	var hrs = parseInt(auxRelayOneOffDuration / 60)
-	var mins = auxRelayOneOffDuration % 60;
+	let hrs = parseInt(auxRelayOneOffDuration / 60)
+	let mins = auxRelayOneOffDuration % 60;
 	document.getElementById("auxRelayOneOffTime").innerHTML = hrs;
 	document.getElementById("auxRelayOneOffTime2").innerHTML = mins;	
   }
   else {
-  	var offTime = adjustAuxRelayOneOffTimer(inc, auxRelayOneOffTimeMin, auxRelayOneOffTimeHour);
+  	let offTime = adjustAuxRelayOneOffTimer(inc, auxRelayOneOffTimeMin, auxRelayOneOffTimeHour);
 	if (inc != null) {
 	  setVal("auxRelayOneOffTimeMin", auxRelayOneOffTimeMin);
       setVal("auxRelayOneOffTimeHour", auxRelayOneOffTimeHour);
@@ -5528,36 +5528,36 @@ function adjustAuxOneOffTime(inc) {
 function adjustAuxTwoOnTime(inc) {
   if (auxRelayTwoMode == 0) {
 	auxRelayTwoOnDuration = adjustValue(inc, auxRelayTwoOnDuration, 1, 1440, 0, "auxRelayTwoOnDuration");
-	var hrs = parseInt(auxRelayTwoOnDuration / 60)
-	var mins = auxRelayTwoOnDuration % 60;
+	let hrs = parseInt(auxRelayTwoOnDuration / 60)
+	let mins = auxRelayTwoOnDuration % 60;
 	document.getElementById("auxRelayTwoOnTime").innerHTML = hrs;
 	document.getElementById("auxRelayTwoOnTime2").innerHTML = mins;	
   }
   else {
-  	var onTime = adjustAuxRelayTwoOnTimer(inc, auxRelayTwoOnTimeMin, auxRelayTwoOnTimeHour);
-	if (inc != null) {
-	  setVal("auxRelayTwoOnTimeMin", auxRelayTwoOnTimeMin);
-      setVal("auxRelayTwoOnTimeHour", auxRelayTwoOnTimeHour);
-	}
-	document.getElementById("auxRelayTwoOnTime").innerHTML = onTime;
+  	let onTime = adjustAuxRelayTwoOnTimer(inc, auxRelayTwoOnTimeMin, auxRelayTwoOnTimeHour);
+    if (inc != null) {
+      setVal("auxRelayTwoOnTimeMin", auxRelayTwoOnTimeMin);
+        setVal("auxRelayTwoOnTimeHour", auxRelayTwoOnTimeHour);
+    }
+    document.getElementById("auxRelayTwoOnTime").innerHTML = onTime;
   }
 }
 
 function adjustAuxTwoOffTime(inc) {
   if (auxRelayTwoMode == 0) {
 	auxRelayTwoOffDuration = adjustValue(inc, auxRelayTwoOffDuration, 1, 1440, 0, "auxRelayTwoOffDuration");
-	var hrs = parseInt(auxRelayTwoOffDuration / 60)
-	var mins = auxRelayTwoOffDuration % 60;
+	let hrs = parseInt(auxRelayTwoOffDuration / 60)
+	let mins = auxRelayTwoOffDuration % 60;
 	document.getElementById("auxRelayTwoOffTime").innerHTML = hrs;
 	document.getElementById("auxRelayTwoOffTime2").innerHTML = mins;	
   }
   else {
-  	var offTime = adjustAuxRelayTwoOffTimer(inc, auxRelayTwoOffTimeMin, auxRelayTwoOffTimeHour);
-	if (inc != null) {
-	  setVal("auxRelayTwoOffTimeMin", auxRelayTwoOffTimeMin);
+  	let offTime = adjustAuxRelayTwoOffTimer(inc, auxRelayTwoOffTimeMin, auxRelayTwoOffTimeHour);
+	  if (inc != null) {
+	    setVal("auxRelayTwoOffTimeMin", auxRelayTwoOffTimeMin);
       setVal("auxRelayTwoOffTimeHour", auxRelayTwoOffTimeHour);
-	}
-	document.getElementById("auxRelayTwoOffTime").innerHTML = offTime;
+	  }
+	  document.getElementById("auxRelayTwoOffTime").innerHTML = offTime;
   }
 }
 
@@ -5718,8 +5718,8 @@ function adjustDoserMls(inc, doser) {
 }
 
 function changeDoserButton(doser) {
-  var index = doserPageScrollPosition + doser;
-    console.log("index = " + index);	
+  let index = doserPageScrollPosition + doser;
+  console.log("index = " + index);	
 	if (index == 1) {
 		if (doserOneMode < 4)
 			doserOneMode++;
@@ -5958,9 +5958,9 @@ function adjustCo2Time(inc, minute, hour) {
   }
   co2CheckTimeMinute = minute;
   co2CheckTimeHour = hour;
-  var strMin = minute;
-  var strHour = hour;
-  //var timeSymbol = hour < 10 ? "AM" :"PM";
+  let strMin = minute;
+  let strHour = hour;
+  //let timeSymbol = hour < 10 ? "AM" :"PM";
   if (minute < 10) strMin = "0" + strMin;
   if (hour < 10) strHour = "0" + hour;
   return (strHour + ":" + strMin);// + timeSymbol
@@ -6011,8 +6011,8 @@ function adjustLightOnTimer(inc, minute, hour) {
   }
   lightOnTimeMin = minute;
   lightOnTimeHour = hour;
-  var strMin = minute;
-  var strHour = hour;
+  let strMin = minute;
+  let strHour = hour;
   if (minute < 10) strMin = "0" + strMin;
   if (hour < 10) strHour = "0" + hour;
   return (strHour + ":" + strMin);
@@ -6039,8 +6039,8 @@ function adjustLightOffTimer(inc, minute, hour) {
   }
   lightOffTimeMin = minute;
   lightOffTimeHour = hour;
-  var strMin = minute;
-  var strHour = hour;
+  let strMin = minute;
+  let strHour = hour;
   if (minute < 10) strMin = "0" + strMin;
   if (hour < 10) strHour = "0" + hour;
   return (strHour + ":" + strMin);
@@ -6067,8 +6067,8 @@ function adjustAuxRelayOneOnTimer(inc, minute, hour) {
   }
   auxRelayOneOnTimeMin = minute;
   auxRelayOneOnTimeHour = hour;
-  var strMin = minute;
-  var strHour = hour;
+  let strMin = minute;
+  let strHour = hour;
   if (minute < 10) strMin = "0" + strMin;
   if (hour < 10) strHour = "0" + hour;
   return (strHour + ":" + strMin);
@@ -6095,8 +6095,8 @@ function adjustAuxRelayOneOffTimer(inc, minute, hour) {
   }
   auxRelayOneOffTimeMin = minute;
   auxRelayOneOffTimeHour = hour;
-  var strMin = minute;
-  var strHour = hour;
+  let strMin = minute;
+  let strHour = hour;
   if (minute < 10) strMin = "0" + strMin;
   if (hour < 10) strHour = "0" + hour;
   return (strHour + ":" + strMin);
@@ -6123,8 +6123,8 @@ function adjustAuxRelayTwoOnTimer(inc, minute, hour) {
   }
   auxRelayTwoOnTimeMin = minute;
   auxRelayTwoOnTimeHour = hour;
-  var strMin = minute;
-  var strHour = hour;
+  let strMin = minute;
+  let strHour = hour;
   if (minute < 10) strMin = "0" + strMin;
   if (hour < 10) strHour = "0" + hour;
   return (strHour + ":" + strMin);
@@ -6151,8 +6151,8 @@ function adjustAuxRelayTwoOffTimer(inc, minute, hour) {
   }
   auxRelayTwoOffTimeMin = minute;
   auxRelayTwoOffTimeHour = hour;
-  var strMin = minute;
-  var strHour = hour;
+  let strMin = minute;
+  let strHour = hour;
   if (minute < 10) strMin = "0" + strMin;
   if (hour < 10) strHour = "0" + hour;
   return (strHour + ":" + strMin);
@@ -6179,9 +6179,9 @@ function adjustRefillTime(inc, minute, hour) {
   }
   autoFillMinute = minute;
   autoFillHour = hour;
-  var strMin = minute;
-  var strHour = hour;
-  var timeSymbol = hour < 10 ? "AM" :"PM";
+  let strMin = minute;
+  let strHour = hour;
+  let timeSymbol = hour < 10 ? "AM" :"PM";
   if (minute < 10) strMin = "0" + strMin;
   if (hour < 10) strHour = "0" + hour;
   setVal("autoFillMinute", autoFillMinute);
@@ -6200,36 +6200,36 @@ function mapFloat(x, in_min, in_max, out_min, out_max) {
 }
 
 function drawGraph(canvasID, a_xStartPos, a_yStartPos, a_graphHeight, a_graphWidth, a_numYLabels, a_data, a_arrayNumber, a_percision) {
-  var minArrayVal = 999, maxArrayVal = -999;
-  var maxGraphArrayValues = 120;
-  var canvas = document.getElementById(canvasID);
-  var ctx = canvas.getContext("2d");
+  let minArrayVal = 999, maxArrayVal = -999;
+  let maxGraphArrayValues = 120;
+  let canvas = document.getElementById(canvasID);
+  let ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.font = (canvas.height/15)+"px Tahoma";
   ctx.fillStyle = "black";
   ctx.beginPath();
   // work out the greatest number to display on the y axis.
-  for (var i = 0;i < a_arrayNumber;i++) {
+  for (let i = 0;i < a_arrayNumber;i++) {
     if (a_data[i] > maxArrayVal)
       maxArrayVal = a_data[i];
 	if (a_data[i] < minArrayVal)
     minArrayVal = a_data[i];
   }
 
-  var graphXstartPosition = 0;
-  var yIncrement = 0;
-  var YLablePosition = a_yStartPos + (canvasID == "graphCanvas2" ? (canvas.height/19) : 0);
-  var tempYmax = maxArrayVal;
-  var yLableGap = (a_graphHeight - 11) / a_numYLabels - 1;
+  let graphXstartPosition = 0;
+  let yIncrement = 0;
+  let YLablePosition = a_yStartPos + (canvasID == "graphCanvas2" ? (canvas.height/19) : 0);
+  let tempYmax = maxArrayVal;
+  let yLableGap = (a_graphHeight - 11) / a_numYLabels - 1;
   
   if (maxArrayVal != minArrayVal)
 	  yIncrement = (maxArrayVal - minArrayVal) / a_numYLabels;
   else
 	  yIncrement = maxArrayVal / a_numYLabels;
 
-  for (var i = 0;i < a_numYLabels + 1;i++) {
+  for (let i = 0;i < a_numYLabels + 1;i++) {
     ctx.fillText(parseFloat(tempYmax).toFixed(1), a_xStartPos, YLablePosition);
-    var textMaxWidth = ctx.measureText(parseFloat(tempYmax).toFixed(1)).width + a_xStartPos;
+    let textMaxWidth = ctx.measureText(parseFloat(tempYmax).toFixed(1)).width + a_xStartPos;
   if (parseFloat(textMaxWidth) > parseFloat(graphXstartPosition))
       graphXstartPosition = textMaxWidth;
     YLablePosition += yLableGap;// 33
@@ -6241,9 +6241,9 @@ function drawGraph(canvasID, a_xStartPos, a_yStartPos, a_graphHeight, a_graphWid
   // draw x line and numbers
   ctx.textBaseline = "top";
   let drawArea = a_graphWidth - (graphXstartPosition - a_xStartPos);
-  var xSpacing = drawArea / maxGraphArrayValues;
-  var xLablePosition = graphXstartPosition;
-  for (var i = 1 ;i < a_arrayNumber + 1;i++) {
+  let xSpacing = drawArea / maxGraphArrayValues;
+  let xLablePosition = graphXstartPosition;
+  for (let i = 1 ;i < a_arrayNumber + 1;i++) {
     ctx.fillText('|', xLablePosition, a_yStartPos + a_graphHeight - 10);
     xLablePosition += xSpacing;
   }
@@ -6267,7 +6267,7 @@ function drawGraph(canvasID, a_xStartPos, a_yStartPos, a_graphHeight, a_graphWid
 }  
 
 function getData(pageNumber) {
-  var slide = 0;
+  let slide = 0;
   if (pageNumber == 1)
 	slide = homePageScrollPosition;
   else if (pageNumber == 2)
@@ -6278,13 +6278,13 @@ function getData(pageNumber) {
 	slide = maxMinPageScrollPosition;
 	
   try {
-	  var xhttp = new XMLHttpRequest();
+	  let xhttp = new XMLHttpRequest();
 	  xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 		  console.log(this.responseText);
-		  var values = this.responseText.split(",");
-		  var valLen = values.length;
-		  var cnt = 0;	  
+		  let values = this.responseText.split(",");
+		  let valLen = values.length;
+		  let cnt = 0;	  
 		  // Page 1 slide 0
 		  if (pageNumber == 1) {
 			if (valLen == 30) {	
@@ -6295,42 +6295,42 @@ function getData(pageNumber) {
 					ecSensor = values[cnt++];
 					targetMinEc = values[cnt++];
 					targetMaxEc = values[cnt++];
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  ecSenorArray[i] = values[cnt++];
 				}
 				else if (homePageScrollPosition == 1) {	
 					tdsSensor = values[cnt++];
 					targetMinTds = values[cnt++];
 					targetMaxTds = values[cnt++];
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  tdsSenorArray[i] = values[cnt++];
 				}
 				else if (homePageScrollPosition == 2) {	
 					phSensor = values[cnt++];
 					targetMinPh = values[cnt++];
 					targetMaxPh = values[cnt++];
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  phSenorArray[i] = values[cnt++];			
 				}
 				else if (homePageScrollPosition == 3) {	
 					co2Sensor = values[cnt++];
 					targetMinCo2 = values[cnt++];
 					targetMaxCo2 = values[cnt++];
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  co2SenorArray[i] = values[cnt++];	
 				}
 				else if (homePageScrollPosition == 4) {	
 					waterTemperatureSensor = values[cnt++];
 					targetMinWaterTemp = values[cnt++];
 					targetMaxWaterTemp = values[cnt++];
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  waterTemperatureSenorArray[i] = values[cnt++];
 				}
 				else if (homePageScrollPosition == 5) {	
 					waterLevelSensor = values[cnt++];
 					targetMinWaterHeight = values[cnt++];
 					targetMaxWaterHeight = values[cnt++];
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  waterLevelSenorArray[i] = values[cnt++];
 				}
 				else if (homePageScrollPosition == 6) {
@@ -6338,28 +6338,28 @@ function getData(pageNumber) {
 					airTemperatureSensor = values[cnt++];
 					targetMinAirTemp = values[cnt++];
 					targetMaxAirTemp = values[cnt++];
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  airTemperatureSenorArray[i] = values[cnt++];
 				}
 				else if (homePageScrollPosition == 7) {	
 					airHumiditySensor = values[cnt++];
 					targetMinHumidity = values[cnt++];
 					targetMaxHumidity = values[cnt++];
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  airHumiditySenorArray[i] = values[cnt++];
 				}
 				else if (homePageScrollPosition == 8) {	
 					fanOneSpeed = values[cnt++];
 					fanOneMinSpeed = values[cnt++];
 					fanOneMaxSpeed = values[cnt++];
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  fanOneSpeedArray[i] = values[cnt++];
 				}
 				else if (homePageScrollPosition == 9) {	
 					fantwoSpeed = values[cnt++];
 					targetFanTwoMinSpeed = values[cnt++];
 					targetFanTwoMaxSpeed = values[cnt++];
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  fanTwoSpeedArray[i] = values[cnt++];
 				}
 			}
@@ -6373,43 +6373,43 @@ function getData(pageNumber) {
 				convertToInchs = (values[cnt++] == "0" ? false : true);
         arrayCount = values[cnt++];
 				if (graphPageScrollPosition == 0) {
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  ecSenorArray[i] = values[cnt++];
 				}
 				else if (graphPageScrollPosition == 1) {
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  tdsSenorArray[i] = values[cnt++];
 				}
 				else if (graphPageScrollPosition == 2) {
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  phSenorArray[i] = values[cnt++];	
 				}
 				else if (graphPageScrollPosition == 3) {
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  co2SenorArray[i] = values[cnt++];
 				}
 				else if (graphPageScrollPosition == 4) {
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  waterTemperatureSenorArray[i] = values[cnt++];
 				}
 				else if (graphPageScrollPosition == 5) {
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  waterLevelSenorArray[i] = values[cnt++];
 				}
 				else if (graphPageScrollPosition == 6) {
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  airTemperatureSenorArray[i] = values[cnt++];
 				}
 				else if (graphPageScrollPosition == 7) {
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  airHumiditySenorArray[i] = values[cnt++];
 				}
 				else if (graphPageScrollPosition == 8) {
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  fanOneSpeedArray[i] = values[cnt++];
 				}
 				else if (graphPageScrollPosition == 9) {
-					for (var i = 0; i < 24; i++) 
+					for (let i = 0; i < 24; i++) 
 					  fanTwoSpeedArray[i] = values[cnt++];
 				}
 			}
@@ -6547,7 +6547,7 @@ function getData(pageNumber) {
 				targetMaxWaterTemp = values[cnt++];
 				targetWaterTankLength = values[cnt++]; //
 				targetWaterTankWidth = values[cnt++]; //
-				for (var i = 0; i < 31; i++) 
+				for (let i = 0; i < 31; i++) 
 					autoFillDays[i] = values[cnt++];
 				autoFillMinute = values[cnt++];
 				autoFillHour = values[cnt++];
@@ -6691,9 +6691,8 @@ function getData(pageNumber) {
 		  connectionTime = new Date().getTime();
       setPage(pageNumber, false);
 		}
-	  };
-	  
-	  var command = "/getPageData?page=" + (pageNumber-1) + "&slide=" + slide;
+	  };	  
+	  let command = "/getPageData?page=" + (pageNumber-1) + "&slide=" + slide;
 	  console.log("Sending command: " + command);
 	  xhttp.open("GET", command, true);
 	  xhttp.send();
@@ -6703,18 +6702,42 @@ function getData(pageNumber) {
   }
 }
 
-function setVal(cmd, val) {
-  try {
-	  var command = "/setValue?cmd="+cmd+"&val="+val;
-	  console.log("Sending command: " + command);
-	  var xhr = new XMLHttpRequest();
-	  xhr.open("GET", command, false);
-	  xhr.send();
+function setVal(a_cmd, a_val) {
+	console.log("Adding " + a_cmd + "," + a_val);
+	let foundMatch = false;
+	if (cmdsList.length > 0) {
+    for (let i = 0; i < cmdsList.length; i++) {
+      let cmd = cmdsList[i].split(",")[0];
+      if (cmd == a_cmd) {
+        console.log("found match for: " + cmd);
+        foundMatch = true;
+        cmdsList[i] = a_cmd + "," + a_val;
+      }
+    }
   }
-  catch(err) {
-	console.log("Error: " + err.message);
+  if (!foundMatch) {
+    cmdsList.push(a_cmd + "," + a_val);
   }
 }
+
+setInterval(function() {
+	for (let i = 0; i < cmdsList.length; i++) {
+    let cmd = cmdsList[i].split(",")[0];
+    let val = cmdsList[i].split(",")[1];
+    let command = "/setValue?cmd="+cmd+"&val="+val;
+    console.log("sending: " + command);
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", command, false);
+      xhr.send();
+    }
+    catch(err) {
+      console.log("Error: " + err.message);
+    }
+    cmdsList.splice(i, 1);
+    break;
+  }
+},1000); 
 </script>
 </body>
 </html>
