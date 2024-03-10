@@ -380,6 +380,7 @@ let ecSensor = 0;
 let tdsSensor = 0;
 let phSensor = 0;
 let co2Sensor = 0;
+let lightOn = false;
 let waterTemperatureSensor = 0;
 let waterLevelSensor = 0;
 let airTemperatureSensor = 0;
@@ -396,10 +397,22 @@ let fansControlHum = true;
 let fanOneFixedSpeed = false;
 let fanTwoFixedSpeed = false;
 // user targets
-let targetMinAirTemp = 0;
-let targetMaxAirTemp = 0;
-let targetMinHumidity = 0;
-let targetMaxHumidity = 0;
+
+//let targetMinAirTemp = 0;
+//let targetMaxAirTemp = 0;
+//let targetMinHumidity = 0;
+//let targetMaxHumidity = 0;
+
+let targetDayMinAirTemp = 0;
+let targetDayMaxAirTemp = 0;
+let targetDayMinHumidity = 0;
+let targetDayMaxHumidity = 0;
+
+let targetNightMinAirTemp = 0;
+let targetNightMaxAirTemp = 0;
+let targetNightMinHumidity = 0;
+let targetNightMaxHumidity = 0;
+
 let targetMinTds = 0;
 let targetMaxTds = 0;
 let targetCo2 = 0;
@@ -3532,6 +3545,13 @@ eINFMEKmgXsR8AecKBVPIrm/i044DIW2CBBRZYYIEFFlhggQV6wbn/AeWMuU
           <div class="slideIcon" style="float:left;padding-right:2px;">
             <img id="fanSlideIcon5" style="width:100%;height:100%;" />
           </div>
+		  <div class="slideIcon" style="float:left;padding-right:2px;">
+            <img id="fanSlideIcon6" style="width:100%;height:100%;" />
+          </div>
+		  <div class="slideIcon" style="float:left;padding-right:2px;">
+            <img id="fanSlideIcon7" style="width:100%;height:100%;" />
+          </div>
+		  
         </div>
         <div id="leftSlideArrow" onclick="fanPageSlider(-1)">
           <img class="leftSlideArrowIcon"  alt="right scroll" style="width:100%;height:100%;cursor:pointer;" />
@@ -3640,7 +3660,7 @@ eINFMEKmgXsR8AecKBVPIrm/i044DIW2CBBRZYYIEFFlhggQV6wbn/AeWMuU
           </div>          
           <div id="fanPage3" style="display:none;width:100%;height:100%;float:left;">
             <div style="display:block;width:100%;height:20%;float:left;">
-              <b><p style="margin:0px;text-align:center;" class="p3text">Target air temp</p></b>
+              <b><p style="margin:0px;text-align:center;" class="p3text">Target day air temp</p></b>
             </div>
             <div style="display:block;width:100%;height:20%;float:left;">
               <div style="display:block;width:50%;height:100%;float:left;">
@@ -3652,34 +3672,34 @@ eINFMEKmgXsR8AecKBVPIrm/i044DIW2CBBRZYYIEFFlhggQV6wbn/AeWMuU
             </div>          
             <div style="display:block;width:50%;height:60%;float:left;">
               <div style="display:block;width:100%;height:45%;float:left;display:flex;justify-content:center;align-items:initial;"> 
-                  <b><p id="minAirTemp" class="p5text" style="margin:0px;display:inline;">-</p></b>
+                  <b><p id="minDayAirTemp" class="p5text" style="margin:0px;display:inline;">-</p></b>
 				  <b><p name="cf" class="p3text" style="margin:0px;display:inline;">c</p></b>
               </div>
               <div style="display:block;width:100%;height:50%;float:left;">
                 <div style="display:block;width:15%;height:50%;float:left;"></div>
                 <div style="display:block;width:25%;height:55%;float:left;">
-                  <img class="ldbutt" alt="up arrow" onclick="adjustMinAirTemp(-0.1)" style="float:right;"/>
+                  <img class="ldbutt" alt="up arrow" onclick="adjustDayMinAirTemp(-0.1)" style="float:right;"/>
                 </div>
                 <div style="display:block;width:20%;height:50%;float:left;"></div>
                 <div style="display:block;width:25%;height:55%;float:left;">
-                  <img class="lubutt" alt="down arrow" onclick="adjustMinAirTemp(0.1)" style="float:left;"/>
+                  <img class="lubutt" alt="down arrow" onclick="adjustDayMinAirTemp(0.1)" style="float:left;"/>
                 </div>
                 <div style="display:block;width:15%;height:50%;float:left;"></div>
               </div>
             </div>          
             <div style="display:block;width:50%;height:60%;float:left;">
               <div style="display:block;width:100%;height:45%;float:left;display:flex;justify-content:center;align-items:initial;">         
-                  <b><p id="maxAirTemp" class="p5text" style="margin:0px;display:inline;">-</p></b>
+                  <b><p id="maxDayAirTemp" class="p5text" style="margin:0px;display:inline;">-</p></b>
 				  <b><p name="cf" class="p3text" style="margin:0px;display:inline;">c</p></b>          
               </div>
               <div style="display:block;width:100%;height:50%;float:left;">                       
                 <div style="display:block;width:15%;height:50%;float:left;"></div>
                 <div style="display:block;width:25%;height:55%;float:left;">
-                  <img class="ldbutt" alt="up arrow" onclick="adjustMaxAirTemp(-0.01)" style="float:right;"/>
+                  <img class="ldbutt" alt="up arrow" onclick="adjustDayMaxAirTemp(-0.01)" style="float:right;"/>
                 </div>
                 <div style="display:block;width:20%;height:50%;float:left;"></div>
                 <div style="display:block;width:25%;height:55%;float:left;">
-                  <img class="lubutt" alt="down arrow" onclick="adjustMaxAirTemp(0.1)" style="float:left;"/>
+                  <img class="lubutt" alt="down arrow" onclick="adjustDayMaxAirTemp(0.1)" style="float:left;"/>
                 </div>
                 <div style="display:block;width:15%;height:50%;float:left;"></div>            
               </div>
@@ -3687,7 +3707,7 @@ eINFMEKmgXsR8AecKBVPIrm/i044DIW2CBBRZYYIEFFlhggQV6wbn/AeWMuU
           </div>          
           <div id="fanPage4" style="display:none;width:100%;height:100%;float:left;">
             <div style="display:block;width:100%;height:20%;float:left;">
-              <b><p style="margin:0px;text-align:center;" class="p3text">Target humidity</p></b>
+              <b><p style="margin:0px;text-align:center;" class="p3text">Target day humidity</p></b>
             </div>
             <div style="display:block;width:100%;height:20%;float:left;">
               <div style="display:block;width:50%;height:100%;float:left;">
@@ -3700,17 +3720,17 @@ eINFMEKmgXsR8AecKBVPIrm/i044DIW2CBBRZYYIEFFlhggQV6wbn/AeWMuU
             <div style="display:block;width:50%;height:60%;float:left;">
               <div style="display:block;width:100%;height:45%;float:left;align-items:baseline;">
                 <center>
-                  <b><p id="minHumidity" class="p5text" style="margin:0px;display:inline;">-</p></b><b><p class="p3text" style="margin:0px;display:inline;">%</p></b>
+                  <b><p id="minDayHumidity" class="p5text" style="margin:0px;display:inline;">-</p></b><b><p class="p3text" style="margin:0px;display:inline;">%</p></b>
                 </center>
               </div>
               <div style="display:block;width:100%;height:50%;float:left;">         
                 <div style="display:block;width:15%;height:50%;float:left;"></div>
                 <div style="display:block;width:25%;height:55%;float:left;">
-                  <img class="ldbutt" alt="up arrow" onclick="adjustMinHumidity(-0.1)" style="float:right;"/>
+                  <img class="ldbutt" alt="up arrow" onclick="adjustDayMinHumidity(-0.1)" style="float:right;"/>
                 </div>
                 <div style="display:block;width:20%;height:50%;float:left;"></div>
                 <div style="display:block;width:25%;height:55%;float:left;">
-                  <img class="lubutt" alt="down arrow" onclick="adjustMinHumidity(0.1)" style="float:left;"/>
+                  <img class="lubutt" alt="down arrow" onclick="adjustDayMinHumidity(0.1)" style="float:left;"/>
                 </div>
                 <div style="display:block;width:15%;height:50%;float:left;"></div>            
               </div>
@@ -3718,23 +3738,119 @@ eINFMEKmgXsR8AecKBVPIrm/i044DIW2CBBRZYYIEFFlhggQV6wbn/AeWMuU
             <div style="display:block;width:50%;height:60%;float:left;">
               <div style="display:block;width:100%;height:45%;float:left;align-items:baseline;">
                 <center>
-                  <b><p id="maxHumidity" class="p5text" style="margin:0px;display:inline;">-</p></b><b><p class="p3text" style="margin:0px;display:inline;">%</p></b>
+                  <b><p id="maxDayHumidity" class="p5text" style="margin:0px;display:inline;">-</p></b><b><p class="p3text" style="margin:0px;display:inline;">%</p></b>
                 </center>
               </div>
               <div style="display:block;width:100%;height:50%;float:left;">             
                 <div style="display:block;width:15%;height:50%;float:left;"></div>
                 <div style="display:block;width:25%;height:55%;float:left;">
-                  <img class="ldbutt" alt="up arrow" onclick="adjustMaxHumidity(-0.1)" style="float:right;"/>
+                  <img class="ldbutt" alt="up arrow" onclick="adjustDayMaxHumidity(-0.1)" style="float:right;"/>
                 </div>
                 <div style="display:block;width:20%;height:50%;float:left;"></div>
                 <div style="display:block;width:25%;height:55%;float:left;">
-                  <img class="lubutt" alt="down arrow" onclick="adjustMaxHumidity(0.1)" style="float:left;"/>
+                  <img class="lubutt" alt="down arrow" onclick="adjustDayMaxHumidity(0.1)" style="float:left;"/>
                 </div>
                 <div style="display:block;width:15%;height:50%;float:left;"></div>              
               </div>
             </div>            
-          </div>          
+          </div>   
           <div id="fanPage5" style="display:none;width:100%;height:100%;float:left;">
+            <div style="display:block;width:100%;height:20%;float:left;">
+              <b><p style="margin:0px;text-align:center;" class="p3text">Target night air temp</p></b>
+            </div>
+            <div style="display:block;width:100%;height:20%;float:left;">
+              <div style="display:block;width:50%;height:100%;float:left;">
+                <b><p style="margin:0px;text-align:center;" class="p3text">Minimum</p></b>
+              </div>
+              <div style="display:block;width:50%;height:100%;float:left;">
+                <b><p style="margin:0px;text-align:center;" class="p3text">Maximum</p></b>
+              </div>
+            </div>          
+            <div style="display:block;width:50%;height:60%;float:left;">
+              <div style="display:block;width:100%;height:45%;float:left;display:flex;justify-content:center;align-items:initial;"> 
+                  <b><p id="minNightAirTemp" class="p5text" style="margin:0px;display:inline;">-</p></b>
+				  <b><p name="cf" class="p3text" style="margin:0px;display:inline;">c</p></b>
+              </div>
+              <div style="display:block;width:100%;height:50%;float:left;">
+                <div style="display:block;width:15%;height:50%;float:left;"></div>
+                <div style="display:block;width:25%;height:55%;float:left;">
+                  <img class="ldbutt" alt="up arrow" onclick="adjustNightMinAirTemp(-0.1)" style="float:right;"/>
+                </div>
+                <div style="display:block;width:20%;height:50%;float:left;"></div>
+                <div style="display:block;width:25%;height:55%;float:left;">
+                  <img class="lubutt" alt="down arrow" onclick="adjustNightMinAirTemp(0.1)" style="float:left;"/>
+                </div>
+                <div style="display:block;width:15%;height:50%;float:left;"></div>
+              </div>
+            </div>          
+            <div style="display:block;width:50%;height:60%;float:left;">
+              <div style="display:block;width:100%;height:45%;float:left;display:flex;justify-content:center;align-items:initial;">         
+                  <b><p id="maxNightAirTemp" class="p5text" style="margin:0px;display:inline;">-</p></b>
+				  <b><p name="cf" class="p3text" style="margin:0px;display:inline;">c</p></b>          
+              </div>
+              <div style="display:block;width:100%;height:50%;float:left;">                       
+                <div style="display:block;width:15%;height:50%;float:left;"></div>
+                <div style="display:block;width:25%;height:55%;float:left;">
+                  <img class="ldbutt" alt="up arrow" onclick="adjustNightMaxAirTemp(-0.01)" style="float:right;"/>
+                </div>
+                <div style="display:block;width:20%;height:50%;float:left;"></div>
+                <div style="display:block;width:25%;height:55%;float:left;">
+                  <img class="lubutt" alt="down arrow" onclick="adjustNightMaxAirTemp(0.1)" style="float:left;"/>
+                </div>
+                <div style="display:block;width:15%;height:50%;float:left;"></div>            
+              </div>
+            </div>                
+          </div>          
+          <div id="fanPage6" style="display:none;width:100%;height:100%;float:left;">
+            <div style="display:block;width:100%;height:20%;float:left;">
+              <b><p style="margin:0px;text-align:center;" class="p3text">Target night humidity</p></b>
+            </div>
+            <div style="display:block;width:100%;height:20%;float:left;">
+              <div style="display:block;width:50%;height:100%;float:left;">
+                <b><p style="margin:0px;text-align:center;" class="p3text">Minimum</p></b>
+              </div>
+              <div style="display:block;width:50%;height:100%;float:left;">
+                <b><p style="margin:0px;text-align:center;" class="p3text">Maximum</p></b>
+              </div>
+            </div>            
+            <div style="display:block;width:50%;height:60%;float:left;">
+              <div style="display:block;width:100%;height:45%;float:left;align-items:baseline;">
+                <center>
+                  <b><p id="minNightHumidity" class="p5text" style="margin:0px;display:inline;">-</p></b><b><p class="p3text" style="margin:0px;display:inline;">%</p></b>
+                </center>
+              </div>
+              <div style="display:block;width:100%;height:50%;float:left;">         
+                <div style="display:block;width:15%;height:50%;float:left;"></div>
+                <div style="display:block;width:25%;height:55%;float:left;">
+                  <img class="ldbutt" alt="up arrow" onclick="adjustNightMinHumidity(-0.1)" style="float:right;"/>
+                </div>
+                <div style="display:block;width:20%;height:50%;float:left;"></div>
+                <div style="display:block;width:25%;height:55%;float:left;">
+                  <img class="lubutt" alt="down arrow" onclick="adjustNightMinHumidity(0.1)" style="float:left;"/>
+                </div>
+                <div style="display:block;width:15%;height:50%;float:left;"></div>            
+              </div>
+            </div>          
+            <div style="display:block;width:50%;height:60%;float:left;">
+              <div style="display:block;width:100%;height:45%;float:left;align-items:baseline;">
+                <center>
+                  <b><p id="maxNightHumidity" class="p5text" style="margin:0px;display:inline;">-</p></b><b><p class="p3text" style="margin:0px;display:inline;">%</p></b>
+                </center>
+              </div>
+              <div style="display:block;width:100%;height:50%;float:left;">             
+                <div style="display:block;width:15%;height:50%;float:left;"></div>
+                <div style="display:block;width:25%;height:55%;float:left;">
+                  <img class="ldbutt" alt="up arrow" onclick="adjustNightMaxHumidity(-0.1)" style="float:right;"/>
+                </div>
+                <div style="display:block;width:20%;height:50%;float:left;"></div>
+                <div style="display:block;width:25%;height:55%;float:left;">
+                  <img class="lubutt" alt="down arrow" onclick="adjustNightMaxHumidity(0.1)" style="float:left;"/>
+                </div>
+                <div style="display:block;width:15%;height:50%;float:left;"></div>              
+              </div>
+            </div>            
+          </div> 		  
+          <div id="fanPage7" style="display:none;width:100%;height:100%;float:left;">
             <div style="display:block;width:100%;height:20%;float:left;">
               <b><p style="margin:0px;text-align:center;" class="p3text">Fan settings</p></b>
             </div>
@@ -3909,7 +4025,7 @@ eINFMEKmgXsR8AecKBVPIrm/i044DIW2CBBRZYYIEFFlhggQV6wbn/AeWMuU
   </div>
 </div>
 <footer>
-  <p style="margin:0px;position:fixed;right:0;bottom:0;text-align:right;font-size:0.5vw;"><b>V5.0.2 last updated 13 Janurary 2024&nbsp;</b></p>
+  <p style="margin:0px;position:fixed;right:0;bottom:0;text-align:right;font-size:0.5vw;"><b>V4.9.3 last updated 10th March 2024&nbsp;</b></p>
 </footer>
 </div>
 <script type="text/JavaScript">
@@ -4063,6 +4179,8 @@ function setLedColor() {
     }
     //
     if (!disableAirTempWarn) {
+	  let targetMinAirTemp = (lightOn ? targetDayMinAirTemp : targetNightMinAirTemp);
+	  let targetMaxAirTemp = (lightOn ? targetDayMaxAirTemp : targetNightMaxAirTemp);
       if (airTemperatureSensor <= (targetMinAirTemp - airTempErrorMargin) || airTemperatureSensor >= (targetMaxAirTemp + airTempErrorMargin)) {
         errorState = warningState.MAJOR_WARNING;
         airTempErrorState = warningState.MAJOR_WARNING;
@@ -4083,6 +4201,8 @@ function setLedColor() {
     }
     //
     if (!disableHumidityWarn) {
+	  let targetMinHumidity = (lightOn ? targetDayMinHumidity : targetNightMinHumidity);
+	  let targetMaxHumidity = (lightOn ? targetDayMaxHumidity : targetNightMaxHumidity);
       if (airHumiditySensor <= (targetMinHumidity - humidityErrorMargin) || airHumiditySensor >= (targetMaxHumidity + humidityErrorMargin)) {
         errorState = warningState.MAJOR_WARNING;
         humidityErrorState = warningState.MAJOR_WARNING;
@@ -4280,8 +4400,6 @@ function setPage(pageNumber, refreshValues) {
       document.getElementById("auxOneAuto").style.backgroundColor = "lightgrey";
       document.getElementById("auxOneOff").style.backgroundColor = "red";
     }
-
-	
 	//setToggleButton(auxRelayTwoMode,"auxRelayTwoMode");      
 	if (auxRelayTwoMode == 0) {
 		document.getElementById("auxRelayTwoOnHrs").style.display = "inline";
@@ -4316,20 +4434,21 @@ function setPage(pageNumber, refreshValues) {
       document.getElementById("auxTwoAuto").style.backgroundColor = "lightgrey";
       document.getElementById("auxTwoOff").style.backgroundColor = "red";
     }
-
-	
-	
   }
   else if (pageNumber == 12) {
     fanPageSlider(0);
-    adjustMinAirTemp(null);
-    adjustMaxAirTemp(null);
-    adjustFanOneMinSpeed(null);
+	adjustFanOneMinSpeed(null);
     adjustFanOneMaxSpeed(null);
     adjustFanTwoMinSpeed(null);
     adjustFanTwoMaxSpeed(null);
-    adjustMinHumidity(null);
-    adjustMaxHumidity(null);
+    adjustDayMinAirTemp(null);
+    adjustDayMaxAirTemp(null);
+    adjustDayMinHumidity(null);
+    adjustDayMaxHumidity(null);
+	adjustNightMinAirTemp(null);
+    adjustNightMaxAirTemp(null);
+    adjustNightMinHumidity(null);
+    adjustNightMaxHumidity(null);
     setToggleButton(fansControlTemp,"controlTemp");
     setToggleButton(fansControlHum,"controlHum");
     setToggleButton(fanOneFixedSpeed,"fanOneFixedSpeed");
@@ -4495,8 +4614,8 @@ function homePageSlider(inc) {
     }
     drawGraph("graphCanvas",2,3,box.offsetHeight-5,box.offsetWidth-2,10,airTemperatureSenorArray,arrayCount,1);
     document.getElementById('homePageSensorValue').innerHTML = parseFloat(airTemperatureSensor).toFixed(1);
-    document.getElementById('homePageMinTargetValue').innerHTML = parseFloat(targetMinAirTemp).toFixed(1);
-    document.getElementById('homePageMaxTargetValue').innerHTML = parseFloat(targetMaxAirTemp).toFixed(1);
+    document.getElementById('homePageMinTargetValue').innerHTML = parseFloat(lightOn ? targetDayMinAirTemp : targetNightMinAirTemp).toFixed(1);
+    document.getElementById('homePageMaxTargetValue').innerHTML = parseFloat(lightOn ? targetDayMaxAirTemp : targetNightMaxAirTemp).toFixed(1);
   }
   else if (homePageScrollPosition == 7) {
     document.getElementById('homePageSensorTitle').innerHTML = "Air Hum Sensor";
@@ -4999,14 +5118,14 @@ function timerPageSlider(inc) {
 function fanPageSlider(inc) {
   if (inc < 0) {
     if (fanPageScrollPosition > 0) fanPageScrollPosition--;
-    else fanPageScrollPosition = 4;
+    else fanPageScrollPosition = 6;
   } 
   else if (inc > 0) {
-    if (fanPageScrollPosition < 4) fanPageScrollPosition++;
+    if (fanPageScrollPosition < 6) fanPageScrollPosition++;
     else fanPageScrollPosition = 0;
   }
   let currentSlideIcon = "fanSlideIcon" + (fanPageScrollPosition + 1);
-  for (let i = 1; i < 6;i++) {
+  for (let i = 1; i < 8;i++) {
     let slideIcon = "fanSlideIcon" + i;
     let newPage = "fanPage" + i;
     document.getElementById(slideIcon).src = document.getElementById("slideIcon_blue").src;
@@ -5581,24 +5700,44 @@ function adjustFanTwoMaxSpeed(inc) {
   document.getElementById("fanTwoMaxSpeed").innerHTML = targetFanTwoMaxSpeed;
 }
 
-function adjustMinAirTemp(inc) {
-  if (inc != null) targetMinAirTemp = adjustValue(inc, targetMinAirTemp, 0, targetMaxAirTemp, 1, "targetMinAirTemp");
-  document.getElementById("minAirTemp").innerHTML = parseFloat(targetMinAirTemp).toFixed(1);
+function adjustDayMinAirTemp(inc) {
+  if (inc != null) targetDayMinAirTemp = adjustValue(inc, targetDayMinAirTemp, 0, targetDayMaxAirTemp, 1, "targetDayMinAirTemp");
+  document.getElementById("minDayAirTemp").innerHTML = parseFloat(targetDayMinAirTemp).toFixed(1);
 }
 
-function adjustMaxAirTemp(inc) {
-  if (inc != null) targetMaxAirTemp = adjustValue(inc, targetMaxAirTemp, targetMinAirTemp, 999, 1, "targetMaxAirTemp");
-  document.getElementById("maxAirTemp").innerHTML = parseFloat(targetMaxAirTemp).toFixed(1);
+function adjustDayMaxAirTemp(inc) {
+  if (inc != null) targetDayMaxAirTemp = adjustValue(inc, targetDayMaxAirTemp, targetDayMinAirTemp, 999, 1, "targetDayMaxAirTemp");
+  document.getElementById("maxDayAirTemp").innerHTML = parseFloat(targetDayMaxAirTemp).toFixed(1);
 }
 
-function adjustMinHumidity(inc) {
-  if (inc != null) targetMinHumidity = adjustValue(inc, targetMinHumidity, 0, targetMaxHumidity, 1, "targetMinHumidity");
-  document.getElementById("minHumidity").innerHTML = parseFloat(targetMinHumidity).toFixed(1);
+function adjustDayMinHumidity(inc) {
+  if (inc != null) targetDayMinHumidity = adjustValue(inc, targetMinDayHumidity, 0, targetDayMaxHumidity, 1, "targetDayMinHumidity");
+  document.getElementById("minDayHumidity").innerHTML = parseFloat(targetDayMinHumidity).toFixed(1);
 }
 
-function adjustMaxHumidity(inc) {
-  if (inc != null) targetMaxHumidity = adjustValue(inc, targetMaxHumidity, targetMinHumidity, 999, 1, "targetMaxHumidity");
-  document.getElementById("maxHumidity").innerHTML = parseFloat(targetMaxHumidity).toFixed(1);
+function adjustDayMaxHumidity(inc) {
+  if (inc != null) targetDayMaxHumidity = adjustValue(inc, targetDayMaxHumidity, targetDayMinHumidity, 999, 1, "targetDayMaxHumidity");
+  document.getElementById("maxDayHumidity").innerHTML = parseFloat(targetDayMaxHumidity).toFixed(1);
+}
+
+function adjustNightMinAirTemp(inc) {
+  if (inc != null) targetNightMinAirTemp = adjustValue(inc, targetNightMinAirTemp, 0, targetNightMaxAirTemp, 1, "targetNightMinAirTemp");
+  document.getElementById("minNightAirTemp").innerHTML = parseFloat(targetNightMinAirTemp).toFixed(1);
+}
+
+function adjustNightMaxAirTemp(inc) {
+  if (inc != null) targetNightMaxAirTemp = adjustValue(inc, targetNightMaxAirTemp, targetNightMinAirTemp, 999, 1, "targetNightMaxAirTemp");
+  document.getElementById("maxNightAirTemp").innerHTML = parseFloat(targetNightMaxAirTemp).toFixed(1);
+}
+
+function adjustNightMinHumidity(inc) {
+  if (inc != null) targetNightMinHumidity = adjustValue(inc, targetMinNightHumidity, 0, targetNightMaxHumidity, 1, "targetNightMinHumidity");
+  document.getElementById("minNightHumidity").innerHTML = parseFloat(targetNightMinHumidity).toFixed(1);
+}
+
+function adjustNightMaxHumidity(inc) {
+  if (inc != null) targetNightMaxHumidity = adjustValue(inc, targetNightMaxHumidity, targetNightMinHumidity, 999, 1, "targetNightMaxHumidity");
+  document.getElementById("maxNightHumidity").innerHTML = parseFloat(targetNightMaxHumidity).toFixed(1);
 }
 
 function adjustControlTemp(inc) {
@@ -6287,10 +6426,11 @@ function getData(pageNumber) {
 		  let cnt = 0;	  
 		  // Page 1 slide 0
 		  if (pageNumber == 1) {
-			if (valLen == 30) {	
+			if (valLen == 31) {	
+				lightOn = (values[cnt++] == "0" ? false : true);	
 				convertToF = (values[cnt++] == "0" ? false : true);	
 				convertToInchs = (values[cnt++] == "0" ? false : true);
-        arrayCount = values[cnt++];
+				arrayCount = values[cnt++];
 				if (homePageScrollPosition == 0) {		
 					ecSensor = values[cnt++];
 					targetMinEc = values[cnt++];
@@ -6364,14 +6504,14 @@ function getData(pageNumber) {
 				}
 			}
 			else
-				console.log("error expected 30, received " + valLen);
+				console.log("error expected 31, received " + valLen);
 		  }
 		  ///////////////////////////////////////////////////////////////////
 		  else if (pageNumber == 2) {
 			if (valLen == 27) {		
 				convertToF = (values[cnt++] == "0" ? false : true);		
 				convertToInchs = (values[cnt++] == "0" ? false : true);
-        arrayCount = values[cnt++];
+				arrayCount = values[cnt++];
 				if (graphPageScrollPosition == 0) {
 					for (let i = 0; i < 24; i++) 
 					  ecSenorArray[i] = values[cnt++];
@@ -6546,9 +6686,7 @@ function getData(pageNumber) {
 				targetMinWaterTemp = values[cnt++];
 				targetMaxWaterTemp = values[cnt++];
 				targetWaterTankLength = values[cnt++]; //
-				targetWaterTankWidth = values[cnt++]; //
-				for (let i = 0; i < 31; i++) 
-					autoFillDays[i] = values[cnt++];
+				targetWaterTankWidth = values[cnt++]; //			
 				autoFillMinute = values[cnt++];
 				autoFillHour = values[cnt++];
 				disableDrainAndRefill = (values[cnt++] == "0" ? false : true);
@@ -6558,6 +6696,8 @@ function getData(pageNumber) {
 				refillDoserFourMills = values[cnt++];
 				refillDoserFiveMills = values[cnt++];
 				refillDoserSixMills = values[cnt++];
+				for (let i = 0; i < 31; i++) 
+					autoFillDays[i] = values[cnt++];
 			}
 			else
 			  console.log("waterPage: error expected 48, received " + valLen);
@@ -6617,27 +6757,31 @@ function getData(pageNumber) {
 				auxRelayTwoMode = values[cnt++];		
 			}
 			else
-			  console.log("Lighting page: error expected 5, received " + valLen);
+			  console.log("Lighting page: error expected 24, received " + valLen);
 		  }
 		  ///////////////////////////////////////////////////////////////////
 		  else if (pageNumber == 12) {
-			if (valLen == 13) {	
+			if (valLen == 17) {	
 				convertToF = (values[cnt++] == "0" ? false : true);		
 				fanOneMinSpeed = values[cnt++];
 				fanOneMaxSpeed = values[cnt++];
 				fanTwoMinSpeed = values[cnt++];
 				fanTwoMaxSpeed = values[cnt++];
-				targetMinAirTemp = values[cnt++];
-				targetMaxAirTemp = values[cnt++];
-				targetMinHumidity = values[cnt++];
-				targetMaxHumidity = values[cnt++];
+				targetDayMinAirTemp = values[cnt++];
+				targetDayMaxAirTemp = values[cnt++];
+				targetDayMinAirTemp = values[cnt++];
+				targetDayMaxAirTemp = values[cnt++];
+				targetNightMinHumidity = values[cnt++];
+				targetNightMaxHumidity = values[cnt++];
+				targetNightMinHumidity = values[cnt++];
+				targetNightMaxHumidity = values[cnt++];
 				fansControlTemp = (values[cnt++] == "0" ? false : true);
 				fansControlHum = (values[cnt++] == "0" ? false : true);
 				fanOneFixedSpeed = (values[cnt++] == "0" ? false : true);
 				fanTwoFixedSpeed = (values[cnt++] == "0" ? false : true);
 			}
 			else
-			  console.log("Fans page: error expected 13, received " + valLen);
+			  console.log("Fans page: error expected 17, received " + valLen);
 		  }
 		  ///////////////////////////////////////////////////////////////////
 		  else if (pageNumber == 13) {
@@ -6689,7 +6833,7 @@ function getData(pageNumber) {
 			  console.log("Warnings page: error expected 34, received " + valLen);
 		  }
 		  connectionTime = new Date().getTime();
-      setPage(pageNumber, false);
+		  setPage(pageNumber, false);
 		}
 	  };	  
 	  let command = "/getPageData?page=" + (pageNumber-1) + "&slide=" + slide;
@@ -6738,6 +6882,7 @@ setInterval(function() {
     break;
   }
 },1000); 
+
 </script>
 </body>
 </html>

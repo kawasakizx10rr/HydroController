@@ -532,85 +532,108 @@ void setValue() {
 			cmdIndex = 93;
       user::targetMaxFanTwoSpeed = atoi(val);
     }
-    // targetMinAirTemp
-    else if (strcmp(cmd, "targetMinAirTemp") == 0) {
+
+    // targetDayMinAirTemp
+    else if (strcmp(cmd, "targetDayMinAirTemp") == 0) {
 			cmdIndex = 94;
-      user::targetMinAirTemp = atof(val);
+      user::targetDayMinAirTemp = atof(val);
     }
-    // targetMaxAirTemp
-    else if (strcmp(cmd, "targetMaxAirTemp") == 0) {
+    // targetDayMaxAirTemp
+    else if (strcmp(cmd, "targetDayMaxAirTemp") == 0) {
 			cmdIndex = 95;
-      user::targetMaxAirTemp = atof(val);
+      user::targetDayMaxAirTemp = atof(val);
     }
-    // targetMinHumidity
-    else if (strcmp(cmd, "targetMinHumidity") == 0) {
+    // targetDayMinHumidity
+    else if (strcmp(cmd, "targetDayMinHumidity") == 0) {
 			cmdIndex = 96;
-      user::targetMinHumidity = atof(val);
+      user::targetDayMinHumidity = atof(val);
     }
-    // targetMaxHumidity
-    else if (strcmp(cmd, "targetMaxHumidity") == 0) {
+    // targetDayMaxHumidity
+    else if (strcmp(cmd, "targetDayMaxHumidity") == 0) {
 			cmdIndex = 97;
-      user::targetMaxHumidity = atof(val);
+      user::targetDayMaxHumidity = atof(val);
     }
+
+    // targetNightMinAirTemp
+    else if (strcmp(cmd, "targetNightMinAirTemp") == 0) {
+			cmdIndex = 98;
+      user::targetNightMinAirTemp = atof(val);
+    }
+    // targetNightMaxAirTemp
+    else if (strcmp(cmd, "targetNightMaxAirTemp") == 0) {
+			cmdIndex = 99;
+      user::targetNightMaxAirTemp = atof(val);
+    }
+    // targetNightMinHumidity
+    else if (strcmp(cmd, "targetNightMinHumidity") == 0) {
+			cmdIndex = 100;
+      user::targetNightMinHumidity = atof(val);
+    }
+    // targetNightMaxHumidity
+    else if (strcmp(cmd, "targetNightMaxHumidity") == 0) {
+			cmdIndex = 101;
+      user::targetNightMaxHumidity = atof(val);
+    }
+
     // fansControlTemp
     else if (strcmp(cmd, "fansControlTemp") == 0) {
-			cmdIndex = 98;
+			cmdIndex = 102;
       user::fansControlTemperature = strBool(val);
     }
     // fansControlHum
     else if (strcmp(cmd, "fansControlHum") == 0) {
-			cmdIndex = 99;
+			cmdIndex = 103;
       user::fansControlHumidity = strBool(val);
     }
     // fanOneFixedSpeed
     else if (strcmp(cmd, "fanOneFixedSpeed") == 0) {
-			cmdIndex = 100;
+			cmdIndex = 104;
       user::fanOneFixedSpeed = strBool(val);
     }
     // fanTwoFixedSpeed
     else if (strcmp(cmd, "fanTwoFixedSpeed") == 0) {
-			cmdIndex = 101;
+			cmdIndex = 105;
       user::fanTwoFixedSpeed = strBool(val);
     }
     // ============== WARNINGS PAGE ==============
     // ecErrorMargin
     else if (strcmp(cmd, "ecErrorMargin") == 0) {
-			cmdIndex = 102;
+			cmdIndex = 106;
       user::ecErrorMargin = atof(val);
     }
     // tdsErrorMargin
     else if (strcmp(cmd, "tdsErrorMargin") == 0) {
-			cmdIndex = 103;
+			cmdIndex = 107;
       user::tdsErrorMargin = atoi(val);
     }
     // phErrorMargin
     else if (strcmp(cmd, "phErrorMargin") == 0) {
-			cmdIndex = 104;
+			cmdIndex = 108;
       user::phErrorMargin = atof(val);
     }
     // co2ErrorMargin
     else if (strcmp(cmd, "co2ErrorMargin") == 0) {
-			cmdIndex = 105;
+			cmdIndex = 109;
       user::co2ErrorMargin = atoi(val);
     }
     // waterHeightErrorMargin
     else if (strcmp(cmd, "waterHeightErrorMargin") == 0) {
-			cmdIndex = 106;
+			cmdIndex = 110;
       user::waterHeightErrorMargin = atof(val);
     }
     // waterTempErrorMargin
     else if (strcmp(cmd, "waterTempErrorMargin") == 0) {
-			cmdIndex = 107;
+			cmdIndex = 111;
       user::waterTempErrorMargin = atof(val);
     }
     // airTempErrorMargin
     else if (strcmp(cmd, "airTempErrorMargin") == 0) {
-			cmdIndex = 108;
+			cmdIndex = 112;
       user::airTempErrorMargin = atof(val);
     }
     // humidityErrorMargin
     else if (strcmp(cmd, "humidityErrorMargin") == 0) {
-			cmdIndex = 109;
+			cmdIndex = 113;
       user::humidityErrorMargin = atof(val);
     } 
     else if (device::globalDebug)
@@ -641,6 +664,7 @@ void getPageData() {
   memset(wifi::buffer, 0, sizeof(wifi::buffer));
   // Page 0 (Home page)
   if (page == 0) {
+    copyIntToArray(device::lightOn);
     copyIntToArray(user::convertToF);
     copyIntToArray(user::convertToInches);
     copyIntToArray(sensor::sensorArrayPos); 
@@ -682,14 +706,14 @@ void getPageData() {
     } 
     else if (slide == 6) {  // home page slide 6
       copyFloatToArray(sensor::airTemp, 1);
-      copyFloatToArray(user::targetMinAirTemp, 1);
-      copyFloatToArray(user::targetMaxAirTemp, 1);
+      device::lightOn ? copyFloatToArray(user::targetDayMinAirTemp, 1) : copyFloatToArray(user::targetNightMinAirTemp, 1);
+      device::lightOn ? copyFloatToArray(user::targetDayMaxAirTemp, 1) : copyFloatToArray(user::targetNightMaxAirTemp, 1);
       copyFloatArrayToArray(sensor::airTemperatureArray, sensor::maxSensorArrayVals, 1);
     } 
     else if (slide == 7) {  // home page slide 7
       copyFloatToArray(sensor::humidity, 1);
-      copyFloatToArray(user::targetMinHumidity, 1);
-      copyFloatToArray(user::targetMaxHumidity, 1);
+      device::lightOn ? copyFloatToArray(user::targetDayMinHumidity, 1) : copyFloatToArray(user::targetNightMinHumidity, 1);
+      device::lightOn ? copyFloatToArray(user::targetDayMaxHumidity, 1) : copyFloatToArray(user::targetNightMaxHumidity, 1);
       copyFloatArrayToArray(sensor::humidityArray, sensor::maxSensorArrayVals, 1);
     } 
     else if (slide == 8) {  // home page slide 8
@@ -880,7 +904,7 @@ void getPageData() {
     //doserFiveSpeed = values[cnt++];
     //doserSixSpeed = values[cnt++];
   }
-  // Page 10 (Lighting page)
+  // Page 10 (Timer page)
   else if (page == 10) {
     copyIntToArray(user::lightOnTimeHour);
     copyIntToArray(user::lightOnTimeMin);
@@ -914,10 +938,14 @@ void getPageData() {
     copyIntToArray(user::targetMaxFanOneSpeed);
     copyIntToArray(user::targetMinFanTwoSpeed);
     copyIntToArray(user::targetMaxFanTwoSpeed);
-    copyFloatToArray(user::targetMinAirTemp, 1);
-    copyFloatToArray(user::targetMaxAirTemp, 1);
-    copyFloatToArray(user::targetMinHumidity, 1);
-    copyFloatToArray(user::targetMaxHumidity, 1);
+    copyFloatToArray(user::targetDayMinAirTemp, 1);
+    copyFloatToArray(user::targetDayMaxAirTemp, 1);
+    copyFloatToArray(user::targetDayMinHumidity, 1);
+    copyFloatToArray(user::targetDayMaxHumidity, 1);
+    copyFloatToArray(user::targetNightMinAirTemp, 1);
+    copyFloatToArray(user::targetNightMaxAirTemp, 1);
+    copyFloatToArray(user::targetNightMinHumidity, 1);
+    copyFloatToArray(user::targetNightMaxHumidity, 1);
     copyIntToArray(user::fansControlTemperature);
     copyIntToArray(user::fansControlHumidity);
     copyIntToArray(user::fanOneFixedSpeed);
@@ -952,12 +980,12 @@ void getPageData() {
     copyFloatToArray(user::targetMaxWaterHeight, 1);
     copyFloatToArray(user::waterHeightErrorMargin, 1);
     copyFloatToArray(sensor::airTemp, 1);
-    copyFloatToArray(user::targetMinAirTemp, 1);
-    copyFloatToArray(user::targetMaxAirTemp, 1);
+    device::lightOn ? copyFloatToArray(user::targetDayMinAirTemp, 1) : copyFloatToArray(user::targetNightMinAirTemp, 1);
+    device::lightOn ? copyFloatToArray(user::targetDayMaxAirTemp, 1) : copyFloatToArray(user::targetNightMaxAirTemp, 1);
     copyFloatToArray(user::airTempErrorMargin, 1);
     copyFloatToArray(sensor::humidity, 1);
-    copyFloatToArray(user::targetMinHumidity, 1);
-    copyFloatToArray(user::targetMaxHumidity, 1);
+    device::lightOn ? copyFloatToArray(user::targetDayMinHumidity, 1) : copyFloatToArray(user::targetNightMinHumidity, 1);
+    device::lightOn ? copyFloatToArray(user::targetDayMaxHumidity, 1) : copyFloatToArray(user::targetNightMaxHumidity, 1);
     copyFloatToArray(user::humidityErrorMargin, 1);
   }
   else if (device::globalDebug) {

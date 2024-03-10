@@ -41,110 +41,112 @@ void receiveSerialData(const uint8_t a_page, const uint8_t a_slide) {
 void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buffer, const uint16_t a_index) {
   if (a_page == 0) {
     if (a_index == 0)
-      bufferToBool(user::convertToF, a_buffer);
+      bufferToBool(device::lightOn, a_buffer);
     else if (a_index == 1)
-      bufferToBool(user::convertToInches, a_buffer);
+      bufferToBool(user::convertToF, a_buffer);
     else if (a_index == 2)
-        bufferToUint8(sensor::sensorArrayPos, a_buffer);
+      bufferToBool(user::convertToInches, a_buffer);
+    else if (a_index == 3)
+      bufferToUint8(sensor::sensorArrayPos, a_buffer);
     if (a_slide == 0) {  // home page slide 0
-      if (a_index == 3)
+      if (a_index == 4)
         bufferToFloat(sensor::ec, a_buffer);
-      else if (a_index == 4)
-        bufferToFloat(user::targetMinEc, a_buffer);
       else if (a_index == 5)
+        bufferToFloat(user::targetMinEc, a_buffer);
+      else if (a_index == 6)
         bufferToFloat(user::targetMaxEc, a_buffer);
       else 
-        copyBufferToArray(sensor::ecArray, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
+        copyBufferToArray(sensor::ecArray, sensor::maxSensorArrayVals, a_index - 7, a_buffer);
     } 
     else if (a_slide == 1) {  // home page slide 1
-      if (a_index == 3)
+      if (a_index == 4)
         bufferToUint16(sensor::tds, a_buffer);
-      else if (a_index == 4)
-        bufferToUint16(user::targetMinTds, a_buffer);
       else if (a_index == 5)
+        bufferToUint16(user::targetMinTds, a_buffer);
+      else if (a_index == 6)
         bufferToUint16(user::targetMaxTds, a_buffer);
       else
-        copyBufferToArray(sensor::tdsArray, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
+        copyBufferToArray(sensor::tdsArray, sensor::maxSensorArrayVals, a_index - 7, a_buffer);
     } 
     else if (a_slide == 2) {  // home page slide 2
-      if (a_index == 3)
+      if (a_index == 4)
         bufferToFloat(sensor::ph, a_buffer);
-      else if (a_index == 4)
-        bufferToFloat(user::targetMinPh, a_buffer);
       else if (a_index == 5)
+        bufferToFloat(user::targetMinPh, a_buffer);
+      else if (a_index == 6)
         bufferToFloat(user::targetMaxPh, a_buffer);
       else 
-        copyBufferToArray(sensor::phArray, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
+        copyBufferToArray(sensor::phArray, sensor::maxSensorArrayVals, a_index - 7, a_buffer);
     } 
     else if (a_slide == 3) {  // home page slide 3
-      if (a_index == 3)
+      if (a_index == 4)
         bufferToUint16(sensor::co2, a_buffer);
-      else if (a_index == 4)
-        bufferToUint16(user::targetCo2, a_buffer);
       else if (a_index == 5)
         bufferToUint16(user::targetCo2, a_buffer);
+      else if (a_index == 6)
+        bufferToUint16(user::targetCo2, a_buffer);
       else 
-        copyBufferToArray(sensor::co2Array, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
+        copyBufferToArray(sensor::co2Array, sensor::maxSensorArrayVals, a_index - 7, a_buffer);
     } 
     else if (a_slide == 4) {  // home page slide 4
-      if (a_index == 3)
+      if (a_index == 4)
         bufferToFloat(sensor::waterTemp, a_buffer);
-      else if (a_index == 4)
-        bufferToFloat(user::targetMinWaterTemp, a_buffer);
       else if (a_index == 5)
+        bufferToFloat(user::targetMinWaterTemp, a_buffer);
+      else if (a_index == 6)
         bufferToFloat(user::targetMaxWaterTemp, a_buffer);
       else 
-        copyBufferToArray(sensor::waterTemperatureArray, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
+        copyBufferToArray(sensor::waterTemperatureArray, sensor::maxSensorArrayVals, a_index - 7, a_buffer);
     } 
     else if (a_slide == 5) {  // home page slide 5
-      if (a_index == 3)
+      if (a_index == 4)
         bufferToFloat(sensor::waterLevel, a_buffer);
-      else if (a_index == 4)
-        bufferToFloat(user::targetMinWaterHeight, a_buffer);
       else if (a_index == 5)
+        bufferToFloat(user::targetMinWaterHeight, a_buffer);
+      else if (a_index == 6)
         bufferToFloat(user::targetMaxWaterHeight, a_buffer);
       else 
-        copyBufferToArray(sensor::waterLevelArray, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
+        copyBufferToArray(sensor::waterLevelArray, sensor::maxSensorArrayVals, a_index - 7, a_buffer);
     }
     else if (a_slide == 6) {  // home page slide 6
-      if (a_index == 3)
+      if (a_index == 4)
         bufferToFloat(sensor::airTemp, a_buffer);
-      else if (a_index == 4)
-        bufferToFloat(user::targetMinAirTemp, a_buffer);
       else if (a_index == 5)
-        bufferToFloat(user::targetMaxAirTemp, a_buffer);
+        device::lightOn ? bufferToFloat(user::targetDayMinAirTemp, a_buffer) : bufferToFloat(user::targetNightMinAirTemp, a_buffer);
+      else if (a_index == 6)
+        device::lightOn ? bufferToFloat(user::targetDayMaxAirTemp, a_buffer) : bufferToFloat(user::targetNightMaxAirTemp, a_buffer);
       else 
-        copyBufferToArray(sensor::airTemperatureArray, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
+        copyBufferToArray(sensor::airTemperatureArray, sensor::maxSensorArrayVals, a_index - 7, a_buffer);
     } 
     else if (a_slide == 7) {  // home page slide 7
       if (a_index == 3)
         bufferToFloat(sensor::humidity, a_buffer);
       else if (a_index == 4)
-        bufferToFloat(user::targetMinHumidity, a_buffer);
+        device::lightOn ? bufferToFloat(user::targetDayMinHumidity, a_buffer) : bufferToFloat(user::targetNightMinHumidity, a_buffer);
       else if (a_index == 5)
-        bufferToFloat(user::targetMaxHumidity, a_buffer);
+        device::lightOn ? bufferToFloat(user::targetDayMaxHumidity, a_buffer) : bufferToFloat(user::targetNightMaxHumidity, a_buffer);
       else 
-        copyBufferToArray(sensor::humidityArray, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
+        copyBufferToArray(sensor::humidityArray, sensor::maxSensorArrayVals, a_index - 7, a_buffer);
     } 
     else if (a_slide == 8) {  // home page slide 8
-      if (a_index == 3)
+      if (a_index == 4)
         bufferToUint8(device::fanOneSpeed, a_buffer);
-      else if (a_index == 4)
-        bufferToUint8(user::targetMinFanOneSpeed, a_buffer);
       else if (a_index == 5)
+        bufferToUint8(user::targetMinFanOneSpeed, a_buffer);
+      else if (a_index == 6)
         bufferToUint8(user::targetMaxFanOneSpeed, a_buffer);
       else 
-        copyBufferToArray(sensor::fanOneSpeedArray, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
+        copyBufferToArray(sensor::fanOneSpeedArray, sensor::maxSensorArrayVals, a_index - 7, a_buffer);
     } 
     else if (a_slide == 9) {  // home page slide 9
-      if (a_index == 3)
+      if (a_index == 4)
         bufferToUint8(device::fanTwoSpeed, a_buffer);
-      else if (a_index == 4)
-        bufferToUint8(user::targetMinFanTwoSpeed, a_buffer);
       else if (a_index == 5)
+        bufferToUint8(user::targetMinFanTwoSpeed, a_buffer);
+      else if (a_index == 6)
         bufferToUint8(user::targetMaxFanTwoSpeed, a_buffer);
       else
-        copyBufferToArray(sensor::fanTwoSpeedArray, sensor::maxSensorArrayVals, a_index - 6, a_buffer);
+        copyBufferToArray(sensor::fanTwoSpeedArray, sensor::maxSensorArrayVals, a_index - 7, a_buffer);
     }
   }
   // Page 1 (Graphs page)
@@ -420,16 +422,54 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
   }
   // Page 10 (Lighting page)
   else if (a_page == 10) {
-    if (a_index == 0)
-      bufferToUint8(user::lightOnTimeMin, a_buffer);
+   if (a_index == 0)
+      bufferToUint8(user::lightOnTimeHour, a_buffer); 
     else if (a_index == 1)
-      bufferToUint8(user::lightOnTimeHour, a_buffer);
+      bufferToUint8(user::lightOnTimeMin, a_buffer); 
     else if (a_index == 2)
-      bufferToUint8(user::lightOffTimeMin, a_buffer);
-    else if (a_index == 3)
       bufferToUint8(user::lightOffTimeHour, a_buffer);
+    else if (a_index == 3)
+      bufferToUint8(user::lightOffTimeMin, a_buffer);
     else if (a_index == 4)
+      bufferToUint8(user::lightState, a_buffer);
+    else if (a_index == 5)
       bufferToUint8(user::lightMode, a_buffer);
+    else if (a_index == 6)
+      bufferToUint16(user::lightOffDuration, a_buffer);
+    else if (a_index == 7)
+      bufferToUint16(user::lightOnDuration, a_buffer);
+    else if (a_index == 8)
+      bufferToUint8(user::auxRelayOneOnTimeHour, a_buffer);
+    else if (a_index == 9)
+      bufferToUint8(user::auxRelayOneOnTimeHour, a_buffer);
+    else if (a_index == 10)
+      bufferToUint8(user::auxRelayOneOffTimeHour, a_buffer);
+    else if (a_index == 11)
+      bufferToUint8(user::auxRelayOneOffTimeMin, a_buffer);
+    else if (a_index == 12)
+      bufferToUint8(user::auxRelayOneState, a_buffer);
+    else if (a_index == 13)
+      bufferToUint8(user::auxRelayOneMode, a_buffer);
+    else if (a_index == 14)
+      bufferToUint16(user::auxRelayOneOnDuration, a_buffer);
+    else if (a_index == 15)
+      bufferToUint16(user::auxRelayOneOffDuration, a_buffer);
+    else if (a_index == 16)
+      bufferToUint8(user::auxRelayTwoOnTimeHour, a_buffer);
+    else if (a_index == 17)
+      bufferToUint8(user::auxRelayTwoOnTimeMin, a_buffer);
+    else if (a_index == 18)   
+      bufferToUint8(user::auxRelayTwoOffTimeHour, a_buffer);
+    else if (a_index == 19)      
+      bufferToUint8(user::auxRelayTwoOffTimeMin, a_buffer);
+    else if (a_index == 20)    
+      bufferToUint8(user::auxRelayTwoState, a_buffer);
+    else if (a_index == 21)     
+      bufferToUint8(user::auxRelayTwoMode, a_buffer);
+    else if (a_index == 22) 
+      bufferToUint16(user::auxRelayTwoOnDuration, a_buffer);
+    else if (a_index == 23)   
+      bufferToUint16(user::auxRelayTwoOffDuration, a_buffer);
   }
     // Page 11 (Fans page)
   else if (a_page == 11) {  // small amount of data so no need to segment based on slider
@@ -444,20 +484,28 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
     else if (a_index == 4)
       bufferToUint8(user::targetMaxFanTwoSpeed, a_buffer);
     else if (a_index == 5)
-      bufferToFloat(user::targetMinAirTemp, a_buffer);
+      bufferToFloat(user::targetDayMinAirTemp, a_buffer);
     else if (a_index == 6)
-      bufferToFloat(user::targetMaxAirTemp, a_buffer);
+      bufferToFloat(user::targetDayMaxAirTemp, a_buffer);
     else if (a_index == 7)
-      bufferToFloat(user::targetMinHumidity, a_buffer);
+      bufferToFloat(user::targetNightMinAirTemp, a_buffer);
     else if (a_index == 8)
-      bufferToFloat(user::targetMaxHumidity, a_buffer);
+      bufferToFloat(user::targetNightMaxAirTemp, a_buffer);
     else if (a_index == 9)
-      bufferToBool(user::fansControlTemperature, a_buffer);
+      bufferToFloat(user::targetDayMinHumidity, a_buffer);
     else if (a_index == 10)
-      bufferToBool(user::fansControlHumidity, a_buffer);
+      bufferToFloat(user::targetDayMaxHumidity, a_buffer);
     else if (a_index == 11)
+      bufferToFloat(user::targetNightMinHumidity, a_buffer);
+    else if (a_index == 12)
+      bufferToFloat(user::targetNightMaxHumidity, a_buffer);
+    else if (a_index == 13)
+      bufferToBool(user::fansControlTemperature, a_buffer);
+    else if (a_index == 14)
+      bufferToBool(user::fansControlHumidity, a_buffer);
+    else if (a_index == 15)
       bufferToBool(user::fanOneFixedSpeed, a_buffer);
-    else if (a_index == 12) 
+    else if (a_index == 16) 
       bufferToBool(user::fanTwoFixedSpeed, a_buffer);
   }
     // Page 12 (Warnings page)
@@ -517,17 +565,17 @@ void updateValue(const uint8_t a_page, const uint8_t a_slide, const char* a_buff
     else if (a_index == 26)     
       bufferToFloat(sensor::airTemp, a_buffer);
     else if (a_index == 27)    
-      bufferToFloat(user::targetMinAirTemp, a_buffer);
+      device::lightOn ? bufferToFloat(user::targetDayMinAirTemp, a_buffer) : bufferToFloat(user::targetNightMinAirTemp, a_buffer);
     else if (a_index == 28)    
-      bufferToFloat(user::targetMaxAirTemp, a_buffer);
+      device::lightOn ? bufferToFloat(user::targetDayMaxAirTemp, a_buffer) : bufferToFloat(user::targetNightMaxAirTemp, a_buffer);
     else if (a_index == 29)  
       bufferToFloat(user::airTempErrorMargin, a_buffer);
     else if (a_index == 30)  
       bufferToFloat(sensor::humidity, a_buffer);
     else if (a_index == 31)  
-      bufferToFloat(user::targetMinHumidity, a_buffer);
+      device::lightOn ? bufferToFloat(user::targetDayMinHumidity, a_buffer) : bufferToFloat(user::targetNightMinHumidity, a_buffer);
     else if (a_index == 32)  
-      bufferToFloat(user::targetMaxHumidity, a_buffer);
+      device::lightOn ? bufferToFloat(user::targetDayMaxHumidity, a_buffer) : bufferToFloat(user::targetNightMaxHumidity, a_buffer);
     else if (a_index == 33) 
       bufferToFloat(user::humidityErrorMargin, a_buffer);
   }
