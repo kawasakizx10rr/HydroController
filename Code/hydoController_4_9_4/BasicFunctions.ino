@@ -217,7 +217,7 @@ void initializeDevice() {
 }
 
 void sendWifiDetails() {
-  Serial.print(F("sending Wifi details..."));
+  Serial.println(F("sending Wifi details..."));
   Serial1.print(F("$"));
   Serial1.print(wifi::ssid); Serial1.print(F(","));
   Serial1.print(wifi::password); Serial1.print(F(","));
