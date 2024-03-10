@@ -1016,7 +1016,7 @@ void settingsOnePageTouched() {
         }
         else if (display::touch_x >= 460 && display::touch_x <= 620 && display::touch_y >= 430 && display::touch_y <= 470) { // confirm
           beep();
-          wifi::connectionTime = millis();
+          wifi::connectionTime = millis() + 5000UL;
           display::showWifiSsid = false;
           clearPage();
           display::showingDialog = false;
@@ -1055,7 +1055,7 @@ void settingsOnePageTouched() {
         }
         else if (display::touch_x >= 460 && display::touch_x <= 620 && display::touch_y >= 430 && display::touch_y <= 470) { // confirm
           beep();
-          wifi::connectionTime = millis();
+          wifi::connectionTime = millis() + 5000UL;
           display::showWifiPassword = false;
           clearPage();
           display::showingDialog = false;
@@ -1164,7 +1164,7 @@ void settingsOnePageTouched() {
       if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 370 - scrollMargin && display::touch_y <= 400 - scrollMargin) { // enable WiFi hidden network
         wifi::hiddenNetwork = !wifi::hiddenNetwork;
         beep();
-        wifi::connectionTime = millis();
+        wifi::connectionTime = millis() + 5000UL;
       }
     }
     if (display::settingsPageOneScrollPos <= 5) {
