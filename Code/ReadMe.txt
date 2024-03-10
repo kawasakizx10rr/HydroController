@@ -5,7 +5,6 @@ or the gerber files in the PCB folder for details wiring diagrams.
 
 The wiring diagram needs to be updated, as the controller now uses the DF Robot Pro PH sensor version 2.0, as such the digital pot and dip switch between an analog or digital pot is no longer required.
 
-Upload the nanoCode to the Arduino Nano.
-Upload the hydroControllerV4.9.3 to the Arduino Mega.
-Currently the ESP8266 code is not compatable with the latest version of the Hydro controller 4.9.x, this will be added back in shortly.
-
+Upload the nanoCode to an Arduino Nano or Arduino Uno.
+Upload the hydroControllerV4.9.4 to an Arduino Mega2560.
+Upload the esp8266 to an esp8266-01.
