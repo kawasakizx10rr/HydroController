@@ -1562,8 +1562,8 @@ void displaySystemLogs() {
     if (device::globalDebug) {
       Serial.print(F("maxLogsToDsiplay: ")); Serial.println(maxLogsToDsiplay);
     }
-    tft.setFont(&myriadPro_32px_Regular);
-    tft.print(700, 105, F("Logs ")); tft.print(display::systemLogScrollPos + 1); tft.print(F(" of ")); tft.print(maxLogsToDsiplay);
+    //tft.setFont(&Arial_22px_Regular);
+    //tft.print(700, 105, F("Logs ")); tft.print(display::systemLogScrollPos + 1); tft.print(F(" of ")); tft.print(maxLogsToDsiplay);
     tft.setFont(&akashi_36px_Regular);
     for (uint8_t i = display::systemLogScrollPos; i < maxLogsToDsiplay; i++) {
       int16_t logType = message::logTypeArray[i];   
