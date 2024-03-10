@@ -373,7 +373,7 @@ int16_t sliderXTouch() {
   if (returnVal != 0) {
     display::scrollLeftCount = 0;
     display::scrollRightCount = 0;
-    Serial.print(F("slide x touch ")); Serial.println(returnVal);
+    //Serial.print(F("slide x touch ")); Serial.println(returnVal);
   }
   return returnVal;
 }

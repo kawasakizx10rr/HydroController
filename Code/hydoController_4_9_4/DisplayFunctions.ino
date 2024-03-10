@@ -1685,8 +1685,8 @@ void displayWifiSsid() {
     tft.fillRect(237, 250, 346, 42, RA8875_WHITE);
     tft.drawRect(235, 248, 350, 46, RA8875_BLACK);
     tft.drawRect(236, 249, 348, 44, RA8875_BLACK);
-    tft.setTextColor(RA8875_BLACK, user::backgroundColor);
     tft.print(242, 250, wifi::ssid);
+    tft.setTextColor(RA8875_BLACK, user::backgroundColor);
     tft.setFont(&myriadPro_32px_Regular);
     tft.print(330, 295, F("Press to edit"));
   }

@@ -689,7 +689,7 @@ enum airStates{ IS_FALLING, IS_RISING, IS_SAME};
 }
 
 namespace wifi {
-bool wifiEnabled = false;
+bool wifiEnabled = true;
 uint32_t connectionTime = 0;
 bool remotlyLoadUserProfile = false;
 bool remotlySaveUserProfile = false;
