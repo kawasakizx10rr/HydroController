@@ -21,3 +21,6 @@ https://paypal.me/EdwinsOnlineStore?country.x=GB&locale.x=en_GB
 
 ### Youtube video
 https://youtu.be/aWhb0Ocu9u4
+
+### Email me
+husqvarna1990@yahoo.com
