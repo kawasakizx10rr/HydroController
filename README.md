@@ -6,7 +6,7 @@ The hydro controller is an all-in-one system which is designed to maintain the e
   <li>EC/TDS and PH control via 4 to 6 peristaltic pumps and a PH and EC sensor.</li>
   <li>Water level maintenance which includes the ability to drain and refill the water using either an ultra-sonic sensor or a E-tape water level sensor and two water pumps one for the water inlet and another for the water outlet, with each pump controlled by a relay.</li>
   <li>Water temperature control via DS18B20 and a water heater controlled by a relay.</li>
-  <li>Air ventilation control (temperature and humidity) via a dual AC zero-point cross module to control two AC fans with a DHT22 or HDC1080 or SCD41 sensor and a relay to control an exter AC heater.</li>
+  <li>Air ventilation control (temperature and humidity) via a dual AC zero-point cross module to control two AC fans with a DHT22 or HDC1080 sensor and a relay to control an exter AC heater.</li>
   <li>AC light timer (on/off/auto timer) via a DS3231 RTC and a relay module.</li>
   <li>Co2 cotrol via a MH-Z14 CO2 Sensor Carbon Dioxide Sensor and a relay module (external Co2 solenoid and flow rate meter required).</li>
   <li>Local Wifi access point with a Hydro controller GUI to view and adjust values remotely, via a ESP8266-01.</li>
