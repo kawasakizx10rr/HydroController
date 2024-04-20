@@ -29,7 +29,7 @@ void drawPages() {
       fansPage();
     else if (display::page == 12)
       warningsPage();
-    display::refreshPage = false;
+    refreshPage(false, 0);
     device::newGraphData = false;
   }
   screenSaver();
@@ -44,7 +44,7 @@ void homePage() {
     display::homePage < 9 ? display::homePage++ : display::homePage = 0;
     device::slideShowpreviousMillis = millis();
     clearPage();
-    display::refreshPage = true;
+    refreshPage(true, 1);
   }
   //
   if (display::refreshPage) {
@@ -1929,7 +1929,7 @@ void drawSettingsPageFour() {
             tft.setTouchCalibration(device::calMinX, device::calMinY, device::calMaxX, device::calMaxY);
             display::showTouchCalibration = 0;
             tft.fillWindow(user::backgroundColor);
-            display::refreshPage = true;
+            refreshPage(true, 2);
             frame();
             OuterMenuIcons();
             drawSettingsPageFour();
@@ -1942,7 +1942,7 @@ void drawSettingsPageFour() {
             display::showTouchCalibration = 0;
             tft.fillWindow(user::backgroundColor);
             device::settingsAdjusted = true;
-            display::refreshPage = true;
+            refreshPage(true, 3);
             frame();
             OuterMenuIcons();
             drawSettingsPageFour();

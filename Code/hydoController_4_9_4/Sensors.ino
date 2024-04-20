@@ -137,7 +137,7 @@ void calibrateCo2() {
     continueMessage(message::calibratingCo2, -1, 0, false, false, false);
   const uint8_t calibrateCo2[] {0XFF, 0x01, 0x87, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78};
   Serial2.write(calibrateCo2, 9);
-  display::refreshPage = true;
+  refreshPage(true, 20);
   clearPage();
 }
 

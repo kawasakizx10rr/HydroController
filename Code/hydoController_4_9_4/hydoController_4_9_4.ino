@@ -311,7 +311,7 @@ uint8_t infoPos = 0;
 
 namespace device {
 uint32_t prevMillis = millis();
-bool globalDebug = false; 
+bool globalDebug = true; 
 float currentDoserMls = 0;
 uint16_t profileEEPROMSize = 0;
 uint16_t systemEEPROMSize = 0;

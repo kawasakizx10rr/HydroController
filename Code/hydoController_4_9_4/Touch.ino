@@ -139,7 +139,7 @@ void sliders() {
       }
       beep();
       clearPage();
-      display::refreshPage = true;
+      refreshPage(true, 21);
       device::slideShowpreviousMillis = millis();
     }
   }
@@ -159,7 +159,7 @@ void sliders() {
           display::maxMinsPage = 9;
       }
       beep();
-      display::refreshPage = true;
+      refreshPage(true, 22);
       clearPage();
     }
   }
@@ -169,13 +169,13 @@ void sliders() {
     if (display::showDoserCalibration) {
       if (slideXIncrement == 1 && display::calDoserPageScrollPos < user::numberOfDosers - 4) {
         display::calDoserPageScrollPos++;
-        display::refreshPage = true;
+        refreshPage(true, 23);
         beep();
         clearPage();
       }
       else if (slideXIncrement == -1 && display::calDoserPageScrollPos > 0) {
         display::calDoserPageScrollPos--;
-        display::refreshPage = true;
+        refreshPage(true, 24);
         beep();
         clearPage();
       }
@@ -184,13 +184,13 @@ void sliders() {
     else if (display::showPhCalibration) {
       if (slideXIncrement == 1 && display::calPhPageScrollPos < 2) {
         display::calPhPageScrollPos++;
-        display::refreshPage = true;
+        refreshPage(true, 25);
         beep();
         clearPage();
       }
       else if (slideXIncrement == -1 && display::calPhPageScrollPos > 0) {
         display::calPhPageScrollPos--;
-        display::refreshPage = true;
+        refreshPage(true, 26);
         beep();
         clearPage();
       }
@@ -199,13 +199,13 @@ void sliders() {
     else if (display::showSystemLogs) {
       if (slideYIncrement == 1 && message::systemLogPos > 5 && display::systemLogScrollPos < message::systemLogPos - 6) {
         display::systemLogScrollPos++;       
-        display::refreshPage = true;
+        refreshPage(true, 27);
         beep();
         clearPage();
       }
       else if (slideYIncrement == -1 && display::systemLogScrollPos > 0) {
         display::systemLogScrollPos--;
-        display::refreshPage = true;
+        refreshPage(true, 28);
         beep();
         clearPage();
       }
@@ -215,13 +215,13 @@ void sliders() {
     else if (!display::showingDialog) {
       if (slideXIncrement == 1 && display::settingsPage < 4) {
         display::settingsPage++;
-        display::refreshPage = true;
+        refreshPage(true, 29);
         beep();
         clearPage();
       }
       else if (slideXIncrement == -1 && display::settingsPage > 0) {
         display::settingsPage--;
-        display::refreshPage = true;
+        refreshPage(true, 30);
         beep();
         clearPage();
       }
@@ -231,13 +231,13 @@ void sliders() {
   else if (display::page == 7) {
     if (slideXIncrement == 1 && display::co2PageScrollPos < 3) {
       display::co2PageScrollPos++;
-      display::refreshPage = true;
+      refreshPage(true, 31);
       beep();
       clearPage();
     }
     else if (slideXIncrement == -1 && display::co2PageScrollPos > 0) {
       display::co2PageScrollPos--;
-      display::refreshPage = true;
+      refreshPage(true, 32);
       beep();
       clearPage();
     }
@@ -247,13 +247,13 @@ void sliders() {
     if (slideXIncrement == 1) {
       if (display::waterPageScrollPos < 4) {
         display::waterPageScrollPos++;
-        display::refreshPage = true;
+        refreshPage(true, 33);
         beep();
         clearPage();
       }
       else if (display::waterPageScrollPos == 4 && display::refillDoserPageScrollPos < user::numberOfDosers - 4) {
         display::refillDoserPageScrollPos++;
-        display::refreshPage = true;
+        refreshPage(true, 34);
         beep();
         clearPage();
       }
@@ -261,13 +261,13 @@ void sliders() {
     else if (slideXIncrement == -1) {
       if (display::waterPageScrollPos == 4 && display::refillDoserPageScrollPos > 0) {
         display::refillDoserPageScrollPos--;
-        display::refreshPage = true;
+        refreshPage(true, 35);
         beep();
         clearPage();
       }
       else if (display::waterPageScrollPos > 0) {
         display::waterPageScrollPos--;
-        display::refreshPage = true;
+        refreshPage(true, 36);
         beep();
         clearPage();
       }
@@ -277,13 +277,13 @@ void sliders() {
   else if (display::page == 9) {
     if (slideXIncrement == 1 && display::doserPageScrollPos < user::numberOfDosers - 4) {
       display::doserPageScrollPos++;
-      display::refreshPage = true;
+      refreshPage(true, 37);
       beep();
       clearPage();
     }
     else if (slideXIncrement == -1 && display::doserPageScrollPos > 0) {
       display::doserPageScrollPos--;
-      display::refreshPage = true;
+      refreshPage(true, 38);
       beep();
       clearPage();
     }
@@ -292,13 +292,13 @@ void sliders() {
   else if (display::page == 10) {
     if (slideXIncrement == 1 && display::timerPagePageScrollPos < 3) {
       display::timerPagePageScrollPos++;
-      display::refreshPage = true;
+      refreshPage(true, 39);
       beep();
       clearPage();
     }
     else if (slideXIncrement == -1 && display::timerPagePageScrollPos > 0) {
       display::timerPagePageScrollPos--;
-      display::refreshPage = true;
+      refreshPage(true, 40);
       beep();
       clearPage();
     }
@@ -307,13 +307,13 @@ void sliders() {
   else if (display::page == 11) {
     if (slideXIncrement == 1 && display::fansPage < 6) {
       display::fansPage++;
-      display::refreshPage = true;
+      refreshPage(true, 41);
       beep();
       clearPage();
     }
     else if (slideXIncrement == -1 && display::fansPage > 0) {
       display::fansPage--;
-      display::refreshPage = true;
+      refreshPage(true, 42);
       beep();
       clearPage();
     }
@@ -334,7 +334,7 @@ void sliders() {
           display::warningsPage = 7;
       }
       beep();
-      display::refreshPage = true;
+      refreshPage(true, 43);
       clearPage();
     }
   }
@@ -445,7 +445,7 @@ void infoDialogTouched() {
       clearPage();
       display::showingDialog = false;
       display::showInfoDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 44);
     }
   }
 }
@@ -475,7 +475,7 @@ void graphsPageTouched() {
       else if ( display::touch_y >= 434 && display::touch_y <= 474)
         display::showHumidityGraph = !display::showHumidityGraph;
       beep();
-      display::refreshPage = true;
+      refreshPage(true, 45);
     }
     graphTouchPreviousMillis = millis();
   }
@@ -486,7 +486,7 @@ void maxMinsPageTouched() {
     message::infoPos = 20;
     display::showingDialog = true;
     display::showInfoDialog = true;
-    display::refreshPage = true;
+    refreshPage(true, 46);
     display::infoDialogDisplayTime = millis();
   }
 }
@@ -496,7 +496,7 @@ void profilesPageTouched() {
     if (display::touch_x >= 284 && display::touch_x <= 422 && display::touch_y >= 368 && display::touch_y <= 414) { // cancel saving profile
       beep();
       display::showSaveDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 47);
       clearPage();
     }
     else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with saving profile
@@ -510,14 +510,14 @@ void profilesPageTouched() {
       device::keyBoardClosedTime = millis();
       getSetProfileEEPROM(device::userProfile, device::EEPROM_SET);
       display::showSaveDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 48);
       clearPage();
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 21;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 49);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -542,42 +542,42 @@ void profilesPageTouched() {
     else if (display::touch_x >= 490 && display::touch_x <= 620 && display::touch_y >= 160 && display::touch_y <= 202) {
       beep();
       device::userProfile = 0;
-      display::refreshPage = true;
+      refreshPage(true, 50);
       display::showSaveDialog = true;
     }
     else if (display::touch_x >= 490 && display::touch_x <= 620 && display::touch_y >= 222 && display::touch_y <= 262) {
       beep();
       device::userProfile = 1;
       device::settingsAdjusted = true;
-      display::refreshPage = true;
+      refreshPage(true, 51);
       display::showSaveDialog = true;
     }
     else if (display::touch_x >= 490 && display::touch_x <= 620 && display::touch_y >= 284 && display::touch_y <= 326) {
       beep();
       device::userProfile = 2;
       device::settingsAdjusted = true;
-      display::refreshPage = true;
+      refreshPage(true, 52);
       display::showSaveDialog = true;;
     }
     else if (display::touch_x >= 490 && display::touch_x <= 620 && display::touch_y >= 346 && display::touch_y <= 388) {
       beep();
       device::userProfile = 3;
       device::settingsAdjusted = true;
-      display::refreshPage = true;
+      refreshPage(true, 53);
       display::showSaveDialog = true;
     }
     else if (display::touch_x >= 490 && display::touch_x <= 620 && display::touch_y >= 408 && display::touch_y <= 450) {
       beep();
       device::userProfile = 4;
       device::settingsAdjusted = true;
-      display::refreshPage = true;
+      refreshPage(true, 54);
       display::showSaveDialog = true;
     }
     else if (display::touch_x >= 630 && display::touch_x <= 760 && display::touch_y >= 160 && display::touch_y <= 202) {
       beep();
       device::userProfile = 0;
       device::settingsAdjusted = true;
-      display::refreshPage = true;
+      refreshPage(true, 55);
       device::lockSaveButtons = true;
       device::keyBoardClosedTime = millis();
       getSetProfileEEPROM(device::userProfile, device::EEPROM_GET);
@@ -588,7 +588,7 @@ void profilesPageTouched() {
       beep();
       device::userProfile = 1;
       device::settingsAdjusted = true;
-      display::refreshPage = true;
+      refreshPage(true, 56);
       device::lockSaveButtons = true;
       device::keyBoardClosedTime = millis();
       getSetProfileEEPROM(device::userProfile, device::EEPROM_GET);
@@ -599,7 +599,7 @@ void profilesPageTouched() {
       beep();
       device::userProfile = 2;
       device::settingsAdjusted = true;
-      display::refreshPage = true;
+      refreshPage(true, 57);
       device::lockSaveButtons = true;
       device::keyBoardClosedTime = millis();
       getSetProfileEEPROM(device::userProfile, device::EEPROM_GET);
@@ -610,7 +610,7 @@ void profilesPageTouched() {
       beep();
       device::userProfile = 3;
       device::settingsAdjusted = true;
-      display::refreshPage = true;
+      refreshPage(true, 58);
       device::lockSaveButtons = true;
       device::keyBoardClosedTime = millis();
       getSetProfileEEPROM(device::userProfile, device::EEPROM_GET);
@@ -621,7 +621,7 @@ void profilesPageTouched() {
       beep();
       device::userProfile = 4;
       device::settingsAdjusted = true;
-      display::refreshPage = true;
+      refreshPage(true, 59);
       device::lockSaveButtons = true;
       device::keyBoardClosedTime = millis();
       getSetProfileEEPROM(device::userProfile, device::EEPROM_GET);
@@ -668,11 +668,11 @@ void settingsZeroPageTouched() {
   if (display::showRTCtime) {
     if (display::touch_x >= 295 && display::touch_x <= 345 && display::touch_y >= 375 && display::touch_y <= 425 ) { // setRtcTimePos right
       display::setRtcTimePos = adjustValue(display::setRtcTimePos, 1, 0, 7);
-      display::refreshPage = true;
+      refreshPage(true, 60);
     }
     else if (display::touch_x >= 385 && display::touch_x <= 435 && display::touch_y >= 375 && display::touch_y <= 425 ) { // setRtcTimePos left
       display::setRtcTimePos = adjustValue(display::setRtcTimePos, -1, 0, 7);
-      display::refreshPage = true;
+      refreshPage(true, 61);
     }
     if (display::setRtcTimePos == 7)
       display::setRtcTimePos = 0;
@@ -726,7 +726,7 @@ void settingsZeroPageTouched() {
       display::showRTCtime = false;
       clearPage();
       display::showingDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 62);
     }
     else if (display::touch_x >= 460 && display::touch_x <= 620 && display::touch_y >= 430 && display::touch_y <= 470) { // confirm
       beep();
@@ -734,13 +734,13 @@ void settingsZeroPageTouched() {
       display::showRTCtime = false;
       clearPage();
       display::showingDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 63);
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 23;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 64);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -753,14 +753,14 @@ void settingsZeroPageTouched() {
       beep();
       clearPage();
       display::showAfkTime = false;
-      display::refreshPage = true;    
+      refreshPage(true, 65);    
       display::showingDialog = false;
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 24;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 66);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -777,14 +777,14 @@ void settingsZeroPageTouched() {
       beep();
       clearPage();
       display::showBrightness = false;
-      display::refreshPage = true;    
+      refreshPage(true, 67);    
       display::showingDialog = false;
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 38;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 68);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -797,14 +797,14 @@ void settingsZeroPageTouched() {
       beep();
       clearPage();
       display::showGraphInterval = false;
-      display::refreshPage = true;    
+      refreshPage(true, 69);    
       display::showingDialog = false;
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 25;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 70);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -816,7 +816,7 @@ void settingsZeroPageTouched() {
       if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 100 && display::touch_y <= 140) {
         if (display::settingsPageZeroScrollPos > 0) {
           display::settingsPageZeroScrollPos--;
-          display::refreshPage = true;
+          refreshPage(true, 71);
           beep();
           clearPage();
         }
@@ -826,14 +826,14 @@ void settingsZeroPageTouched() {
         if (display::settingsPageZeroScrollPos > 3)
           display::settingsPageZeroScrollPos = 3;
         //Serial.print(F("settingsPageZero slider menu pos = ")); Serial.println(display::settingsPageZeroScrollPos);
-        display::refreshPage = true;
+        refreshPage(true, 72);
         beep();
         clearPage();
       } 
       else if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 430 && display::touch_y <= 470) {
         if (display::settingsPageZeroScrollPos < 3) {
           display::settingsPageZeroScrollPos++;
-          display::refreshPage = true;
+          refreshPage(true, 73);
           beep();
           clearPage();
         }
@@ -859,7 +859,7 @@ void settingsZeroPageTouched() {
         display::showAfkTime = true;
         display::showingDialog = true;
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 74);
       }
     }
     if (display::settingsPageZeroScrollPos <= 2) {
@@ -868,7 +868,7 @@ void settingsZeroPageTouched() {
         display::showBrightness = true;
         display::showingDialog = true;
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 75);
       }
     }
     if (display::settingsPageZeroScrollPos <= 3) {
@@ -877,7 +877,7 @@ void settingsZeroPageTouched() {
         display::showGraphInterval = true;
         display::showingDialog = true;
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 76);
       }
     }
     if (display::settingsPageZeroScrollPos <= 4) {
@@ -896,7 +896,7 @@ void settingsZeroPageTouched() {
           user::rtcYear = 24;
         display::showRTCtime = true;
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 77);
       }
     }
     if (display::settingsPageZeroScrollPos <= 5) {
@@ -958,7 +958,7 @@ void settingsOnePageTouched() {
         if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 100 && display::touch_y <= 140) {
           if (display::systemLogScrollPos > 0) {
             display::systemLogScrollPos--;
-            display::refreshPage = true;
+            refreshPage(true, 78);
             lastTouchTime = millis();
             beep();
             clearPage();
@@ -969,7 +969,7 @@ void settingsOnePageTouched() {
           if (display::systemLogScrollPos > message::systemLogPos - 6)
             display::systemLogScrollPos = message::systemLogPos - 6;
           //Serial.print(F("settingsPageZero slider menu pos = ")); Serial.println(display::systemLogScrollPos);
-          display::refreshPage = true;
+          refreshPage(true, 79);
           lastTouchTime = millis();
           beep();
           clearPage();
@@ -977,7 +977,7 @@ void settingsOnePageTouched() {
         else if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 430 && display::touch_y <= 470) {
           if (display::systemLogScrollPos < message::systemLogPos - 6) {
             display::systemLogScrollPos++;
-            display::refreshPage = true;
+            refreshPage(true, 80);
             lastTouchTime = millis();
             beep();
             clearPage();
@@ -989,14 +989,14 @@ void settingsOnePageTouched() {
     if (display::touch_x >= 390 && display::touch_x <= 490 && display::touch_y >= 430 && display::touch_y <= 479) {
       beep();
       display::showSystemLogs = false;
-      display::refreshPage = true;
+      refreshPage(true, 81);
       clearPage();
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 28;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 82);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -1012,7 +1012,7 @@ void settingsOnePageTouched() {
           display::showWifiSsid = false;
           clearPage();
           display::showingDialog = false;
-          display::refreshPage = true;
+          refreshPage(true, 83);
         }
         else if (display::touch_x >= 460 && display::touch_x <= 620 && display::touch_y >= 430 && display::touch_y <= 470) { // confirm
           beep();
@@ -1020,14 +1020,14 @@ void settingsOnePageTouched() {
           display::showWifiSsid = false;
           clearPage();
           display::showingDialog = false;
-          display::refreshPage = true;
+          refreshPage(true, 84);
         }
       }
       else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
         message::infoPos = 33;
         display::showingDialog = true;
         display::showInfoDialog = true;
-        display::refreshPage = true;
+        refreshPage(true, 85);
         display::infoDialogDisplayTime = millis();
       }
     }
@@ -1051,7 +1051,7 @@ void settingsOnePageTouched() {
           display::showWifiPassword = false;
           clearPage();
           display::showingDialog = false;
-          display::refreshPage = true;
+          refreshPage(true, 86);
         }
         else if (display::touch_x >= 460 && display::touch_x <= 620 && display::touch_y >= 430 && display::touch_y <= 470) { // confirm
           beep();
@@ -1059,13 +1059,13 @@ void settingsOnePageTouched() {
           display::showWifiPassword = false;
           clearPage();
           display::showingDialog = false;
-          display::refreshPage = true;
+          refreshPage(true, 87);
         }
         else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
           message::infoPos = 34;
           display::showingDialog = true;
           display::showInfoDialog = true;
-          display::refreshPage = true;
+          refreshPage(true, 88);
           display::infoDialogDisplayTime = millis();
         }
       }
@@ -1082,7 +1082,7 @@ void settingsOnePageTouched() {
     if (display::touch_x >= 284 && display::touch_x <= 422 && display::touch_y >= 368 && display::touch_y <= 414) { // cancel factory reset
       beep();
       user::resetSettings = false;
-      display::refreshPage = true;
+      refreshPage(true, 89);
       clearPage();
     }
     else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with factory reset
@@ -1098,7 +1098,7 @@ void settingsOnePageTouched() {
       if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 100 && display::touch_y <= 140) {
         if (display::settingsPageOneScrollPos > 0) {
           display::settingsPageOneScrollPos--;
-          display::refreshPage = true;
+          refreshPage(true, 90);
           beep();
           clearPage();
         }
@@ -1108,14 +1108,14 @@ void settingsOnePageTouched() {
         if (display::settingsPageOneScrollPos > 5)
           display::settingsPageOneScrollPos = 5;
         //Serial.print(F("settingsPageZero slider menu pos = ")); Serial.println(display::settingsPageOneScrollPos);
-        display::refreshPage = true;
+        refreshPage(true, 91);
         beep();
         clearPage();
       } 
       else if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 430 && display::touch_y <= 470) {
         if (display::settingsPageOneScrollPos < 5) {
           display::settingsPageOneScrollPos++;
-          display::refreshPage = true;
+          refreshPage(true, 92);
           beep();
           clearPage();
         }
@@ -1127,7 +1127,7 @@ void settingsOnePageTouched() {
       if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 170 - scrollMargin && display::touch_y <= 200 - scrollMargin) { // Show system logs
         beep();
         display::showSystemLogs = true;
-        display::refreshPage = true;
+        refreshPage(true, 93);
         clearPage();
       }
     }
@@ -1148,7 +1148,7 @@ void settingsOnePageTouched() {
      if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 270 - scrollMargin && display::touch_y <= 300 - scrollMargin) { // Set WiFi SSID
         beep();
         display::showWifiSsid = true;
-        display::refreshPage = true;
+        refreshPage(true, 94);
         clearPage();
       }
     }
@@ -1156,7 +1156,7 @@ void settingsOnePageTouched() {
      if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 320 - scrollMargin && display::touch_y <= 350 - scrollMargin) { // Set WiFi password
         beep();
         display::showWifiPassword = true;
-        display::refreshPage = true;
+        refreshPage(true, 95);
         clearPage();
       }
     }
@@ -1202,7 +1202,7 @@ void settingsOnePageTouched() {
     if (display::settingsPageOneScrollPos >= 5 && display::settingsPageOneScrollPos <= 10) {
       if (display::touch_x >= 680 && display::touch_x <= 750 && display::touch_y >= 670 - scrollMargin && display::touch_y <= 720 - scrollMargin) { // reset all device Settings
         user::resetSettings = true;
-        display::refreshPage = true;
+        refreshPage(true, 96);
         beep();
       }
     }
@@ -1223,14 +1223,14 @@ void settingsTwoPageTouched() {
       beep();
       clearPage();
       display::showNumberOfDosers = false;
-      display::refreshPage = true;    
+      refreshPage(true, 97);    
       display::showingDialog = false;
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 27;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 98);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -1247,14 +1247,14 @@ void settingsTwoPageTouched() {
       beep();
       clearPage();
       display::showDosingInterval = false;
-      display::refreshPage = true;    
+      refreshPage(true, 99);    
       display::showingDialog = false;
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 26;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 100);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -1273,14 +1273,14 @@ void settingsTwoPageTouched() {
       beep();
       clearPage();
       display::showEcDosingMode = false;
-      display::refreshPage = true;    
+      refreshPage(true, 101);    
       display::showingDialog = false;
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 29;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 102);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -1299,14 +1299,14 @@ void settingsTwoPageTouched() {
       beep();
       clearPage();
       display::showPhDosingMode = false;
-      display::refreshPage = true;    
+      refreshPage(true, 103);    
       display::showingDialog = false;
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 30;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 104);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -1335,14 +1335,14 @@ void settingsTwoPageTouched() {
       beep();
       clearPage();
       display::showEcTdsValue = false;
-      display::refreshPage = true;    
+      refreshPage(true, 105);    
       display::showingDialog = false;
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 31;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 106);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -1367,14 +1367,14 @@ void settingsTwoPageTouched() {
       beep();
       clearPage();
       display::showPhDownUpValue = false;
-      display::refreshPage = true;    
+      refreshPage(true, 107);    
       display::showingDialog = false;
     }
     else if (display::touch_x >= 770 && display::touch_x <= 800 && display::touch_y >= 120 && display::touch_y <= 140) { // show info dialog
       message::infoPos = 32;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 108);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -1385,7 +1385,7 @@ void settingsTwoPageTouched() {
       if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 100 && display::touch_y <= 140) {
         if (display::settingsPageTwoScrollPos > 0) {
           display::settingsPageTwoScrollPos--;
-          display::refreshPage = true;
+          refreshPage(true, 109);
           beep();
           clearPage();
         }
@@ -1395,14 +1395,14 @@ void settingsTwoPageTouched() {
         if (display::settingsPageTwoScrollPos > 1)
           display::settingsPageTwoScrollPos = 1;
         //Serial.print(F("settingsPageZero slider menu pos = ")); Serial.println(display::settingsPageTwoScrollPos);
-        display::refreshPage = true;
+        refreshPage(true, 110);
         beep();
         clearPage();
       } 
       else if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 430 && display::touch_y <= 470) {
         if (display::settingsPageTwoScrollPos < 1) {
           display::settingsPageTwoScrollPos++;
-          display::refreshPage = true;
+          refreshPage(true, 112);
           beep();
           clearPage();
         }
@@ -1416,7 +1416,7 @@ void settingsTwoPageTouched() {
         display::showNumberOfDosers = true;
         display::showingDialog = true;
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 113);
       }
     }
     if (display::settingsPageTwoScrollPos <= 1) {
@@ -1425,7 +1425,7 @@ void settingsTwoPageTouched() {
         display::showDosingInterval = true;
         display::showingDialog = true;
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 114);
       }
     }
     if (display::settingsPageTwoScrollPos <= 2) {
@@ -1434,7 +1434,7 @@ void settingsTwoPageTouched() {
         display::showEcDosingMode = true;
         display::showingDialog = true;
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 115);
       }
     }
     if (display::settingsPageTwoScrollPos <= 3) {
@@ -1443,7 +1443,7 @@ void settingsTwoPageTouched() {
         display::showPhDosingMode = true;
         display::showingDialog = true;
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 116);
       }
     }
     if (display::settingsPageTwoScrollPos <= 4) {
@@ -1452,7 +1452,7 @@ void settingsTwoPageTouched() {
         display::showEcTdsValue = true;
         display::showingDialog = true;
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 117);
       }
     }
     if (display::settingsPageTwoScrollPos <= 5) {
@@ -1461,7 +1461,7 @@ void settingsTwoPageTouched() {
         display::showPhDownUpValue = true;
         display::showingDialog = true;
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 118);
       }
     }
     if (display::settingsPageTwoScrollPos >= 1 && display::settingsPageTwoScrollPos <= 6) {
@@ -1489,7 +1489,7 @@ void settingsThreePageTouched() {
     if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 100 && display::touch_y <= 140) {
       if (display::settingsPageThreeScrollPos > 0) {
         display::settingsPageThreeScrollPos--;
-        display::refreshPage = true;
+        refreshPage(true, 119);
         beep();
         clearPage();
       }
@@ -1499,14 +1499,14 @@ void settingsThreePageTouched() {
       if (display::settingsPageThreeScrollPos > 2)
         display::settingsPageThreeScrollPos = 2;
       //Serial.print(F("settingsPageZero slider menu pos = ")); Serial.println(display::settingsPageThreeScrollPos);
-      display::refreshPage = true;
+      refreshPage(true, 120);
       beep();
       clearPage();
     } 
     else if (display::touch_x >= 760 && display::touch_x <= 800 && display::touch_y >= 430 && display::touch_y <= 470) {
       if (display::settingsPageThreeScrollPos < 2) {
         display::settingsPageThreeScrollPos++;
-        display::refreshPage = true;
+        refreshPage(true, 121);
         beep();
         clearPage();
       }
@@ -1579,7 +1579,7 @@ void settingsFourPageTouched() {
       beep();
       display::showSr04HeightCalibration = false;
       display::showingDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 122);
       clearPage();
     }
     else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with setting the water empty height / volume
@@ -1587,7 +1587,7 @@ void settingsFourPageTouched() {
       setTankDepth();
       display::showSr04HeightCalibration = false;
       display::showingDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 123);
       clearPage();
     }
   }
@@ -1597,7 +1597,7 @@ void settingsFourPageTouched() {
       beep();
       display::showEtapeCalibration = device::UNCHANGED;
       display::showingDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 124);
       clearPage();
     }
     else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with Etape min reading Calibration
@@ -1605,7 +1605,7 @@ void settingsFourPageTouched() {
       etapePageOneContinuePressed = millis() + 2000UL; // Stop the page 2 continue button being pressed by mistake after the page 1 is pressed
       setEtapeZeroVolumeResistance();
       display::showEtapeCalibration = device::PAGE_TWO;
-      display::refreshPage = true;
+      refreshPage(true, 125);
     }
   }
   else if (display::showEtapeCalibration == device::PAGE_TWO && millis() >= etapePageOneContinuePressed) {
@@ -1614,7 +1614,7 @@ void settingsFourPageTouched() {
       display::showEtapeCalibration = device::UNCHANGED;
       sensor::temp_etapeZeroVolumeResistance = 0;
       display::showingDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 126);
       clearPage();
     }
     else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with Etape max reading Calibration
@@ -1622,7 +1622,7 @@ void settingsFourPageTouched() {
       setEtapeMaxVolumeResistance();
       display::showEtapeCalibration = device::UNCHANGED;
       display::showingDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 127);
       clearPage();
     }
   }
@@ -1632,12 +1632,12 @@ void settingsFourPageTouched() {
       beep();
       display::showCo2Calibration = false;
       display::showingDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 128);
       clearPage();
     }
     else if (display::touch_x >= 460 && display::touch_x <= 638 && display::touch_y >= 368 && display::touch_y <= 414) { // continue with calibrating the Co2 sensor
       beep();
-      display::refreshPage = true;
+      refreshPage(true, 129);
       calibrateCo2();
       display::showCo2Calibration = false;
       display::showingDialog = false;
@@ -1649,7 +1649,7 @@ void settingsFourPageTouched() {
       if (display::showCalErrorMessage) {
         if (display::touch_x >= 366 && display::touch_x <= 504 && display::touch_y >= 368 && display::touch_y <= 414) { // confirm error message
           display::showCalErrorMessage = false;
-          display::refreshPage = true;
+          refreshPage(true, 130);
           device::lastCalTouch = millis();
         }
       }
@@ -1659,7 +1659,7 @@ void settingsFourPageTouched() {
           display::calTdsPageScrollPos = 0;
           display::showTdsCalibration = false;
           display::showingDialog = false;
-          display::refreshPage = true;
+          refreshPage(true, 131);
           device::lastCalTouch = millis();
           clearPage();
         }
@@ -1693,7 +1693,7 @@ void settingsFourPageTouched() {
             }
           }
           device::lastCalTouch = millis();
-          display::refreshPage = true;      
+          refreshPage(true, 132);      
         }
       }     
     }
@@ -1705,7 +1705,7 @@ void settingsFourPageTouched() {
         if (display::touch_x >= 366 && display::touch_x <= 504 && display::touch_y >= 368 && display::touch_y <= 414) { // confirm error message
           display::showCalErrorMessage = false;
           display::showingDialog = false;
-          display::refreshPage = true;
+          refreshPage(true, 133);
           device::lastCalTouch = millis();
         }
       }
@@ -1715,7 +1715,7 @@ void settingsFourPageTouched() {
           display::calPhPageScrollPos = 0;
           display::showPhCalibration = false;
           display::showingDialog = false;
-          display::refreshPage = true;
+          refreshPage(true, 134);
           device::lastCalTouch = millis();
           clearPage();
         }
@@ -1739,7 +1739,7 @@ void settingsFourPageTouched() {
             display::showCalErrorMessage = true;  // show error message
           }
           device::lastCalTouch = millis();
-          display::refreshPage = true;      
+          refreshPage(true, 135);      
         }
       }
     }
@@ -1819,7 +1819,7 @@ void settingsFourPageTouched() {
       beep();
       display::showDoserCalibration = false;
       display::showingDialog = false;
-      display::refreshPage = true;
+      refreshPage(true, 136);
       clearPage();
       // save profile - speed could vary due to fluids viscosity and volatge so per profile save thus no auto save ?
     }
@@ -1827,7 +1827,7 @@ void settingsFourPageTouched() {
       message::infoPos = 22;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 137);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -1837,13 +1837,13 @@ void settingsFourPageTouched() {
       beep();
       display::showSr04HeightCalibration = true;
       display::showingDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 138);
     }
     else {
       beep();
       display::showEtapeCalibration = device::PAGE_ONE;
       display::showingDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 139);
       clearPage();
     }
   }
@@ -1853,34 +1853,34 @@ void settingsFourPageTouched() {
     gravityTds.setRawEcLowSolution(sensor::tdsCalSolutionPart1);
     gravityTds.setRawEcHighSolution(sensor::tdsCalSolutionPart2);
     display::showingDialog = true;
-    display::refreshPage = true;
+    refreshPage(true, 140);
   }
   else if (display::touch_x >= 700 && display::touch_x <= 770 && display::touch_y >= 270 && display::touch_y <= 300) { // set co2 sensor calibration
     beep();
     display::showCo2Calibration = true;
     display::showingDialog = true;
-    display::refreshPage = true;
+    refreshPage(true, 141);
   }
   else if (display::touch_x >= 700 && display::touch_x <= 770 && display::touch_y >= 320 && display::touch_y <= 350) { // set ph sensor calibration
     beep();
     device::phCalStage = 0;
     display::showPhCalibration = true;
     display::showingDialog = true;
-    display::refreshPage = true;
+    refreshPage(true, 142);
     clearPage();
   }
   else if (display::touch_x >= 700 && display::touch_x <= 770 && display::touch_y >= 370 && display::touch_y <= 400) { // showDoserCalibration
     beep();
     display::showDoserCalibration = true;
     display::showingDialog = true;
-    display::refreshPage = true;
+    refreshPage(true, 143);
     clearPage();
   }
   else if (display::touch_x >= 700 && display::touch_x <= 770 && display::touch_y >= 420 && display::touch_y <= 470) { // showTouchCalibration
     beep();
     display::showTouchCalibration = 1;
     //display::showingDialog = true;
-    display::refreshPage = true;
+    refreshPage(true, 144);
     clearPage();
   }
 }
@@ -1907,7 +1907,7 @@ void ecTdsPageTouched() {
       message::infoPos = 0;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 145);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -1932,7 +1932,7 @@ void ecTdsPageTouched() {
       message::infoPos = 1;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 146);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -1959,7 +1959,7 @@ void phPageTouched() {
     message::infoPos = 2;
     display::showingDialog = true;
     display::showInfoDialog = true;
-    display::refreshPage = true;
+    refreshPage(true, 147);
     display::infoDialogDisplayTime = millis();
   }
 }
@@ -1986,7 +1986,7 @@ void co2PageTouched() {
       message::infoPos = 3;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 148);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -2037,7 +2037,7 @@ void co2PageTouched() {
       message::infoPos = 4;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 149);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -2096,7 +2096,7 @@ void co2PageTouched() {
       message::infoPos = 5;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 150);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -2123,7 +2123,7 @@ void co2PageTouched() {
       message::infoPos = 6;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 151);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -2163,7 +2163,7 @@ void waterPageTouched() {
       message::infoPos = 7;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 152);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -2200,7 +2200,7 @@ void waterPageTouched() {
       message::infoPos = 8;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 153);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -2237,7 +2237,7 @@ void waterPageTouched() {
       message::infoPos = 9;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 154);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -2300,7 +2300,7 @@ void waterPageTouched() {
       message::infoPos = 10;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 155);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -2372,7 +2372,7 @@ void waterPageTouched() {
       message::infoPos = 11;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 156);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -2566,7 +2566,7 @@ void dosersPageTouched() {
     message::infoPos = 12;
     display::showingDialog = true;
     display::showInfoDialog = true;
-    display::refreshPage = true;
+    refreshPage(true, 157);
     display::infoDialogDisplayTime = millis();
   }
 }
@@ -2653,7 +2653,7 @@ void timerPagedTouched() {
       message::infoPos = 13;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 158);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -2739,7 +2739,7 @@ void timerPagedTouched() {
       message::infoPos = 13;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 159);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -2825,7 +2825,7 @@ void timerPagedTouched() {
       message::infoPos = 13;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 160);
       display::infoDialogDisplayTime = millis();
     } 
   }
@@ -3035,7 +3035,7 @@ void timerPagedTouched() {
       message::infoPos = 13;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 161);
       display::infoDialogDisplayTime = millis();
     } 
   }
@@ -3081,7 +3081,7 @@ void fansPageTouched() {
       message::infoPos = 14;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 162);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -3124,7 +3124,7 @@ void fansPageTouched() {
       message::infoPos = 15;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 163);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -3161,7 +3161,7 @@ void fansPageTouched() {
       message::infoPos = 16;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 164);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -3186,7 +3186,7 @@ void fansPageTouched() {
       message::infoPos = 17;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 165);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -3223,7 +3223,7 @@ void fansPageTouched() {
       message::infoPos = 16;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 166);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -3248,7 +3248,7 @@ void fansPageTouched() {
       message::infoPos = 17;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 167);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -3299,7 +3299,7 @@ void fansPageTouched() {
       message::infoPos = 18;
       display::showingDialog = true;
       display::showInfoDialog = true;
-      display::refreshPage = true;
+      refreshPage(true, 168);
       display::infoDialogDisplayTime = millis();
     }
   }
@@ -3408,7 +3408,7 @@ void warningsPageTouched() {
     message::infoPos = 19;
     display::showingDialog = true;
     display::showInfoDialog = true;
-    display::refreshPage = true;
+    refreshPage(true, 169);
     display::infoDialogDisplayTime = millis();
   }
 }
@@ -3517,7 +3517,7 @@ void keyboardTouched(char* a_charPtr, const int16_t a_arrayLen) {
     device::lockSaveButtons = true;
     Serial.println(F("keyboard home"));
     clearPage();
-    display::refreshPage = true;
+    refreshPage(true, 170);
   }
   // LOWER CASE - UPPER - SPECIAL
   else if (display::touch_x >= (keyboardColumn += 130) && display::touch_x <= keyboardColumn + 120 && display::touch_y >= keyboardRow && display::touch_y <= keyboardRow + 58) {
@@ -3525,7 +3525,7 @@ void keyboardTouched(char* a_charPtr, const int16_t a_arrayLen) {
     if (millis() - previousMillis >= 4000UL) { // time it takes for keyboard to display plus a healthy margin just in case
       //Serial.println(F("Touched caps"));
       beep();
-      display::refreshPage = true;
+      refreshPage(true, 171);
       if (device::charType == device::LOWER)
         device::charType = device::UPPER;
       else if (device::charType == device::UPPER)

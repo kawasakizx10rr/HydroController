@@ -100,7 +100,7 @@ void waterLevelControl() {
             beep();
             startDraining = false;
             clearPage();
-            display::refreshPage = true;
+            refreshPage(true, 14);
           }
         }
       }
@@ -152,7 +152,7 @@ void waterLevelControl() {
       // Refill complete
       device::dosingTimerHourCounter = 0;
       clearPage();
-      display::refreshPage = true;
+      refreshPage(true, 15);
     }
   }
 }
@@ -747,7 +747,7 @@ void waterEcPhControl() {
         adjustmentMode = ADJUSTED_PH;
       }
       clearPage();
-      display::refreshPage = true;
+      refreshPage(true, 16);
     }
   }
 }
@@ -1091,7 +1091,7 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
     else if (device::currentlyDosing) {
       if (device::globalDebug)
         Serial.println(F("Dosing complete"));
-      display::refreshPage = true;
+      refreshPage(true, 17);
       device::currentlyDosing = false;
     }
     // touch event - cancel button
@@ -1104,7 +1104,7 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
             Serial.println(F("Dosing aborted"));
           beep();
           device::currentlyDosing = false;
-          display::refreshPage = true;
+          refreshPage(true, 18);
           for (uint8_t i = 0; i < 6; i++)
             a_enabledDosers[i] = false;
         }

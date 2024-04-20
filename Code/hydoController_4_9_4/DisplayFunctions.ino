@@ -28,7 +28,7 @@ void launchCo2Notification(uint8_t& a_continueCo2Control, uint8_t& a_previousDat
         a_continueCo2Control = device::CANCEL;
         beep();
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 4);
       }
       else if (display::touch_x >= 450 && display::touch_x <= 628 && display::touch_y >=  366 && display::touch_y <= 412) { // Continue
         a_continueCo2Control = device::CONTINUE;
@@ -37,6 +37,11 @@ void launchCo2Notification(uint8_t& a_continueCo2Control, uint8_t& a_previousDat
     }
     timedEvents(); 
   }
+}
+
+void refreshPage (const bool a_state, const uint16_t debugID) {
+  Serial.print(F("refreshPage set to ")); Serial.print(a_state ? F("true") : F("false")); Serial.print(F(" by caller ID ")); Serial.println(debugID); 
+  display::refreshPage = a_state;
 }
 
 bool abortCo2Notification(uint32_t& a_lastTouch, const int16_t& a_co2RunTime) {
@@ -55,7 +60,7 @@ bool abortCo2Notification(uint32_t& a_lastTouch, const int16_t& a_co2RunTime) {
         sensor::co2GasTime = 0;
         device::co2DisabledFans = false;
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 5);
         return true;
       }
     }
@@ -93,12 +98,12 @@ void launchDrainNotification(uint8_t& a_continueDraining, bool& a_startDraining)
         a_startDraining = false;
         beep();
         clearPage();
-        display::refreshPage = true;
+        refreshPage(true, 6);
       }
       else if (display::touch_x >= 450 && display::touch_x <= 628 && display::touch_y >=  366 && display::touch_y <= 412) { // Continue
         a_continueDraining = device::CONTINUE;
         beep();
-        display::refreshPage = true;
+        refreshPage(true, 7);
       }
     }
     timedEvents();
@@ -136,7 +141,7 @@ void launchRefillNotification(bool& a_startRefilling, uint8_t& a_continueRefilli
           a_startRefilling = false;
           beep();
           clearPage();
-          display::refreshPage = true;
+          refreshPage(true, 8);
         }
         else if (display::touch_x >= 450 && display::touch_x <= 628 && display::touch_y >=  366 && display::touch_y <= 412) { // Continue
           a_continueRefilling = device::CONTINUE;
@@ -291,7 +296,7 @@ void screenSaver() {
     delay(1);
     tft.fillWindow(user::backgroundColor);
     frame();
-    display::refreshPage = true;
+    refreshPage(true, 9);
     OuterMenuIcons(); 
     //tft.sleep(false);
     display::displayIsOff = false;
@@ -305,7 +310,7 @@ void setPage(const uint8_t& a_page) {
     display::page = a_page;
     OuterMenuIcons();
     display::showInfoDialog = false;
-    display::refreshPage = true;
+    refreshPage(true, 10);
     clearPage();
     device::sensorPreviousMillis = millis();
   }
@@ -332,7 +337,7 @@ void setBackground(const uint16_t& a_color) {
     user::backgroundColor = a_color;
     tft.fillWindow(user::backgroundColor);
     frame();
-    display::refreshPage = true;
+    refreshPage(true, 11);
     OuterMenuIcons();
   }
 }
@@ -556,7 +561,7 @@ void displayDosingNotification(const uint8_t& a_seconds, const float& a_outOfRan
       device::continueDosing = device::CANCEL;
       beep();
       clearPage();
-      display::refreshPage = true;
+      refreshPage(true, 12);
     }
     else if (display::touch_x >= startX + 284 && display::touch_x <= startX + 462 && display::touch_y >= startY + 200 && display::touch_y <= startY + 246) { // Yes
       if (device::globalDebug)
@@ -564,7 +569,7 @@ void displayDosingNotification(const uint8_t& a_seconds, const float& a_outOfRan
       device::continueDosing = device::CONTINUE;
       beep();
       //clearPage();
-      display::refreshPage = true;
+      refreshPage(true, 13);
     }
   }
 }

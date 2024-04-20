@@ -237,6 +237,7 @@ void timedEvents() {
 }
 
 void serialDebugger() {
+  /*
   char str[16], charCnt = 0;
   char buffer[16] {0};
   while (Serial.available() > 0) {
@@ -254,6 +255,7 @@ void serialDebugger() {
       buffer[charCnt++] = c;
     }
   }
+  */
 }
 
 void setDebugCmd(const char* a_str, const char* a_buffer) {
