@@ -40,8 +40,12 @@ void launchCo2Notification(uint8_t& a_continueCo2Control, uint8_t& a_previousDat
 }
 
 void refreshPage (const bool a_state, const uint16_t debugID) {
-  Serial.print(F("refreshPage set to ")); Serial.print(a_state ? F("true") : F("false")); Serial.print(F(" by caller ID ")); Serial.println(debugID); 
-  display::refreshPage = a_state;
+  static bool prevRefresh = false;
+  if (prevRefresh != a_state) {
+    Serial.print(F("refreshPage set to ")); Serial.print(a_state ? F("true") : F("false")); Serial.print(F(" by caller ID ")); Serial.println(debugID); 
+    display::refreshPage = a_state;
+    prevRefresh = a_state;
+  }
 }
 
 bool abortCo2Notification(uint32_t& a_lastTouch, const int16_t& a_co2RunTime) {
