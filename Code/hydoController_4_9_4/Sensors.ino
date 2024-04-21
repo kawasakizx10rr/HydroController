@@ -53,8 +53,8 @@ void readSensors() {
     Serial2.write(sensor::co2Request, 9);
     uint8_t buffer[8] {0, 0, 0, 0, 0, 0, 0, 0};
     uint8_t bufferPosition = 0;
-    device::prevMillis = millis();
-    while (millis() - device::prevMillis <= 50UL && Serial2.available() > 0) {
+    static uint32_t prevMillis = millis();
+    while (millis() - prevMillis <= 50UL && Serial2.available() > 0) {
       char c = Serial2.read();
       if (bufferPosition < 8)
         buffer[bufferPosition++] = c;
@@ -137,7 +137,7 @@ void calibrateCo2() {
     continueMessage(message::calibratingCo2, -1, 0, false, false, false);
   const uint8_t calibrateCo2[] {0XFF, 0x01, 0x87, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78};
   Serial2.write(calibrateCo2, 9);
-  refreshPage(true, 20);
+  refreshPage(true, 173);
   clearPage();
 }
 

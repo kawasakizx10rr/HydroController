@@ -310,7 +310,6 @@ uint8_t infoPos = 0;
 }
 
 namespace device {
-uint32_t prevMillis = millis();
 bool globalDebug = true; 
 float currentDoserMls = 0;
 uint16_t profileEEPROMSize = 0;
@@ -689,7 +688,7 @@ enum airStates{ IS_FALLING, IS_RISING, IS_SAME};
 }
 
 namespace wifi {
-bool wifiEnabled = true;
+bool wifiEnabled = false;
 uint32_t connectionTime = 0;
 bool remotlyLoadUserProfile = false;
 bool remotlySaveUserProfile = false;
@@ -758,5 +757,5 @@ void loop() {
   envriomentalControl();
   displayWarnings();
   esp8266DataHandler();
-  serialDebugger();
+  //serialDebugger();
 }

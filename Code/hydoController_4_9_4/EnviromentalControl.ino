@@ -49,7 +49,7 @@ void waterLevelControl() {
     }
     // Start draining the water from the tank
     int16_t previousWaterLevel = sensor::waterLevel;
-    device::prevMillis = millis();
+    static uint32_t prevMillis = millis();
     bool outletPumpIsOn = false;
     while (startDraining && continueDraining != device::CANCEL) {
       if (sensor::waterLevel > 0) { // drain tank till empty
@@ -61,7 +61,7 @@ void waterLevelControl() {
           outletPumpIsOn = true;
         }      
         // timer checking water level is still decresing else bail after 1 minute * drainTimeout
-        if (millis() - device::prevMillis >= 60000UL * user::drainTimeout) { // put timer value in settings GUI !
+        if (millis() - prevMillis >= 60000UL * user::drainTimeout) { // put timer value in settings GUI !
           startDraining = false;
           startRefilling = true;
           if (device::globalDebug)
@@ -78,7 +78,7 @@ void waterLevelControl() {
           // CHeck if the water level has changed, if so reset the timeout
           if (sensor::waterLevel < previousWaterLevel) {
             previousWaterLevel = sensor::waterLevel;
-            device::prevMillis = millis();
+            prevMillis = millis();
           }      
           device::sensorPreviousMillis = millis();
         }
@@ -139,20 +139,20 @@ void waterLevelControl() {
       // setup parameters
       previousWaterLevel = sensor::waterLevel;
       display::lastTouchMillis = millis();
-      device::prevMillis = millis();
+      prevMillis = millis();
       bool startRefilling = true, runRefillDosers = false, inletPumpIsOn = true;
       // turn on the inlet water pump
       if (device::globalDebug)
         Serial.println(F("Turning on the inlet pump"));   
       digitalWrite(pin::inletPump, !device::relayOffState);
       // Refill the tank and run the refill dosers
-      while (refillTank(device::prevMillis, previousWaterLevel, startRefilling, runRefillDosers, inletPumpIsOn)) {
+      while (refillTank(prevMillis, previousWaterLevel, startRefilling, runRefillDosers, inletPumpIsOn)) {
         timedEvents(); 
       }    
       // Refill complete
-      device::dosingTimerHourCounter = 0;
-      clearPage();
-      refreshPage(true, 15);
+    clearPage();
+    refreshPage(true, 15);
+    device::dosingTimerHourCounter = 0;
     }
   }
 }
@@ -482,18 +482,18 @@ void co2Control() {
         }
       }
     }
-    device::prevMillis = millis();
+    static uint32_t prevMillis = millis();
     while (startCo2Relay) {
       if (abortCo2Notification(display::lastTouchMillis, sensor::co2GasTime / 60000))
         break;
-      if (millis() - device::prevMillis >= 1000UL) {
+      if (millis() - prevMillis >= 1000UL) {
         if (sensor::co2GasTime >= 1000UL)
           sensor::co2GasTime -= 1000UL;
         else {
           sensor::co2GasTime = 0;
           break;
         }
-        device::prevMillis = millis();
+        prevMillis = millis();
       }
       timedEvents();
     }
@@ -746,8 +746,6 @@ void waterEcPhControl() {
         adjustWaterPh();
         adjustmentMode = ADJUSTED_PH;
       }
-      clearPage();
-      refreshPage(true, 16);
     }
   }
 }
@@ -835,8 +833,13 @@ void adjustWaterEc() {
         runDosers(enabledDosers, dosingMls, percentage, 1, display::lastTouchMillis);
       }     
     }
-    device::dosingTimerHourCounter = 0;
+    clearPage();
+    refreshPage(true, 16);
   }
+  else if (device::globalDebug) {
+    Serial.print(F("The EC is not below the min target, the PH will be adjusted in ")); (user::dosingInterval); Serial.println(F(" hours"));
+  }
+  device::dosingTimerHourCounter = 0;
 }
 
 void adjustWaterTds() {
@@ -922,8 +925,13 @@ void adjustWaterTds() {
         runDosers(enabledDosers, dosingMls, percentage, 1, display::lastTouchMillis);
       }     
     }
-    device::dosingTimerHourCounter = 0;
+    clearPage();
+    refreshPage(true, 17);
   }
+  else if (device::globalDebug) {
+    Serial.print(F("The TDS is not below the min target, the PH will be adjusted in ")); (user::dosingInterval); Serial.println(F(" hours"));
+  }
+  device::dosingTimerHourCounter = 0;
 }
 
 void adjustWaterPh() {
@@ -1046,8 +1054,13 @@ void adjustWaterPh() {
         runDosers(enabledDosers, dosingMls, percentage, 0, display::lastTouchMillis);
       }        
     }
-    device::dosingTimerHourCounter = 0;
+    clearPage();
+    refreshPage(true, 18);
   }
+  else if (device::globalDebug) {
+    Serial.print(F("The PH is between the min and max targets, the ")); Serial.print(user::convertToTds ? F("TDS") : F("EC")); Serial.print(F(" will be adjusted in ")); (user::dosingInterval); Serial.println(F(" hours"));
+  }
+  device::dosingTimerHourCounter = 0;
 }
 
 // Return the percent out of range
@@ -1091,7 +1104,7 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
     else if (device::currentlyDosing) {
       if (device::globalDebug)
         Serial.println(F("Dosing complete"));
-      refreshPage(true, 17);
+      refreshPage(true, 19);
       device::currentlyDosing = false;
     }
     // touch event - cancel button
@@ -1104,7 +1117,7 @@ void runDosers(bool* a_enabledDosers, float* a_dosingMls, const float a_percent,
             Serial.println(F("Dosing aborted"));
           beep();
           device::currentlyDosing = false;
-          refreshPage(true, 18);
+          refreshPage(true, 20);
           for (uint8_t i = 0; i < 6; i++)
             a_enabledDosers[i] = false;
         }

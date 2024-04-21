@@ -48,6 +48,7 @@ void refreshPage (const bool a_state, const uint16_t debugID) {
   }
 }
 
+
 bool abortCo2Notification(uint32_t& a_lastTouch, const int16_t& a_co2RunTime) {
   static int16_t prevCo2RunTime = -1;
   if (prevCo2RunTime != a_co2RunTime) {

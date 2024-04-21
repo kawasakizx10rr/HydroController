@@ -7,7 +7,7 @@ void loadKeyBoard(const uint8_t& a_profileNum) {
   device::intputPosition = 0;
   display::showKeyboard = true;
   device::updateKeyboardInput = true;
-  refreshPage(true, 19);
+  refreshPage(true, 172);
   clearPage();
 }
 
