@@ -747,6 +747,7 @@ void waterEcPhControl() {
         adjustmentMode = ADJUSTED_PH;
       }
     }
+    device::dosingTimerHourCounter = 0;
   }
 }
 
@@ -839,7 +840,6 @@ void adjustWaterEc() {
   else if (device::globalDebug) {
     Serial.print(F("The EC is not below the min target, the PH will be adjusted in ")); (user::dosingInterval); Serial.println(F(" hours"));
   }
-  device::dosingTimerHourCounter = 0;
 }
 
 void adjustWaterTds() {
@@ -931,7 +931,6 @@ void adjustWaterTds() {
   else if (device::globalDebug) {
     Serial.print(F("The TDS is not below the min target, the PH will be adjusted in ")); (user::dosingInterval); Serial.println(F(" hours"));
   }
-  device::dosingTimerHourCounter = 0;
 }
 
 void adjustWaterPh() {
@@ -1060,7 +1059,6 @@ void adjustWaterPh() {
   else if (device::globalDebug) {
     Serial.print(F("The PH is between the min and max targets, the ")); Serial.print(user::convertToTds ? F("TDS") : F("EC")); Serial.print(F(" will be adjusted in ")); (user::dosingInterval); Serial.println(F(" hours"));
   }
-  device::dosingTimerHourCounter = 0;
 }
 
 // Return the percent out of range
